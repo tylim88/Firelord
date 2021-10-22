@@ -47,7 +47,7 @@ You don't need to do any kind of manipulation onto `read`, `write` and `compare`
 
 the documentation explains how the types work, the library itself is intuitive in practice, thoroughly refer to the documentation only if you want to have better understanding on how the typing work.
 
-You SHOULD NOT try to memorize how the typing work, keep in mind the purpose is not for you to fit into the types but is to let the types GUIDE you.
+You SHOULD NOT try to memorize how the typing work, keep in mind the purpose is not for you to fit into the type but is to let the type GUIDE you.
 
 ## 🦜 Getting Started
 
@@ -418,6 +418,25 @@ users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5) // 
 
 Api is exactly same as Collection Operations: [Query](#-collection-operations-query), [Order And Limit](#-collection-operations-order-and-limit), [Paginate And Cursor](Firelord#-collection-operations-paginate-and-cursor)
 
-the difference is, use collection group reference instead of collection reference
+just use collection group reference instead of collection reference, refer back [Getting Started](#-getting-started) on how to create collection group reference
 
-Refer back [Getting Started](#-getting-started) on how to create collection group reference
+## 🐇 Limitation
+
+While the wrapper try to solve as much as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
+
+1. object data type is not supported.
+
+2. FirebaseFirestore.FieldValue is not narrowed down.
+
+3. no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries).
+
+## 🐕 Opinion
+
+One element of the wrapper is opinionated, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
+
+when a document is created via `add`, `create` or `set` without option, two things will happen:
+
+1. createdAt field path is created and the value is firestore server timestamp(current server timestamp).
+2. updatedAt field path is created and the value is new Date(0), it starts at beginning of the time.
+
+when a document is updated via `update` or `set` with option, updatedAt field path is updated and the value is firestore server timestamp.

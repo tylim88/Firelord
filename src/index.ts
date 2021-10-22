@@ -151,7 +151,7 @@ export const firelord = <
 						const time = firestore.FieldValue.serverTimestamp()
 						return transaction.create(docWrite, {
 							createdAt: time,
-							updatedAt: time,
+							updatedAt: new Date(0),
 							...data,
 						})
 					},
@@ -179,7 +179,7 @@ export const firelord = <
 						} else {
 							return transaction.set(docWrite, {
 								createdAt: time,
-								updatedAt: time,
+								updatedAt: new Date(0),
 								...data,
 							})
 						}
@@ -236,7 +236,7 @@ export const firelord = <
 
 					return docWrite.create({
 						createdAt: time,
-						updatedAt: time,
+						updatedAt: new Date(0),
 						...data,
 					})
 				},
@@ -267,7 +267,7 @@ export const firelord = <
 					} else {
 						return docWrite.set({
 							createdAt: time,
-							updatedAt: time,
+							updatedAt: new Date(0),
 							...data,
 						})
 					}
@@ -304,7 +304,7 @@ export const firelord = <
 							const time = firestore.FieldValue.serverTimestamp()
 							return batch.create(docWrite, {
 								createdAt: time,
-								updatedAt: time,
+								updatedAt: new Date(0),
 								...data,
 							})
 						},
@@ -337,7 +337,7 @@ export const firelord = <
 
 				return colRefWrite.add({
 					createdAt: time,
-					updatedAt: time,
+					updatedAt: new Date(0),
 					...data,
 				})
 			},
