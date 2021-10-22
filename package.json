@@ -6,9 +6,10 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"reinstall": "rm -rf node_modules/ && rm -rf package-lock.json && npm i",
-		"lint": "eslint --ext .ts",
+		"tsc": " tsc -p tsconfig2.json",
+		"lint": "eslint . --ext .ts",
 		"lint-fix": "npm run lint --fix",
-		"build": "rm -rf dist && rm -rf types && babel src --out-dir dist --extensions \".ts\" && tsc -p tsconfig.json",
+		"build": "rm -rf dist && rm -rf types && babel src --out-dir dist --extensions \".ts\" && npm run tsc",
 		"test": "jest",
 		"pub": "npm run build && npm publish"
 	},
@@ -69,6 +70,7 @@
 	},
 	"lint-staged": {
 		"*.{ts}": [
+			"npm run tsc",
 			"npm run lint --fix",
 			"prettier --write"
 		]
