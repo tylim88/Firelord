@@ -8,6 +8,11 @@ declare namespace Firestore {
 		createdAt: Timestamp
 		updatedAt: Timestamp
 	}
+	type CreatedUpdatedCompare = {
+		createdAt: Date | Timestamp
+		updatedAt: Date | Timestamp
+	}
+
 	type Timestamp = import('firebase-admin').firestore.Timestamp
 
 	type Compare = '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in'

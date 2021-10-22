@@ -1,7 +1,7 @@
 {
 	"name": "firelord",
 	"version": "0.0.0",
-	"description": "Deeper admin firestore typing wrapper.",
+	"description": "Deep admin firestore typing wrapper.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {

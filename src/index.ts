@@ -12,11 +12,15 @@ export const fireLord = <
 		DocPath: string
 		read: firestore.DocumentData & Firestore.CreatedUpdatedRead
 		write: firestore.DocumentData & Firestore.CreatedUpdatedWrite
+		compare: firestore.DocumentData & Firestore.CreatedUpdatedCompare
 		base: firestore.DocumentData
 	} = never
 >() => {
 	type Write = OmitKeys<T['write'], 'updatedAt' | 'createdAt'>
 	type Read = T['read']
+	type Compare = T['compare']
+	type RemoveArrayTypeMember = ExcludePropertyKeys<Compare, unknown[]>
+
 	const colCreator = (
 		col: (
 			collectionPath: string
@@ -144,111 +148,125 @@ export const fireLord = <
 			// https://github.com/microsoft/TypeScript/issues/32022
 			// https://stackoverflow.com/questions/51591335/typescript-spead-operator-on-object-with-method
 
-			const orderByCreator =
-				(
-					colRefRead: firestore.CollectionReference<Read>,
-					query?: firestore.Query<Read>
-				) =>
-				<P extends ExcludePropertyKeys<Read, unknown[]>>(
-					fieldPath: P,
-					directionStr: FirebaseFirestore.OrderByDirection = 'asc',
-					cursor?: {
-						clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-						fieldValue: Read[P] | firestore.DocumentSnapshot
-					}
-				) => {
-					const ref = (query || colRefRead).orderBy(fieldPath, directionStr)
+			const queryCreator = () => {
+				const orderByCreator =
+					(
+						colRefRead: firestore.CollectionReference<Read>,
+						query?: firestore.Query<Read>
+					) =>
+					<P extends RemoveArrayTypeMember>(
+						fieldPath: P,
+						directionStr: FirebaseFirestore.OrderByDirection = 'asc',
+						cursor?: {
+							clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
+							fieldValue: Compare[P] | firestore.DocumentSnapshot
+						}
+					) => {
+						const ref = (query || colRefRead).orderBy(fieldPath, directionStr)
 
-					return colCreator(
-						col,
-						cursor ? ref[cursor.clause](cursor.fieldValue) : ref
-					)
+						return colCreator(
+							col,
+							cursor ? ref[cursor.clause](cursor.fieldValue) : ref
+						)
+					}
+				return {
+					firestore: colRefRead.firestore,
+					stream: () => {
+						return colRefRead.stream()
+					},
+					offset: (offset: number) => {
+						return colCreator(col, (query || colRefRead).offset(offset))
+					},
+					doc,
+					add: (data: Write) => {
+						const time = firestore.FieldValue.serverTimestamp()
+
+						return colRefWrite.add({
+							createdAt: time,
+							updatedAt: time,
+							...data,
+						})
+					},
+					where: <
+						P extends string & keyof Read,
+						J extends FirebaseFirestore.WhereFilterOp,
+						Q extends RemoveArrayTypeMember
+					>(
+						fieldPath: P,
+						opStr: J extends never
+							? J
+							: Compare[P] extends unknown[]
+							? '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in'
+							: 'array-contains' | 'in' | 'array-contains-any',
+						value: J extends 'not-in' | 'in'
+							? Compare[P][]
+							: J extends 'array-contains'
+							? RemoveArray<Compare[P]>
+							: Compare[P],
+						orderBy?: J extends 'in' | '='
+							? never
+							: J extends '<' | '<=' | '>' | '>' | 'not-in'
+							? P extends RemoveArrayTypeMember
+								? {
+										fieldPath?: Q extends never
+											? Q
+											: J extends 'not-in'
+											? RemoveArrayTypeMember
+											: never
+										directionStr?: FirebaseFirestore.OrderByDirection
+										cursor?: {
+											clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
+											fieldValue: Compare[J extends 'not-in' ? Q : P]
+										}
+								  }
+								: never
+							: never
+					) => {
+						const ref = (query || colRefRead).where(fieldPath, opStr, value)
+
+						return orderBy
+							? orderByCreator(colRefRead, ref)(
+									orderBy.fieldPath ||
+										(fieldPath as unknown as string & RemoveArrayTypeMember),
+									orderBy.directionStr,
+									orderBy.cursor
+							  )
+							: colCreator(col, ref)
+					},
+					limit: (limit: number) => {
+						return colCreator(col, (query || colRefRead).limit(limit))
+					},
+					limitToLast: (limit: number) => {
+						return colCreator(col, (query || colRefRead).limitToLast(limit))
+					},
+					orderBy: orderByCreator(colRefRead),
+					get: () => {
+						return (query || colRefRead).get()
+					},
 				}
+			}
 
 			return {
 				parent: colRefRead.parent,
 				path: colRefRead.path,
 				id: colRefRead.id,
-				firestore: colRefRead.firestore,
 				listDocuments: () => {
 					return colRefRead.listDocuments()
 				},
-				stream: () => {
-					return colRefRead.stream()
-				},
-				offset: (offset: number) => {
-					return colCreator(col, (query || colRefRead).offset(offset))
-				},
-				doc,
-				add: (data: Write) => {
-					const time = firestore.FieldValue.serverTimestamp()
-
-					return colRefWrite.add({
-						createdAt: time,
-						updatedAt: time,
-						...data,
-					})
-				},
-				where: <
-					P extends string & keyof Read,
-					J extends FirebaseFirestore.WhereFilterOp,
-					Q extends ExcludePropertyKeys<Read, unknown[]>
-				>(
-					fieldPath: P,
-					opStr: J extends never
-						? J
-						: Read[P] extends unknown[]
-						? '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in'
-						: 'array-contains' | 'in' | 'array-contains-any',
-					value: J extends 'not-in' | 'in'
-						? Read[P][]
-						: J extends 'array-contains'
-						? RemoveArray<Read[P]>
-						: Read[P],
-					orderBy?: J extends 'in' | '='
-						? never
-						: J extends '<' | '<=' | '>' | '>' | 'not-in'
-						? P extends ExcludePropertyKeys<Read, unknown[]>
-							? {
-									fieldPath?: Q extends never
-										? Q
-										: J extends 'not-in'
-										? ExcludePropertyKeys<Read, unknown[]>
-										: never
-									directionStr?: FirebaseFirestore.OrderByDirection
-									cursor?: {
-										clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-										fieldValue: Read[J extends 'not-in' ? Q : P]
-									}
-							  }
-							: never
-						: never
-				) => {
-					const ref = (query || colRefRead).where(fieldPath, opStr, value)
-
-					return orderBy
-						? orderByCreator(colRefRead, ref)(
-								orderBy.fieldPath ||
-									(fieldPath as unknown as string &
-										ExcludePropertyKeys<Read, unknown[]>),
-								orderBy.directionStr,
-								orderBy.cursor
-						  )
-						: colCreator(col, ref)
-				},
-				limit: (limit: number) => {
-					return colCreator(col, (query || colRefRead).limit(limit))
-				},
-				limitToLast: (limit: number) => {
-					return colCreator(col, (query || colRefRead).limitToLast(limit))
-				},
-				orderBy: orderByCreator(colRefRead),
-				get: () => {
-					return (query || colRefRead).get()
-				},
+				...queryCreator(),
 			}
 		}
 	}
+
+	const groupColCreator = (
+		col: (
+			collectionPath: string
+		) => firestore.CollectionGroup<firestore.DocumentData>,
+		query?: firestore.Query<Read>
+	) => {
+		return {}
+	}
+	firestore().collectionGroup('')
 
 	return { col: colCreator(firestore().collection) }
 }

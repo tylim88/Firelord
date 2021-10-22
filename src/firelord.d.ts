@@ -15,7 +15,7 @@ export type ExcludePropertyKeys<A, U = undefined> = string &
 
 export type NoUndefined<T> = {
 	[K in keyof T]: T[K] extends undefined
-		? 'value cannot be undefined, if this is intentional, please explicitly assign the undefined type in base type'
+		? 'value cannot be undefined, if this is intentional, please union undefined in base type'
 		: T[K]
 }
 
@@ -47,22 +47,30 @@ type NonNullableKey<T, K extends keyof T> = OmitKeys<T, K> &
 export namespace FireLord {
 	type ServerTimestamp = 'ServerTimestamp'
 
-	type ReadConverter<T> = T extends ServerTimestamp | Date
+	// https://stackoverflow.com/questions/69628967/typescript-distribute-over-union-doesnt-work-in-index-signature
+
+	type ArrayWriteConverter<A> = A extends (infer T)[]
+		? ArrayWriteConverter<T>[]
+		: A extends ServerTimestamp
+		? Firestore.FieldValue
+		: A extends Firestore.Timestamp | Date
+		? Firestore.Timestamp | Date
+		: A
+
+	type ReadConverter<T> = T extends (infer A)[]
+		? ReadConverter<A>[]
+		: T extends ServerTimestamp | Date
 		? Firestore.Timestamp
-		: T extends (infer A)[]
-		? A extends ServerTimestamp | Date
-			? Firestore.Timestamp[]
-			: T
 		: T
 
+	type CompareConverter<A> = A extends (infer T)[]
+		? CompareConverter<T>[]
+		: A extends ServerTimestamp | Date | Firestore.Timestamp
+		? Firestore.Timestamp | Date
+		: A
+
 	type WriteConverter<T> = T extends (infer A)[]
-		?
-				| (A extends ServerTimestamp
-						? Firestore.FieldValue[]
-						: A extends Firestore.Timestamp | Date
-						? (Firestore.Timestamp | Date)[]
-						: A[])
-				| Firestore.FieldValue
+		? ArrayWriteConverter<A>[] | Firestore.FieldValue
 		: T extends ServerTimestamp
 		? Firestore.FieldValue
 		: T extends Firestore.Timestamp | Date
@@ -80,12 +88,41 @@ export namespace FireLord {
 		base: B
 		read: {
 			[J in keyof B]: ReadConverter<B[J]>
-		} & Firestore.CreatedUpdatedRead
+		} & {
+			[index in keyof Firestore.CreatedUpdatedRead]: Firestore.CreatedUpdatedRead[index]
+		} // so it looks more explicit in typescript hint
 		write: {
 			[J in keyof B]: WriteConverter<B[J]>
-		} & Firestore.CreatedUpdatedWrite
+		} & {
+			[index in keyof Firestore.CreatedUpdatedWrite]: Firestore.CreatedUpdatedWrite[index]
+		} // so it looks more explicit in typescript hint
+		compare: {
+			[J in keyof B]: CompareConverter<B[J]>
+		} & {
+			[index in keyof Firestore.CreatedUpdatedCompare]: Firestore.CreatedUpdatedCompare[index]
+		} // so it looks more explicit in typescript hint
 
 		ColPath: E extends never ? C : `${E['ColPath']}\\${E['DocPath']}\\${C}`
 		DocPath: D
 	}
+
+	type a = ReadWriteCreator<
+		{
+			a:
+				| string
+				| number
+				| number[]
+				| (string | number)[]
+				| (string | number)[][]
+				| (string | number)[][][]
+		},
+		string,
+		string
+	>
+
+	type b = a['write']
+	type c = a['read']
+	type f = a['compare']
+
+	type d = string[] & (string | number)[]
 }
