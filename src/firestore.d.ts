@@ -1,4 +1,4 @@
-declare namespace Firestore {
+declare namespace Firelord {
 	type FieldValue = import('firebase-admin').firestore.FieldValue
 	type CreatedUpdatedWrite = {
 		createdAt: FieldValue

@@ -6,13 +6,13 @@ import {
 	RemoveArray,
 } from './firelord'
 
-export const fireLord = <
+export const firelord = <
 	T extends {
-		ColPath: string
-		DocPath: string
-		read: firestore.DocumentData & Firestore.CreatedUpdatedRead
-		write: firestore.DocumentData & Firestore.CreatedUpdatedWrite
-		compare: firestore.DocumentData & Firestore.CreatedUpdatedCompare
+		colPath: string
+		docPath: string
+		read: firestore.DocumentData & Firelord.CreatedUpdatedRead
+		write: firestore.DocumentData & Firelord.CreatedUpdatedWrite
+		compare: firestore.DocumentData & Firelord.CreatedUpdatedCompare
 		base: firestore.DocumentData
 	} = never
 >() => {
@@ -67,8 +67,8 @@ export const fireLord = <
 				opStr: J extends never
 					? J
 					: Compare[P] extends unknown[]
-					? '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in'
-					: 'array-contains' | 'in' | 'array-contains-any',
+					? 'array-contains' | 'in' | 'array-contains-any'
+					: '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in',
 				value: J extends 'not-in' | 'in'
 					? Compare[P][]
 					: J extends 'array-contains'
@@ -76,7 +76,7 @@ export const fireLord = <
 					: Compare[P],
 				orderBy?: J extends 'in' | '='
 					? never
-					: J extends '<' | '<=' | '>' | '>' | 'not-in'
+					: J extends '<' | '<=' | '>' | '>=' | 'not-in'
 					? P extends RemoveArrayTypeMember
 						? {
 								fieldPath?: Q extends never
@@ -97,14 +97,26 @@ export const fireLord = <
 			) => {
 				const ref = (query || colRefRead).where(fieldPath, opStr, value)
 
-				return orderBy
+				const queryRef = queryCreator(colRefRead, ref)
+
+				const { orderBy: orderBy1, ...rest } = orderBy
 					? orderByCreator(colRefRead, ref)(
 							orderBy.fieldPath ||
 								(fieldPath as unknown as string & RemoveArrayTypeMember),
 							orderBy.directionStr,
 							orderBy.cursor
 					  )
-					: queryCreator(colRefRead, ref)
+					: queryRef
+
+				return (orderBy ? rest : queryRef) as J extends
+					| '<'
+					| '<='
+					| '>'
+					| '>'
+					| '=='
+					| 'in'
+					? typeof rest
+					: typeof queryRef
 			},
 			limit: (limit: number) => {
 				return queryCreator(colRefRead, (query || colRefRead).limit(limit))
@@ -122,16 +134,76 @@ export const fireLord = <
 		}
 	}
 
-	const col = (collectionPath: T['ColPath']) => {
+	const col = (collectionPath: T['colPath']) => {
 		const colRefWrite = firestore().collection(
 			collectionPath
 		) as firestore.CollectionReference<Write>
 		const colRefRead = colRefWrite as firestore.CollectionReference<Read>
 
-		const doc = (documentPath: T['DocPath']) => {
+		const doc = (documentPath: T['docPath']) => {
 			const docWrite = colRefWrite.doc(documentPath)
 
 			const docRead = colRefRead.doc(documentPath)
+
+			const transactionCreator = (transaction: firestore.Transaction) => {
+				return {
+					create: (data: Write) => {
+						const time = firestore.FieldValue.serverTimestamp()
+						return transaction.create(docWrite, {
+							createdAt: time,
+							updatedAt: time,
+							...data,
+						})
+					},
+					set: <
+						J extends Partial<Write>,
+						Z extends { merge?: true; mergeField?: (keyof Write)[] }
+					>(
+						data: J extends never
+							? J
+							: Z extends undefined
+							? Write
+							: PartialNoImplicitUndefined<Write, J>,
+						options?: Z
+					) => {
+						const time = firestore.FieldValue.serverTimestamp()
+						if (options) {
+							return transaction.set(
+								docWrite,
+								{
+									updatedAt: time,
+									...data,
+								},
+								options
+							)
+						} else {
+							return transaction.set(docWrite, {
+								createdAt: time,
+								updatedAt: time,
+								...data,
+							})
+						}
+					},
+					update: <J extends Partial<Write>>(
+						data: J extends never ? J : PartialNoImplicitUndefined<Write, J>
+					) => {
+						const time = firestore.FieldValue.serverTimestamp()
+						return transaction.update(docWrite, { updatedAt: time, ...data })
+					},
+					delete: () => {
+						return transaction.delete(docWrite)
+					},
+					get: () => {
+						return transaction.get(docRead)
+					},
+					getAll: <J extends firestore.DocumentData = firestore.DocumentData>(
+						documentReferences: J[],
+						options: firestore.ReadOptions
+					) => {
+						return transaction.getAll<J>(...documentReferences, options)
+					},
+				}
+			}
 
 			return {
 				firestore: docRead.firestore,
@@ -238,6 +310,15 @@ export const fireLord = <
 						},
 					}
 				},
+				runTransaction: (
+					callback: (
+						transaction: ReturnType<typeof transactionCreator>
+					) => Promise<unknown>
+				) => {
+					firestore().runTransaction(async transaction => {
+						return callback(transactionCreator(transaction))
+					})
+				},
 			}
 		}
 
@@ -264,7 +345,7 @@ export const fireLord = <
 		}
 	}
 
-	const colGroup = (collectionPath: T['ColPath']) => {
+	const colGroup = (collectionPath: T['colPath']) => {
 		const colRefRead = firestore().collectionGroup(
 			collectionPath
 		) as firestore.CollectionGroup<Read>
@@ -274,4 +355,4 @@ export const fireLord = <
 	return { col, colGroup }
 }
 
-export const ozai = fireLord
+export const ozai = firelord
