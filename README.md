@@ -117,7 +117,7 @@ NOTE: you dont need to union `Date | firestore.Timestamp` or `(Date | firestore.
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 \*\*It is not totally impossible to deal with object type, however it is too painful to deal with right now, any elegant solution is welcomed. Personally I do not recommend storing object type, primitive data type can do thing just fine and easier to deal with.
 
-## 🎵 Document operations
+## 🎵 Document operations: Write, Read and Listen
 
 all the document operations api is similar to firestore [write](https://firebase.google.com/docs/firestore/manage-data/add-data), [read](https://firebase.google.com/docs/firestore/query-data/get-data) and [listen](https://firebase.google.com/docs/firestore/query-data/listen).
 
@@ -212,7 +212,7 @@ userBatch.update({ name: 'Ozai' })
 batch.commit()
 ```
 
-## 🌞 Query
+## 🌞 Collection Operations: Query
 
 all the api are similar to [firestore](https://firebase.google.com/docs/firestore/query-data/queries), clauses are chain-able.
 
@@ -236,7 +236,7 @@ Users.where('beenTo', 'array-contains-any', 'USA').get()
 Users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
 ```
 
-## 🐳 Order And Limit
+## 🐳 Collection Operations: Order And Limit
 
 all the api are similar to [firestore](https://firebase.google.com/docs/firestore/query-data/queries) with slight different, but work the same, clauses are chain-able.
 
@@ -275,7 +275,7 @@ User.where('name', 'not-in', ['John', 'Ozai'], {
 }).get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc').endAt(50)
 ```
 
-## 🌺 Paginate And Cursor
+## 🌺 Collection Operations: Paginate And Cursor
 
 api are slightly different than [firestore](https://firebase.google.com/docs/firestore/query-data/query-cursors) but work the same, clauses are chain-able.
 
