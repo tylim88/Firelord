@@ -181,7 +181,7 @@ user.set(
 user.update({ name: 'Michael' }, { merge: true })
 ```
 
-## 🦩 Batch Operation
+## 🦩 Document operations: Batch
 
 all the api are similar to [firestore](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes), the only difference is, the batch is member of doc.
 
@@ -284,5 +284,9 @@ api are slightly different than [firestore](https://firebase.google.com/docs/fir
 
 // field path only include members that is NOT array type in `compare type`
 // field value type is the corresponding field path value type in `compare type`
-User.orderBy('age', { clause: 'startAt', fieldValue: 20 }) // equivalent to orderBy("age").startAt(20)
+User.orderBy('age', { clause: 'startAt', fieldValue: 20 }).offset(5) // equivalent to orderBy("age").startAt(20).offset(5)
 ```
+
+## 🌵 Collection Group
+
+Api is exactly same as Collection Operations: [Query](#-document-operations-write-read-and-listen), Order And Limit, Paginate And Cursor
