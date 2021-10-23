@@ -41,7 +41,7 @@ Overview:
 
 ![orderBy limitation](img/orderBy.png)
 
-basically all read operation return `read type` data, all write operation require `write type` data and all query require `compare type` data, you only need to define `base type` and the wrapper generate the other 3 types for you.
+basically all read operation return `read type` data, all write operation require `write type` data and all query require `compare type` data, you only need to define `base type` and the wrapper will generates the other 3 types for you.
 
 You don't need to do any kind of manipulation onto `read`, `write` and `compare` types nor you need to utilize them.
 
@@ -98,7 +98,7 @@ type Transaction = Firelord.ReadWriteCreator<
 	}, // base type
 	'Transactions', // collection path type
 	string, // document path type
-	User // insert parent collection, it will auto construct the collection path for you
+	User // insert parent collection, it will auto construct the sub collection path for you
 >
 
 // implement the wrapper
@@ -136,7 +136,7 @@ write type: `string | number | FirebaseFirestore.FieldValue | number[] | (string
 
 compare type: `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]`
 
-In practice, any union is not recommended, data should has only one type, except union with `undefined` or `null` that bear certain meaning(value missing or never initialized).
+In practice, any union is not recommended, data should has only one type, except `undefined` or `null` union that bear certain meaning(value missing or never initialized).
 
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 
@@ -426,13 +426,13 @@ While the wrapper try to solve as much as possible, some problem cannot be solve
 
 1. object data type is not supported.
 
-2. FirebaseFirestore.FieldValue is not narrowed down.
+2. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
 
 3. no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries).
 
-## 🐕 Opinion
+## 🐕 Opinionated
 
-One element of the wrapper is opinionated, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
+There is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
 
 when a document is created via `add`, `create` or `set` without option, two things will happen:
 
