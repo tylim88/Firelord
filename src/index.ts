@@ -9,14 +9,21 @@ import { FirelordFirestore } from './firelordFirestore'
 
 const time = firestore.FieldValue.serverTimestamp()
 
+const newTime = {
+	createdAt: time,
+	updatedAt: new Date(0),
+}
+
 export const firelord = <
 	T extends {
 		colPath: string
 		docPath: string
-		read: firestore.DocumentData & FirelordFirestore.CreatedUpdatedRead
-		write: firestore.DocumentData & FirelordFirestore.CreatedUpdatedWrite
-		compare: firestore.DocumentData & FirelordFirestore.CreatedUpdatedCompare
-		base: firestore.DocumentData
+		read: FirelordFirestore.DocumentData & FirelordFirestore.CreatedUpdatedRead
+		write: FirelordFirestore.DocumentData &
+			FirelordFirestore.CreatedUpdatedWrite
+		compare: FirelordFirestore.DocumentData &
+			FirelordFirestore.CreatedUpdatedCompare
+		base: FirelordFirestore.DocumentData
 	} = never
 >() => {
 	type Write = OmitKeys<T['write'], 'updatedAt' | 'createdAt'>
@@ -26,23 +33,23 @@ export const firelord = <
 
 	const queryCreator = (
 		colRefRead:
-			| firestore.CollectionReference<Read>
-			| firestore.CollectionGroup<Read>,
-		query?: firestore.Query<Read>
+			| FirelordFirestore.CollectionReference<Read>
+			| FirelordFirestore.CollectionGroup<Read>,
+		query?: FirelordFirestore.Query<Read>
 	) => {
 		const orderByCreator =
 			(
 				colRefRead:
-					| firestore.CollectionReference<Read>
-					| firestore.CollectionGroup<Read>,
-				query?: firestore.Query<Read>
+					| FirelordFirestore.CollectionReference<Read>
+					| FirelordFirestore.CollectionGroup<Read>,
+				query?: FirelordFirestore.Query<Read>
 			) =>
 			<P extends RemoveArrayTypeMember>(
 				fieldPath: P,
-				directionStr: FirebaseFirestore.OrderByDirection = 'asc',
+				directionStr: FirelordFirestore.OrderByDirection = 'asc',
 				cursor?: {
 					clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-					fieldValue: Compare[P] | firestore.DocumentSnapshot
+					fieldValue: Compare[P] | FirelordFirestore.DocumentSnapshot
 				}
 			) => {
 				const ref = (query || colRefRead).orderBy(fieldPath, directionStr)
@@ -63,7 +70,7 @@ export const firelord = <
 			},
 			where: <
 				P extends string & keyof Read,
-				J extends FirebaseFirestore.WhereFilterOp,
+				J extends FirelordFirestore.WhereFilterOp,
 				Q extends RemoveArrayTypeMember
 			>(
 				fieldPath: P,
@@ -87,12 +94,12 @@ export const firelord = <
 									: J extends 'not-in'
 									? RemoveArrayTypeMember
 									: never
-								directionStr?: FirebaseFirestore.OrderByDirection
+								directionStr?: FirelordFirestore.OrderByDirection
 								cursor?: {
 									clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
 									fieldValue:
 										| Compare[J extends 'not-in' ? Q : P]
-										| firestore.DocumentSnapshot
+										| FirelordFirestore.DocumentSnapshot
 								}
 						  }
 						: never
@@ -140,20 +147,22 @@ export const firelord = <
 	const col = (collectionPath: T['colPath']) => {
 		const colRefWrite = firestore().collection(
 			collectionPath
-		) as firestore.CollectionReference<Write>
-		const colRefRead = colRefWrite as firestore.CollectionReference<Read>
+		) as FirelordFirestore.CollectionReference<Write>
+		const colRefRead =
+			colRefWrite as FirelordFirestore.CollectionReference<Read>
 
 		const doc = (documentPath: T['docPath']) => {
 			const docWrite = colRefWrite.doc(documentPath)
 
 			const docRead = colRefRead.doc(documentPath)
 
-			const transactionCreator = (transaction: firestore.Transaction) => {
+			const transactionCreator = (
+				transaction: FirelordFirestore.Transaction
+			) => {
 				return {
 					create: (data: Write) => {
 						return transaction.create(docWrite, {
-							createdAt: time,
-							updatedAt: new Date(0),
+							...newTime,
 							...data,
 						})
 					},
@@ -179,8 +188,7 @@ export const firelord = <
 							)
 						} else {
 							return transaction.set(docWrite, {
-								createdAt: time,
-								updatedAt: new Date(0),
+								...newTime,
 								...data,
 							})
 						}
@@ -196,9 +204,11 @@ export const firelord = <
 					get: () => {
 						return transaction.get(docRead)
 					},
-					getAll: <J extends firestore.DocumentData = firestore.DocumentData>(
+					getAll: <
+						J extends FirelordFirestore.DocumentData = FirelordFirestore.DocumentData
+					>(
 						documentReferences: J[],
-						options: firestore.ReadOptions
+						options: FirelordFirestore.ReadOptions
 					) => {
 						return transaction.getAll<J>(...documentReferences, options)
 					},
@@ -214,12 +224,14 @@ export const firelord = <
 					return docRead.listCollections()
 				},
 				isEqual: (
-					other: firestore.DocumentReference<firestore.DocumentData>
+					other: FirelordFirestore.DocumentReference<FirelordFirestore.DocumentData>
 				) => {
-					return docRead.isEqual(other as firestore.DocumentReference<Read>)
+					return docRead.isEqual(
+						other as FirelordFirestore.DocumentReference<Read>
+					)
 				},
 				onSnapshot: (
-					next?: (snapshot: firestore.DocumentSnapshot<Read>) => void,
+					next?: (snapshot: FirelordFirestore.DocumentSnapshot<Read>) => void,
 					error?: (error: Error) => void
 				) => {
 					return docRead.onSnapshot(
@@ -233,8 +245,7 @@ export const firelord = <
 				},
 				create: (data: Write) => {
 					return docWrite.create({
-						createdAt: time,
-						updatedAt: new Date(0),
+						...newTime,
 						...data,
 					})
 				},
@@ -263,8 +274,7 @@ export const firelord = <
 						)
 					} else {
 						return docWrite.set({
-							createdAt: time,
-							updatedAt: new Date(0),
+							...newTime,
 							...data,
 						})
 					}
@@ -281,7 +291,7 @@ export const firelord = <
 					return docRead.get()
 				},
 				delete: () => docWrite.delete(),
-				batch: (batch: firestore.WriteBatch) => {
+				batch: (batch: FirelordFirestore.WriteBatch) => {
 					return {
 						commit: () => {
 							return batch.commit()
@@ -296,8 +306,7 @@ export const firelord = <
 						},
 						create: (data: Write) => {
 							return batch.create(docWrite, {
-								createdAt: time,
-								updatedAt: new Date(0),
+								...newTime,
 								...data,
 							})
 						},
@@ -327,8 +336,7 @@ export const firelord = <
 			doc,
 			add: (data: Write) => {
 				return colRefWrite.add({
-					createdAt: time,
-					updatedAt: new Date(0),
+					...newTime,
 					...data,
 				})
 			},
@@ -339,7 +347,7 @@ export const firelord = <
 	const colGroup = (collectionPath: T['colPath']) => {
 		const colRefRead = firestore().collectionGroup(
 			collectionPath
-		) as firestore.CollectionGroup<Read>
+		) as FirelordFirestore.CollectionGroup<Read>
 		return queryCreator(colRefRead)
 	}
 
