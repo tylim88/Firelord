@@ -1,10 +1,10 @@
 import { firelord } from '.'
 
-import { FireLord } from './firelord'
+import { Firelord } from './firelord'
 import { firestore } from 'firebase-admin'
 
 // use base type to generate read and write type
-type User = FireLord.ReadWriteCreator<
+type User = Firelord.ReadWriteCreator<
 	{
 		name: string
 		age: number
@@ -37,7 +37,7 @@ const userGroup = userCreator.colGroup('Users') // collection path type is "User
 const user = users.doc('1234567890') // document path is string
 
 // subCollection of User
-type Transaction = FireLord.ReadWriteCreator<
+type Transaction = Firelord.ReadWriteCreator<
 	{
 		amount: number
 		date: 'ServerTimestamp'
@@ -49,7 +49,18 @@ type Transaction = FireLord.ReadWriteCreator<
 >
 
 // implement the wrapper
-const transactions = firelord<Transaction>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
+const transactions = firelord<
+	Firelord.ReadWriteCreator<
+		{
+			amount: number
+			date: 'ServerTimestamp'
+			status: 'Fail' | 'Success'
+		}, // base type
+		'Transactions', // collection path type
+		string, // document path type
+		User // insert parent collection, it will auto construct the collection path for you
+	>
+>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
 const transaction = users.doc('1234567890') // document path is string
 
 user.get().then(snapshot => {

@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
-🐤 admin firestore typing wrapper.
+🐤 admin firestore wrapper with deeper typing solution.
 
 🚀 All read and write operation are typed, field path, field value, collection path, document path, all typed!
 
@@ -56,10 +56,10 @@ npm i firelord
 ```
 
 ```ts
-import { firelord, FireLord } from 'firelord'
+import { firelord, Firelord } from 'firelord'
 
 // use base type to generate read and write type
-type User = FireLord.ReadWriteCreator<
+type User = Firelord.ReadWriteCreator<
 	{
 		name: string
 		age: number
@@ -90,7 +90,7 @@ const userGroup = userCreator.colGroup('Users') // collection path type is "User
 const user = users.doc('1234567890') // document path is string
 
 // subCollection of User
-type Transaction = FireLord.ReadWriteCreator<
+type Transaction = Firelord.ReadWriteCreator<
 	{
 		amount: number
 		date: 'ServerTimestamp'

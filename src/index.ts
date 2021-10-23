@@ -7,6 +7,8 @@ import {
 } from './firelord'
 import { FirelordFirestore } from './firelordFirestore'
 
+const time = firestore.FieldValue.serverTimestamp()
+
 export const firelord = <
 	T extends {
 		colPath: string
@@ -149,7 +151,6 @@ export const firelord = <
 			const transactionCreator = (transaction: firestore.Transaction) => {
 				return {
 					create: (data: Write) => {
-						const time = firestore.FieldValue.serverTimestamp()
 						return transaction.create(docWrite, {
 							createdAt: time,
 							updatedAt: new Date(0),
@@ -167,7 +168,6 @@ export const firelord = <
 							: PartialNoImplicitUndefined<Write, J>,
 						options?: Z
 					) => {
-						const time = firestore.FieldValue.serverTimestamp()
 						if (options) {
 							return transaction.set(
 								docWrite,
@@ -188,7 +188,6 @@ export const firelord = <
 					update: <J extends Partial<Write>>(
 						data: J extends never ? J : PartialNoImplicitUndefined<Write, J>
 					) => {
-						const time = firestore.FieldValue.serverTimestamp()
 						return transaction.update(docWrite, { updatedAt: time, ...data })
 					},
 					delete: () => {
@@ -233,8 +232,6 @@ export const firelord = <
 					)
 				},
 				create: (data: Write) => {
-					const time = firestore.FieldValue.serverTimestamp()
-
 					return docWrite.create({
 						createdAt: time,
 						updatedAt: new Date(0),
@@ -256,7 +253,6 @@ export const firelord = <
 						: Write,
 					options?: Z
 				) => {
-					const time = firestore.FieldValue.serverTimestamp()
 					if (options) {
 						return docWrite.set(
 							{
@@ -276,8 +272,6 @@ export const firelord = <
 				update: <J extends Partial<Write>>(
 					data: J extends never ? J : PartialNoImplicitUndefined<Write, J>
 				) => {
-					const time = firestore.FieldValue.serverTimestamp()
-
 					return docWrite.update({
 						updatedAt: time,
 						...data,
@@ -298,11 +292,9 @@ export const firelord = <
 						update: <J extends Partial<Write>>(
 							data: J extends never ? J : PartialNoImplicitUndefined<Write, J>
 						) => {
-							const time = firestore.FieldValue.serverTimestamp()
 							return batch.update(docWrite, { updatedAt: time, ...data })
 						},
 						create: (data: Write) => {
-							const time = firestore.FieldValue.serverTimestamp()
 							return batch.create(docWrite, {
 								createdAt: time,
 								updatedAt: new Date(0),
@@ -334,8 +326,6 @@ export const firelord = <
 			},
 			doc,
 			add: (data: Write) => {
-				const time = firestore.FieldValue.serverTimestamp()
-
 				return colRefWrite.add({
 					createdAt: time,
 					updatedAt: new Date(0),
@@ -356,3 +346,5 @@ export const firelord = <
 	return { col, colGroup }
 }
 export const ozai = firelord
+
+export type { Firelord } from './firelord'

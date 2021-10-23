@@ -27,8 +27,8 @@ export type PartialNoImplicitUndefined<
 
 import { FirelordFirestore } from './firelordFirestore'
 
-export namespace FireLord {
-	type ServerTimestamp = 'ServerTimestamp'
+export namespace Firelord {
+	export type ServerTimestamp = 'ServerTimestamp'
 
 	// https://stackoverflow.com/questions/69628967/typescript-distribute-over-union-doesnt-work-in-index-signature
 
