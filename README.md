@@ -16,6 +16,11 @@
 
 ⛲️ Out of box typescript support.
 
+Variants:
+
+1. [react native](https://www.npmjs.com/package/firelordrn)
+2. [js](https://www.npmjs.com/package/firelordjs)
+
 ## 🦙 Purpose
 
 Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types in read, write and compare(query) are needed. This library is a wrapper that introduce deeper typing solution to handle each case.
