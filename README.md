@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD010 -->
 
-# firelord(BETA, Nodejs ONLY)
+# firelord(BETA BETA BETA, Nodejs ONLY)
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
@@ -11,6 +11,8 @@
 🔥 Automatically convert base type to corresponding read and write time(good at handling timestamp and field value).
 
 ✨ Api closely resemble firestore api, low learning curve.
+
+🐉 Zero dependency.
 
 ⛲️ Out of box typescript support.
 
