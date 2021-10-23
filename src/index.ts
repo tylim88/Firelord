@@ -5,7 +5,7 @@ import {
 	ExcludePropertyKeys,
 	RemoveArray,
 } from './firelord'
-import { FirelordFirestore } from './firelordF1irestore'
+import { FirelordFirestore } from './firelordFirestore'
 
 export const firelord = <
 	T extends {

@@ -25,7 +25,7 @@ export type PartialNoImplicitUndefined<
 	keyof L & keyof T
 >
 
-import { FirelordFirestore } from './firelordF1irestore'
+import { FirelordFirestore } from './firelordFirestore'
 
 export namespace FireLord {
 	type ServerTimestamp = 'ServerTimestamp'
