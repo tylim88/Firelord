@@ -25,12 +25,7 @@ export type PartialNoImplicitUndefined<
 	keyof L & keyof T
 >
 
-type ExcludeUnion<T, U extends T> = Exclude<T, U>
-
-type NonNullableKey<T, K extends keyof T> = OmitKeys<T, K> &
-	Required<{
-		[index in K]: T[K]
-	}>
+import { FirelordFirestore } from './firelordF1irestore'
 
 export namespace FireLord {
 	type ServerTimestamp = 'ServerTimestamp'
@@ -40,34 +35,34 @@ export namespace FireLord {
 	type ArrayWriteConverter<A> = A extends (infer T)[]
 		? ArrayWriteConverter<T>[]
 		: A extends ServerTimestamp
-		? Firelord.FieldValue
-		: A extends Firelord.Timestamp | Date
-		? Firelord.Timestamp | Date
+		? FirelordFirestore.FieldValue
+		: A extends FirelordFirestore.Timestamp | Date
+		? FirelordFirestore.Timestamp | Date
 		: A
 
 	type ReadConverter<T> = T extends (infer A)[]
 		? ReadConverter<A>[]
 		: T extends ServerTimestamp | Date
-		? Firelord.Timestamp
+		? FirelordFirestore.Timestamp
 		: T
 
 	type CompareConverter<A> = A extends (infer T)[]
 		? CompareConverter<T>[]
-		: A extends ServerTimestamp | Date | Firelord.Timestamp
-		? Firelord.Timestamp | Date
+		: A extends ServerTimestamp | Date | FirelordFirestore.Timestamp
+		? FirelordFirestore.Timestamp | Date
 		: A
 
 	type WriteConverter<T> = T extends (infer A)[]
-		? ArrayWriteConverter<A>[] | Firelord.FieldValue
+		? ArrayWriteConverter<A>[] | FirelordFirestore.FieldValue
 		: T extends ServerTimestamp
-		? Firelord.FieldValue
-		: T extends Firelord.Timestamp | Date
-		? Firelord.Timestamp | Date
+		? FirelordFirestore.FieldValue
+		: T extends FirelordFirestore.Timestamp | Date
+		? FirelordFirestore.Timestamp | Date
 		: T extends number
-		? Firelord.FieldValue | number
+		? FirelordFirestore.FieldValue | number
 		: T
 
-	type ReadWriteCreator<
+	export type ReadWriteCreator<
 		B extends { [index: string]: unknown },
 		C extends string,
 		D extends string,
@@ -80,17 +75,17 @@ export namespace FireLord {
 		read: {
 			[J in keyof B]: ReadConverter<B[J]>
 		} & {
-			[index in keyof Firelord.CreatedUpdatedRead]: Firelord.CreatedUpdatedRead[index]
+			[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
 		} // so it looks more explicit in typescript hint
 		write: {
 			[J in keyof B]: WriteConverter<B[J]>
 		} & {
-			[index in keyof Firelord.CreatedUpdatedWrite]: Firelord.CreatedUpdatedWrite[index]
+			[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
 		} // so it looks more explicit in typescript hint
 		compare: {
 			[J in keyof B]: CompareConverter<B[J]>
 		} & {
-			[index in keyof Firelord.CreatedUpdatedCompare]: Firelord.CreatedUpdatedCompare[index]
+			[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
 		} // so it looks more explicit in typescript hint
 
 		colPath: E extends {
@@ -102,23 +97,23 @@ export namespace FireLord {
 		docPath: D
 	}
 
-	type a = ReadWriteCreator<
-		{
-			a:
-				| string
-				| Date
-				| number[]
-				| (string | number)[]
-				| (string | Date)[][]
-				| (string | number)[][][]
-		},
-		string,
-		string
-	>
+	// type a = ReadWriteCreator<
+	// 	{
+	// 		a:
+	// 			| string
+	// 			| Date
+	// 			| number[]
+	// 			| (string | number)[]
+	// 			| (string | Date)[][]
+	// 			| (string | number)[][][]
+	// 	},
+	// 	string,
+	// 	string
+	// >
 
-	type b = a['write']
-	type c = a['read']
-	type f = a['compare']
+	// type b = a['write']
+	// type c = a['read']
+	// type f = a['compare']
 
-	type d = string[] & (string | number)[]
+	// type d = string[] & (string | number)[]
 }

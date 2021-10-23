@@ -5,14 +5,15 @@ import {
 	ExcludePropertyKeys,
 	RemoveArray,
 } from './firelord'
+import { FirelordFirestore } from './firelordF1irestore'
 
 export const firelord = <
 	T extends {
 		colPath: string
 		docPath: string
-		read: firestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: firestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: firestore.DocumentData & Firelord.CreatedUpdatedCompare
+		read: firestore.DocumentData & FirelordFirestore.CreatedUpdatedRead
+		write: firestore.DocumentData & FirelordFirestore.CreatedUpdatedWrite
+		compare: firestore.DocumentData & FirelordFirestore.CreatedUpdatedCompare
 		base: firestore.DocumentData
 	} = never
 >() => {
@@ -354,5 +355,4 @@ export const firelord = <
 
 	return { col, colGroup }
 }
-
 export const ozai = firelord

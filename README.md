@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
-🐤 Deep admin firestore typing wrapper.
+🐤 admin firestore typing wrapper.
 
 🚀 All read and write operation are typed, field path, field value, collection path, document path, all typed!
 

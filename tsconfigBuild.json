@@ -13,6 +13,7 @@
 		"baseUrl": "src",
 		"emitDeclarationOnly": true,
 		"outDir": "dist",
+		"declarationMap": true,
 		"paths": {
 			"*": ["*"]
 		},

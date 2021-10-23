@@ -1,12 +1,12 @@
 {
 	"name": "firelord",
-	"version": "0.0.0",
-	"description": "Deep admin firestore typing wrapper.",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"version": "0.0.0-beta.12",
+	"description": "admin firestore typing wrapper.",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"reinstall": "rm -rf node_modules/ && rm -rf package-lock.json && npm i",
-		"tsc": " tsc -p tsconfig2.json",
+		"tsc": " tsc -p tsconfigBuild.json",
 		"lint": "eslint . --ext .ts",
 		"lint-fix": "npm run lint --fix",
 		"build": "rm -rf dist && rm -rf types && babel src --out-dir dist --extensions \".ts\" && npm run tsc",

@@ -21,6 +21,7 @@ module.exports = {
 		'import/no-unresolved': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-explicit-any': 'error',
+		'@typescript-eslint/no-namespace': 'off',
 		camelcase: 'off',
 	},
 }
