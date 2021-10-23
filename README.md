@@ -38,8 +38,8 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - much better where and orderBy clause
   - field value are typed accordingly to field path
-  - comparator are depend on field value, eg:you cannot apply `array-contains` operator on non-array field path
-  - depend on comparators, you can or cannot chain orderBy due to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for more information.
+  - comparator depend on field value type, eg:you cannot apply `array-contains` operator onto non-array field value
+  - depend on comparators value, you can or cannot chain orderBy due to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for more information.
 
 ![orderBy limitation](img/orderBy.png)
 
