@@ -58,6 +58,9 @@ npm i firelord
 ```ts
 import { firelord, Firelord } from 'firelord'
 
+// create wrapper
+const wrapper = firelord(firestore)
+
 // use base type to generate read and write type
 type User = Firelord.ReadWriteCreator<
 	{
@@ -81,7 +84,7 @@ type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.Fi
 type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
 // implement wrapper
-const userCreator = firelord<User>()
+const userCreator = wrapper<User>()
 // collection reference
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
@@ -102,7 +105,7 @@ type Transaction = Firelord.ReadWriteCreator<
 >
 
 // implement the wrapper
-const transactions = firelord<Transaction>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
+const transactions = wrapper<Transaction>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
 const transaction = users.doc('1234567890') // document path is string
 ```
 
@@ -225,7 +228,7 @@ all api are similar to [firestore batch](https://firebase.google.com/docs/firest
 import { firestore } from 'firebase-admin'
 
 // implement the wrapper
-const user = firelord<User>().col('Users').doc('1234567890')
+const user = wrapper<User>().col('Users').doc('1234567890')
 
 // create batch
 const batch = firestore().batch()

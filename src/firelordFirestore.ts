@@ -1,4 +1,6 @@
 export namespace FirelordFirestore {
+	export type Firestore = typeof import('firebase-admin').firestore
+
 	export type FieldValue = import('firebase-admin').firestore.FieldValue
 
 	export type DocumentData = import('firebase-admin').firestore.DocumentData
