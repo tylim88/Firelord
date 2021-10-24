@@ -6,7 +6,7 @@
 
 🐤 admin firestore wrapper with deeper typing solution.
 
-🚀 All read and write operation are typed, field path, field value, collection path, document path, all typed!
+🚀 All read and write operation are typed, field path, field value, collection path, document path, everything is typed!
 
 🔥 Automatically convert base type to corresponding read and write time(good at handling timestamp and field value).
 

@@ -276,10 +276,10 @@ users
 //pagination
 users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5)
 
-//==================
+// quick doc
 users.where('age', '!=', 20).orderBy('age', 'desc').get() // ok
 users.where('age', 'not-in', [20]).orderBy('age', 'desc').get() // ok
-users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // no order for
+users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // no order for array
 
 users.where('age', '==', 20).orderBy('age', 'desc').get() // no order for '==' | 'in' comparator for SAME field name
 
