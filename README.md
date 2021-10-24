@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD010 -->
 
-# firelord(BETA BETA BETA, Nodejs ONLY)
+# firelord(BETA, Nodejs ONLY)
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
