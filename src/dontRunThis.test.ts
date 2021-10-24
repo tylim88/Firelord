@@ -240,17 +240,15 @@ users
 	.where('name', 'not-in', ['John', 'Ozai'], {
 		fieldPath: 'age',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 50 }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
-	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc').endAt(50)
+	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc')
 // shorthand same field path:
 users
 	.where('name', 'not-in', ['John', 'Ozai'], {
 		fieldPath: 'name',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 'Ozai' }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
-	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('name','desc').endAt('Ozai')
+	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('name','desc')
 
 // same field path
 users.where('name', '!=', 'John').orderBy('name', 'desc').get()
@@ -261,20 +259,33 @@ users
 	.where('name', '!=', 'John', {
 		fieldPath: 'age',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 50 }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
-	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc').endAt(50)
+	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc')
 // shorthand same field path:
 users
 	.where('name', '!=', 'John', {
 		fieldPath: 'name',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 'Ozai' }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
-	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc').endAt('Ozai')
+	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc')
 
 //pagination
-users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5)
+// field path only include members that is NOT array type in `base type`
+// field value type is the corresponding field path value type in `compare type`
+// value of cursor clause is 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
+users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5) // equivalent to orderBy("age").startAt(20).offset(5)
+// usage with where
+users
+	.where('name', '!=', 'John')
+	.orderBy('age', 'desc', { clause: 'endAt', fieldValue: 50 })
+// equivalent to shorthand
+users
+	.where('name', '!=', 'John', {
+		fieldPath: 'age',
+		directionStr: 'desc',
+		cursor: { clause: 'endAt', fieldValue: 50 },
+	})
+	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc').endAt(50)
 
 // quick doc
 users.where('age', '!=', 20).orderBy('age', 'desc').get() // ok
