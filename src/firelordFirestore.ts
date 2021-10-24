@@ -30,6 +30,8 @@ export namespace FirelordFirestore {
 
 	export type OrderByDirection = FirebaseFirestore.OrderByDirection
 
+	export type GeoPoint = Firestore['GeoPoint']
+
 	export type CreatedUpdatedWrite = {
 		createdAt: FieldValue
 		updatedAt: FieldValue

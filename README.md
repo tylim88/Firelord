@@ -43,8 +43,8 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - much better where and orderBy clause
   - field value are typed accordingly to field path
-  - comparator depend on field value type, eg:you cannot apply `array-contains` operator onto non-array field value
-  - depend on comparators value, you can or cannot chain orderBy due to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for more information.
+  - comparator depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
+  - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for info.
 
 ![orderBy limitation](img/orderBy.png)
 
@@ -127,7 +127,8 @@ const transaction = users.doc('1234567890') // document path is string
 | Date\*\*\*                  | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
 | firestore.Timestamp\*\*\*   | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
 | 'ServerTimestamp'           | firestore.Timestamp   | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*) \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*)   | firestore.Timestamp \|Date                   |
-| object                      | not supported\*\*     | not supported\*\*                                                                                                                                   | not supported\*\*                            |
+| firestore.GeoPoint          | firestore.GeoPoint    | firestore.GeoPoint                                                                                                                                  | firestore.GeoPoint                           |
+| object                      | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
 | number[]                    | number[]              | number[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | number[]                                     |
 | string[]                    | string[]              | string[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | string[]                                     |
 | null[]                      | null[]                | null[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                                | null[]                                       |
@@ -135,7 +136,8 @@ const transaction = users.doc('1234567890') // document path is string
 | Date[]\*\*\*                | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
 | firestore.Timestamp[]\*\*\* | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
 | 'ServerTimestamp'[]         | firestore.Timestamp[] | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*)[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*) | (Date \| firestore.Timestamp)[]              |
-| object[]                    | not supported\*\*     | not supported\*\*                                                                                                                                   | not supported\*\*                            |
+| firestore.GeoPoint[]        | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                                                                | firestore.GeoPoint[]                         |
+| object[]                    | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
 | n-dimension array           | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*) only supported for 1st dimension array             | compare only elements in 1st dimension array |
 
 you can union any types, it will generates the types distributively, for example type `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]` generates:
@@ -150,7 +152,7 @@ In practice, any union is not recommended, data should has only one type, except
 
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 
-\*\*It is not totally impossible to type object, however it is too painful to deal with right now, any elegant solution is welcomed. In practice, object type is not recommended, primitive data type can do thing just fine and easier to deal with in both usage and typing.
+\*\*It is not totally impossible to type object, however it is too painful to deal with right now, hence no proper deep typing support for object type, any elegant solution is welcomed. In practice, object type is not recommended, primitive data type can do thing just fine and easier to deal with in both usage and typing.
 
 \*\*\*`Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
 
