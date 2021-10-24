@@ -24,7 +24,7 @@ export const firelord =
 		type Write = OmitKeys<T['write'], 'updatedAt' | 'createdAt'>
 		type Read = T['read']
 		type Compare = T['compare']
-		type RemoveArrayTypeMember = ExcludePropertyKeys<Compare, unknown[]>
+		type WithoutArrayTypeMember = ExcludePropertyKeys<Compare, unknown[]>
 
 		const time = firestore.FieldValue.serverTimestamp()
 
@@ -45,7 +45,7 @@ export const firelord =
 						| FirelordFirestore.CollectionGroup<Read>,
 					query?: FirelordFirestore.Query<Read>
 				) =>
-				<P extends RemoveArrayTypeMember>(
+				<P extends WithoutArrayTypeMember>(
 					fieldPath: P,
 					directionStr: FirelordFirestore.OrderByDirection = 'asc',
 					cursor?: {
@@ -72,7 +72,7 @@ export const firelord =
 				where: <
 					P extends string & keyof Read,
 					J extends FirelordFirestore.WhereFilterOp,
-					Q extends RemoveArrayTypeMember
+					Q extends WithoutArrayTypeMember
 				>(
 					fieldPath: P,
 					opStr: J extends never
@@ -94,20 +94,20 @@ export const firelord =
 						| 'in'
 						| '!='
 						| 'not-in'
-						? P extends RemoveArrayTypeMember
+						? P extends WithoutArrayTypeMember
 							? {
 									fieldPath: Q extends never
 										? Q
 										: J extends '<' | '<=' | '>=' | '>'
 										? Q extends P
-											? RemoveArrayTypeMember
+											? WithoutArrayTypeMember
 											: never
 										: J extends '==' | 'in'
 										? Q extends P
 											? never
-											: RemoveArrayTypeMember
+											: WithoutArrayTypeMember
 										: J extends 'not-in' | '!='
-										? RemoveArrayTypeMember
+										? WithoutArrayTypeMember
 										: never
 									directionStr?: FirelordFirestore.OrderByDirection
 									cursor?: {

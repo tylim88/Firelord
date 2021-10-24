@@ -36,14 +36,15 @@ Overview:
   - number: `{write: FieldValue | number, read: number, compare:number}`
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
+- Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge = true) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to)
 - Typed collection path and document path.
   - auto generate sub collection path type.
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
-- much better where and orderBy clause
+- much better `where` and `orderBy` clause
   - field value are typed accordingly to field path
-  - comparator depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
+  - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
 ![orderBy limitation](img/orderBy.png)
@@ -489,7 +490,7 @@ While the wrapper try to solve as much as possible, some problem cannot be solve
 
 2. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
 
-3. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of where clause is unforeseeable.
+3. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
 
 ## 🐕 Opinionated
 
