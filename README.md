@@ -44,7 +44,7 @@ Overview:
 - much better where and orderBy clause
   - field value are typed accordingly to field path
   - comparator depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
-  - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for info.
+  - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
 ![orderBy limitation](img/orderBy.png)
 
