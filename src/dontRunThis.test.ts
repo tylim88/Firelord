@@ -240,7 +240,7 @@ users
 	.where('name', 'not-in', ['John', 'Ozai'], {
 		fieldPath: 'age',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 50 },
+		cursor: { clause: 'endAt', fieldValue: 50 }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
 	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc').endAt(50)
 // shorthand same field path:
@@ -248,7 +248,7 @@ users
 	.where('name', 'not-in', ['John', 'Ozai'], {
 		fieldPath: 'name',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 'Ozai' },
+		cursor: { clause: 'endAt', fieldValue: 'Ozai' }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
 	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('name','desc').endAt('Ozai')
 
@@ -261,7 +261,7 @@ users
 	.where('name', '!=', 'John', {
 		fieldPath: 'age',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 50 },
+		cursor: { clause: 'endAt', fieldValue: 50 }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
 	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc').endAt(50)
 // shorthand same field path:
@@ -269,7 +269,7 @@ users
 	.where('name', '!=', 'John', {
 		fieldPath: 'name',
 		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 'Ozai' },
+		cursor: { clause: 'endAt', fieldValue: 'Ozai' }, // optional, if you need 'startAt' | 'startAfter' | 'endAt' | 'endBefore' for pagination
 	})
 	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc').endAt('Ozai')
 

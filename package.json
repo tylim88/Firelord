@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "🔥 admin firestore wrapper with deeper typing solution.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
