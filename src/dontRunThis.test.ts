@@ -219,16 +219,24 @@ users
 	.get()
 
 // for '==' | 'in' comparators:
-users.where('age', '==', 20).orderBy('age', 'desc').get() // no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20).orderBy('name', 'desc').get() // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // equivalent to where('age', '>', 20).orderBy('name','desc')
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() //  no order for '==' | 'in' comparator for SAME field name
+// no order for '==' | 'in' comparator for SAME field name
+users.where('age', '==', 20).orderBy('age', 'desc').get()
+// '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
+users.where('age', '==', 20).orderBy('name', 'desc').get()
+// shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
+users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+// again, no order for '==' | 'in' comparator for SAME field name
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 
 // for '<' | '<=]| '>'| '>=' comparator
-users.where('age', '>', 20).orderBy('name', 'desc').get() // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20).orderBy('age', 'desc').get() // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // equivalent to where('age', '>', 20).orderBy('age','desc')
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+users.where('age', '>', 20).orderBy('name', 'desc').get()
+// '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
+users.where('age', '>', 20).orderBy('age', 'desc').get()
+// equivalent to where('age', '>', 20).orderBy('age','desc')
+users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
@@ -292,14 +300,20 @@ users.where('age', '!=', 20).orderBy('age', 'desc').get() // ok
 users.where('age', 'not-in', [20]).orderBy('age', 'desc').get() // ok
 users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // no order for array
 
-users.where('age', '==', 20).orderBy('age', 'desc').get() // no order for '==' | 'in' comparator for SAME field name
+// no order for '==' | 'in' comparator for SAME field name
+users.where('age', '==', 20).orderBy('age', 'desc').get()
+// '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
+users.where('age', '==', 20).orderBy('name', 'desc').get()
+// shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
+users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+// again, no order for '==' | 'in' comparator for SAME field name
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 
-users.where('age', '==', 20).orderBy('name', 'desc').get() // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // equivalent to where('age', '>', 20).orderBy('name','desc')
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() //  no order for '==' | 'in' comparator for SAME field name
-
-users.where('age', '>', 20).orderBy('name', 'desc').get() // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-
-users.where('age', '>', 20).orderBy('age', 'desc').get() // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // equivalent to where('age', '>', 20).orderBy('age','desc')
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+users.where('age', '>', 20).orderBy('name', 'desc').get()
+// '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
+users.where('age', '>', 20).orderBy('age', 'desc').get()
+// equivalent to where('age', '>', 20).orderBy('age','desc')
+users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
