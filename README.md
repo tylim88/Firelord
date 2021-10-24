@@ -44,7 +44,7 @@ Overview:
 - much better where and orderBy clause
   - field value are typed accordingly to field path
   - comparator depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
-  - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [firestore limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
+  - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
 ![orderBy limitation](img/orderBy.png)
 
@@ -359,6 +359,8 @@ users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
 
 all the api are similar to [firestore order and limit](https://firebase.google.com/docs/firestore/query-data/queries) with slight different, but work the same, clauses are chain-able.
 
+The type rule obey [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
+
 ```ts
 // import users
 
@@ -374,16 +376,13 @@ users
 	.orderBy('age', 'desc')
 	.get()
 
-// You cannot order your query by any field included in an equality `==` or `in` clause
-// https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
+// You cannot order your query by any field included in an equality `==` or `in` clause due to limitations
 users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR: Property 'orderBy' does not exist
 users.where('age', 'in', [20, 30]).orderBy('age', 'desc').get() // ERROR: Property 'orderBy' does not exist
 
-// the first orderBy must have the same field path as `where` clause with <, <=, >, >= comparators
-// https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
-// whenever <, <=, >, >= comparators is used, they cannot chain the first orderBy, you need to use type safe shorthand shown in example below
+// the first orderBy must have the same field path as `where` clause with <, <=, >, >= comparators due to limitation
+// whenever <, <=, >, >= comparators is used, they cannot chain the first orderBy, you need to use type safe shorthand shown in next example below
 users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR: Property 'orderBy' does not exist
-// this is also invalid according to firestore nor it make any sense
 
 // we prepare type safe shorthand to handle <, <=, >, >= comparators
 // for <, <=, >, >= comparators, the optional 4th parameter(orderBy config object) is available, else the 4th parameter's type is `never`(should not exist)
