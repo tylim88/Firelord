@@ -235,7 +235,7 @@ users.where('age', '>', 20).orderBy('name', 'desc').get()
 users.where('age', '>', 20).orderBy('age', 'desc').get()
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
-// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
@@ -315,5 +315,5 @@ users.where('age', '>', 20).orderBy('name', 'desc').get()
 users.where('age', '>', 20).orderBy('age', 'desc').get()
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
-// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
