@@ -361,7 +361,9 @@ all the api are similar to [firestore order and limit](https://firebase.google.c
 
 The type rule obey [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
 
-you may want to read this before proceed:[Firestore OrderBy and Where conflict](https://stackoverflow.com/questions/56614131/firestore-orderby-and-where-conflict) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) that can overcome certain orderBy limitation, this is also considered into typing.
+you may want to read this before proceed: [Firestore OrderBy and Where conflict](https://stackoverflow.com/questions/56614131/firestore-orderby-and-where-conflict) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain orderBy limitation, this is also considered into typing.
+
+any `orderBy` that is not follow `where` clause does not abide by rule and limitation mentioned above.
 
 ```ts
 // import users
