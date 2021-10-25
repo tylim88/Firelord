@@ -576,7 +576,7 @@ nested.doc('123456').set(flatten(data, {})) // ok, see explanation for 2nd argum
 nested.doc('123456').update(flatten(data, {})) // ok, see explanation for 2nd argument `{}` in 1st caveat
 ```
 
-### Caveat
+### Caveat 1
 
 There are 2 caveats that you need to keep in mind (it is ok if you don't keep in mind, because typescript will stop you if anything goes wrong)
 
@@ -613,9 +613,9 @@ put empty object `{}` as 2nd argument if you don't have any primitive object typ
 
 and don't worry, as always typescript will stop you if any step goes wrong
 
-=====
+### Caveat 2
 
-caveat 2, by now you may notice there is some loophole in caveat 1 solution, what if we have 2 property that share the same name? How the wrapper handle this?
+by now you may notice there is some loophole in caveat 1 solution, what if we have 2 property that share the same name? How the wrapper handle this?
 
 This is not a problem(at least not a problem the wrapper cant handle)
 
@@ -663,11 +663,11 @@ type ThisIsFine = Firelord.ReadWriteCreator<
 >
 ```
 
-The solution for caveats is quite awkward(caveat 1) and require tolerance from developer(caveat 2). But the reality it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
+The solution for caveats is little bit awkward(caveat 1) and require tolerance from developer(caveat 2). But the reality is, it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
 
 ## 🐇 Limitation
 
-While the wrapper try to solve as much as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
+While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
 
 1. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
 
@@ -675,4 +675,4 @@ While the wrapper try to solve as much as possible, some problem cannot be solve
 
 ## 💍 Utility
 
-Since write operation reject stranger member (member that not defined in type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library return exact type, so it should work well with this library.
+Since write operation reject stranger member (member that not defined in type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library return exact type, so it should works well with this library.
