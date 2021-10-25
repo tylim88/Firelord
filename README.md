@@ -41,7 +41,7 @@ Overview:
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
 - Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
-- Preventing you from write stranger member (not exist in type) into operation like `set`(with merge options) or `update`, guaranteeing the shape of your data.
+- Preventing you from write stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
 - typed collection path and document path.
   - auto generate sub collection path type.
 - auto generate `updatedAt` and`createdAt` timestamp.
@@ -672,3 +672,7 @@ While the wrapper try to solve as much as possible, some problem cannot be solve
 1. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
 
 2. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
+
+## 💍 Utility
+
+Since write operation reject stranger member (member that not defined in type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library return exact type, so it should work well with this library.

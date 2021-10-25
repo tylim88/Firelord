@@ -2,7 +2,7 @@ import { firelord } from '.'
 
 import { Firelord } from './firelord'
 import { firestore } from 'firebase-admin'
-import { flatten, CheckObjectHasDuplicateEndName } from './flat'
+import { flatten } from './flat'
 
 // create wrapper
 const wrapper = firelord(firestore)
