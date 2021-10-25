@@ -488,17 +488,6 @@ Api is exactly same as Collection Operations: [Query](#-collection-operations-qu
 
 just use collection group reference instead of collection reference, refer back [Getting Started](#-getting-started) on how to create collection group reference
 
-## 🐕 Opinionated
-
-There is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
-
-when a document is created via `add`, `create` or `set` without option, two things will happen:
-
-1. createdAt field path is created and the value is firestore server timestamp(current server timestamp).
-2. updatedAt field path is created and the value is new Date(0), it starts at beginning of the time.
-
-when a document is updated via `update` or `set` with option, updatedAt field path is updated and the value is firestore server timestamp.
-
 ## 🌻 Object Typing
 
 the (nested or not)object[] type, document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member in array, nested or not, similar rule apply to nested array.
@@ -664,6 +653,26 @@ type ThisIsFine = Firelord.ReadWriteCreator<
 ```
 
 The solution for caveats is little bit awkward(caveat 1) and require tolerance from developer(caveat 2). But the reality is, it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
+
+## 🐕 Opinionated
+
+Code wise, there is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
+
+when a document is created via `add`, `create` or `set` without option, two things will happen:
+
+1. createdAt field path is created and the value is firestore server timestamp(current server timestamp).
+2. updatedAt field path is created and the value is new Date(0), it starts at beginning of the time.
+
+when a document is updated via `update` or `set` with option, updatedAt field path is updated and the value is firestore server timestamp.
+
+This behavior may be undesirable for some people, I will improve this in future by giving the developer choice.
+
+Typing wise, there are few opinionated elements:
+
+1. `set`(without option) and `create` operations require all member to present.
+2. all write operations reject stranger members.
+
+I believe this decision is practical for cases and not planning to change it in forseeable future.
 
 ## 🐇 Limitation
 
