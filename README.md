@@ -635,7 +635,7 @@ const flattenData = flatten(
 	{ a: 'a' }
 )
 
-duplicate.doc('12345').set(flattenData)
+duplicate.doc('12345').set(flattenData) // ERROR, cannot assign to `never`
 ```
 
 array however is fine, you can use the same props name if one of it is in array type
