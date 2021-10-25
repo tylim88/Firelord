@@ -4,11 +4,11 @@
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
-🐤 admin firestore wrapper with deeper typing solution.
+🐤 admin firestore wrapper with deeper typing solution, handle nested object, nested array, array object, object array..etc types!
 
-🚀 All read and write operation are typed, field path, field value, collection path, document path, everything is typed!
+🚀 All read and write operation are typed, query field path, field value, collection path, document path, everything is typed!
 
-🔥 Automatically convert base type to corresponding read and write time(good at handling timestamp and field value).
+🔥 Automatically convert all value type to corresponding read type, write type and compare type(good at handling timestamp and field value).
 
 ✨ Api closely resemble firestore api, low learning curve.
 
@@ -27,6 +27,8 @@ Unfortunately `withConverter` is not enough to solve the type problems, there is
 
 Not only this library deal with data type, it also provide type safe for collection path, document path, firestore limitations(whenever is possible).
 
+Best thing of all: it handles complicated data type and type all their operations.
+
 require typescript 4.1 and above
 
 Overview:
@@ -36,12 +38,14 @@ Overview:
   - number: `{write: FieldValue | number, read: number, compare:number}`
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
-- Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge = true) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to)
-- Typed collection path and document path.
+- Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
+- Preventing you from write stranger member (not exist in type) into operation like `set`(with merge options) or `update`, guaranteeing the shape of your data.
+- typed collection path and document path.
   - auto generate sub collection path type.
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
+- type complicated data type like nested object, nested array, object array, array object and all their operations!!
 - much better `where` and `orderBy` clause
   - field value are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
@@ -83,10 +87,10 @@ type User = Firelord.ReadWriteCreator<
 >
 
 // read type
-type UserRead = User['read'] // {name: string, age:number, birthday:firestore.Timestamp, joinDate: firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+type UserRead = User['read'] // {name: string, age:number, birthday:firestore.Timestamp, joinDate: firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: firestore.Timestamp, updatedAt: firestore.Timestamp}
 
 // write type
-type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt:'ServerTimestamp', updatedAt:'ServerTimestamp'}
+type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
 
 // compare type
 type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
@@ -119,27 +123,27 @@ const transaction = users.doc('1234567890') // document path is string
 
 ## 🦔 Conversion Table
 
-| Base                        | Read                  | Write                                                                                                                                               | Compare                                      |
-| --------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| number                      | number                | number \| FirebaseFirestore.FieldValue (firestore.FieldValue.increment\*)                                                                           | number                                       |
-| string                      | string                | string                                                                                                                                              | string                                       |
-| null                        | null                  | null                                                                                                                                                | null                                         |
-| undefined                   | undefined             | undefined                                                                                                                                           | undefined                                    |
-| Date\*\*\*                  | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
-| firestore.Timestamp\*\*\*   | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
-| 'ServerTimestamp'           | firestore.Timestamp   | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*) \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*)   | firestore.Timestamp \|Date                   |
-| firestore.GeoPoint          | firestore.GeoPoint    | firestore.GeoPoint                                                                                                                                  | firestore.GeoPoint                           |
-| object                      | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
-| number[]                    | number[]              | number[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | number[]                                     |
-| string[]                    | string[]              | string[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | string[]                                     |
-| null[]                      | null[]                | null[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                                | null[]                                       |
-| undefined[]                 | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                           | undefined[]                                  |
-| Date[]\*\*\*                | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
-| firestore.Timestamp[]\*\*\* | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
-| 'ServerTimestamp'[]         | firestore.Timestamp[] | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*)[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*) | (Date \| firestore.Timestamp)[]              |
-| firestore.GeoPoint[]        | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                                                                | firestore.GeoPoint[]                         |
-| object[]                    | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
-| n-dimension array           | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*) only supported for 1st dimension array             | compare only elements in 1st dimension array |
+| Base                  | Read                  | Write                                                                                                                                               | Compare                                      |
+| --------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| number                | number                | number \| FirebaseFirestore.FieldValue (firestore.FieldValue.increment\*)                                                                           | number                                       |
+| string                | string                | string                                                                                                                                              | string                                       |
+| null                  | null                  | null                                                                                                                                                | null                                         |
+| undefined             | undefined             | undefined                                                                                                                                           | undefined                                    |
+| Date                  | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
+| firestore.Timestamp   | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
+| 'ServerTimestamp'     | firestore.Timestamp   | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*) \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*)   | firestore.Timestamp \|Date                   |
+| firestore.GeoPoint    | firestore.GeoPoint    | firestore.GeoPoint                                                                                                                                  | firestore.GeoPoint                           |
+| object                | object\*\*            | object\*\*                                                                                                                                          | object\*\*                                   |
+| number[]              | number[]              | number[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | number[]                                     |
+| string[]              | string[]              | string[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | string[]                                     |
+| null[]                | null[]                | null[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                                | null[]                                       |
+| undefined[]           | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                           | undefined[]                                  |
+| Date[]                | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
+| firestore.Timestamp[] | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
+| 'ServerTimestamp'[]   | firestore.Timestamp[] | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*)[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*) | (Date \| firestore.Timestamp)[]              |
+| firestore.GeoPoint[]  | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                                                                | firestore.GeoPoint[]                         |
+| object[]              | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
+| n-dimension array     | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*) only supported for 1st dimension array             | compare only elements in 1st dimension array |
 
 you can union any types, it will generates the types distributively, for example type `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]` generates:
 
@@ -153,9 +157,9 @@ In practice, any union is not recommended, data should has only one type, except
 
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 
-\*\*It is not totally impossible to type object, however it is too painful to deal with right now, hence no proper deep typing support for object type, any elegant solution is welcomed. In practice, object type is not recommended, primitive data type can do thing just fine and easier to deal with in both usage and typing.
+\*\* the wrapper flatten nested object, however there is not much thing to do with object[] type due to how firestore work, read the [object typing](#-object-typing) for more info.
 
-\*\*\*`Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
+`Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -179,7 +183,7 @@ user.onSnapshot(snapshot => {
 const serverTimestamp = firestore.FieldValue.serverTimestamp()
 
 // create if only exist, else fail
-// require all members in `write type` except `updatedAt` and `createdAt`
+// require all `write type` members(including partial member in `base type`) except `updatedAt` and `createdAt`
 // auto add `createdAt` and `updatedAt`
 user.create({
 	name: 'John',
@@ -191,7 +195,7 @@ user.create({
 
 // create if not exist, else overwrite
 // although it can overwrite, this is intended to use as create
-// require all members in `write type` except `updatedAt` and `createdAt`
+// require all `write type` members(including partial member in `base type`) except `updatedAt` and `createdAt`
 // auto add `createdAt` and `updatedAt`
 user.set({
 	name: 'John',
@@ -248,7 +252,7 @@ const userBatch = user.batch(batch)
 userBatch.delete()
 
 // create if exist, else fail
-// require all members in `write type` except `updatedAt` and `createdAt`
+// require all `write type` members(including partial member in `base type`) except `updatedAt` and `createdAt`
 // auto add `updatedAt` and `createdAt`
 userBatch.create({ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) })
 
@@ -275,7 +279,7 @@ user.runTransaction(async transaction => {
 	})
 
 	// create if only exist, else fail
-	// require all members in `write type` except `updatedAt` and `createdAt`
+	// require all `write type` members(including partial member in `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
 	await transaction.create({
 		name: 'John',
@@ -287,7 +291,7 @@ user.runTransaction(async transaction => {
 
 	// create if not exist, else overwrite
 	// although it can overwrite, this is intended to use as create
-	// require all members in `write type` except `updatedAt` and `createdAt`
+	// require all `write type` members(including partial member in `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
 	user.set({
 		name: 'John',
@@ -502,3 +506,80 @@ when a document is created via `add`, `create` or `set` without option, two thin
 2. updatedAt field path is created and the value is new Date(0), it starts at beginning of the time.
 
 when a document is updated via `update` or `set` with option, updatedAt field path is updated and the value is firestore server timestamp.
+
+## 🌻 Object Typing
+
+the (nested or not)object[] type, document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member in array, nested or not, similar rule apply to nested array.
+
+however, it is very much possible to query and modify object member(nested or not), as long as it is not array, the typing logic works just like other primitive data type in document/collection operation, because this wrapper will flatten all the in object type, nested or not.
+
+NOTE: read type does not flatten, because there is no need to
+
+lastly both object, object[], array, nested or not, all the value type of all member will undergo data type conversion.
+
+consider this example
+
+```ts
+// import Firelord
+// import wrapper
+
+type Nested = Firelord.ReadWriteCreator<
+	{
+		a: number
+		b: { c: string }
+		d: { e: { f: Date[]; g: { h: { a: number }[] } } }
+	},
+	'Nested',
+	string
+>
+
+// read type, does not flatten because no need to
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }	}
+
+// write type
+type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+
+// compare type
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+
+const nested = wrapper<Nested>().col('Nested')
+```
+
+As you can see the object is flatten down and all the value types is converted
+
+so the next question is, how you gonna shape your own object so you can use it in `set`, `create` and `update` operation?
+
+consider this example:
+
+```ts
+// import nested
+
+const data = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ a: '123' }] } } },
+}
+nested.doc('123456').set(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
+nested.doc('123456').update(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
+```
+
+to flat your object, use [object-flat](https://www.npmjs.com/package/object-flat)
+
+solution:
+
+```ts
+// import nested
+
+import { flatten } from 'object-flat'
+
+const data = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ a: 123 }] } } },
+}
+
+nested.doc('123456').set(data)
+nested.doc('123456').update(data)
+nested.doc('123456').set(flatten(data, '.')) // ok
+nested.doc('123456').update(flatten(data, '.')) // ok
+```

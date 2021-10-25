@@ -15,15 +15,17 @@ type DistributeNoUndefined<T, K> = T extends undefined
 	? 'value cannot be undefined, if this is intentional, please union undefined in base type'
 	: K
 
-export type PartialNoImplicitUndefined<
+export type PartialNoImplicitUndefinedAndNoExtraMember<
 	L extends { [index: string]: unknown },
 	T extends Partial<L>
-> = IncludeKeys<
-	{
-		[K in keyof L]: DistributeNoUndefined<L[K], T[K]>
-	},
-	keyof L & keyof T
->
+> = keyof T extends keyof L
+	? IncludeKeys<
+			{
+				[K in keyof L]: DistributeNoUndefined<L[K], T[K]>
+			},
+			keyof L & keyof T
+	  >
+	: never
 
 import { FirelordFirestore } from './firelordFirestore'
 
@@ -80,6 +82,12 @@ export namespace Firelord {
 		: T extends FirelordFirestore.GeoPoint
 		? FirelordFirestore.GeoPoint
 		: T
+	// solve "Type instantiation is excessively deep and possibly infinite" error
+	type ReadDeepConvert<T extends Record<string, unknown>> = {
+		[K in keyof T]: ReadConverter<T[K]> extends Record<string, unknown>
+			? ReadDeepConvert<ReadConverter<T[K]>>
+			: ReadConverter<T[K]>
+	}
 
 	type CompareConverter<T> = T extends (infer P)[]
 		? CompareConverter<P>[]
@@ -111,9 +119,7 @@ export namespace Firelord {
 		}
 	> = {
 		base: B
-		read: {
-			[J in keyof FlattenObject<B>]: ReadConverter<FlattenObject<B>[J]>
-		} & {
+		read: ReadDeepConvert<B> & {
 			[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
 		} // so it looks more explicit in typescript hint
 		write: {
@@ -135,37 +141,4 @@ export namespace Firelord {
 			: `${E['colPath']}/${E['docPath']}/${C}`
 		docPath: D
 	}
-
-	type a = ReadWriteCreator<
-		{
-			a:
-				| string
-				| Date
-				| number[]
-				| (string | number)[]
-				| (string | Date)[][]
-				| (string | number)[][][]
-		},
-		string,
-		string
-	>
-
-	type b = a['write']
-	type c = a['read']
-	type f = a['compare']
-
-	type a1 = ReadWriteCreator<
-		{
-			a: string | Date
-			b: { c: 1; d: 2 }
-		},
-		string,
-		string
-	>
-
-	type b1 = a1['write']
-	type c1 = a1['read']
-	type f1 = a1['compare']
-
-	type e1 = b1['b.c']
 }

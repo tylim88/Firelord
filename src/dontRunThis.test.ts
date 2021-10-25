@@ -2,6 +2,7 @@ import { firelord } from '.'
 
 import { Firelord } from './firelord'
 import { firestore } from 'firebase-admin'
+import { flatten } from 'object-flat'
 
 // create wrapper
 const wrapper = firelord(firestore)
@@ -317,3 +318,72 @@ users.where('age', '>', 20).orderBy('age', 'desc').get()
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+
+type a = Firelord.ReadWriteCreator<
+	{
+		a:
+			| string
+			| Date
+			| number[]
+			| (string | number)[]
+			| (string | Date)[][]
+			| (string | number)[][][]
+	},
+	string,
+	string
+>
+
+type b = a['write']
+type c = a['read']
+type f = a['compare']
+
+type a1 = Firelord.ReadWriteCreator<
+	{
+		a: string | Date
+		b: { c: 1; d: 2 }
+	},
+	string,
+	string
+>
+
+type b1 = a1['write']
+type c1 = a1['read']
+type f1 = a1['compare']
+
+type e1 = b1['b.c']
+
+type x = Nested['read']
+type y = Nested['write']
+type z = Nested['compare']
+
+type Nested = Firelord.ReadWriteCreator<
+	{
+		a: number
+		b: { c: string }
+		d: { e: { f: Date[]; g: { h: { a: number }[] } } }
+	},
+	'Nested',
+	string
+>
+
+// read type, does not flatten because no need to
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }	}
+
+// write type
+type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+
+// compare type
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+
+const nested = wrapper<Nested>().col('Nested')
+
+const data = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ a: 123 }] } } },
+}
+
+nested.doc('123456').set(data)
+nested.doc('123456').update(data)
+nested.doc('123456').set(flatten(data, '.'))
+nested.doc('123456').update(flatten(data, '.'))
