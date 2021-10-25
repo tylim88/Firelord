@@ -655,8 +655,8 @@ array however is fine, you can use the same props name if one of it is in array 
 type ThisIsFine = Firelord.ReadWriteCreator<
 	{
 		a: Date
-		b: { a: string }[]
-		c: { d: { a: string }[] }
+		b: { a: string }[] // this is fine, no conflict
+		c: { d: { a: string }[] } // this is fine, no conflict
 	},
 	'Fine',
 	string
