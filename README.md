@@ -23,6 +23,8 @@ Variants:
 
 ## 🦙 Purpose
 
+You need to prepare 3 set of data type in order to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`. Actually it is more than this, but this is what the library offer now.
+
 Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types in read, write and compare(query) are needed. This library is a wrapper that introduce deeper typing solution to handle each case.
 
 Not only this library deal with data type, it also provide type safe for collection path, document path, firestore limitations(whenever is possible).
@@ -45,13 +47,13 @@ Overview:
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
-- type complicated data type like nested object, nested array, object array, array object and all their operations!!
+- finally, type complicated data type like nested object, nested array, object array, array object and all their operations!! Read [object typing](#-object-typing) for more info.
+  ![flatten object](img/flattenObject.png)
 - much better `where` and `orderBy` clause
   - field value are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
-
-![orderBy limitation](img/orderBy.png)
+    ![orderBy limitation](img/orderBy.png)
 
 basically all read operation return `read type` data, all write operation require `write type` data and all query require `compare type` data, you only need to define `base type` and the wrapper will generates the other 3 types for you.
 
@@ -133,7 +135,7 @@ const transaction = users.doc('1234567890') // document path is string
 | firestore.Timestamp   | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
 | 'ServerTimestamp'     | firestore.Timestamp   | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*) \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*)   | firestore.Timestamp \|Date                   |
 | firestore.GeoPoint    | firestore.GeoPoint    | firestore.GeoPoint                                                                                                                                  | firestore.GeoPoint                           |
-| object                | object\*\*            | object\*\*                                                                                                                                          | object\*\*                                   |
+| object\*\*            | object                | object                                                                                                                                              | object                                       |
 | number[]              | number[]              | number[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | number[]                                     |
 | string[]              | string[]              | string[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | string[]                                     |
 | null[]                | null[]                | null[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                                | null[]                                       |
@@ -142,7 +144,7 @@ const transaction = users.doc('1234567890') // document path is string
 | firestore.Timestamp[] | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
 | 'ServerTimestamp'[]   | firestore.Timestamp[] | FirebaseFirestore.FieldValue (firestore.FieldValue.serverTimestamp*)[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*) | (Date \| firestore.Timestamp)[]              |
 | firestore.GeoPoint[]  | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                                                                | firestore.GeoPoint[]                         |
-| object[]              | object[]\*\*          | object[]\*\*                                                                                                                                        | object[]\*\*                                 |
+| object[]\*\*          | object[]              | object[]                                                                                                                                            | object[]                                     |
 | n-dimension array     | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*) only supported for 1st dimension array             | compare only elements in 1st dimension array |
 
 you can union any types, it will generates the types distributively, for example type `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]` generates:
@@ -157,7 +159,7 @@ In practice, any union is not recommended, data should has only one type, except
 
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 
-\*\* the wrapper flatten nested object, however there is not much thing to do with object[] type due to how firestore work, read the [object typing](#-object-typing) for more info.
+\*\* the wrapper flatten nested object, however there is not much thing to do with object[] type due to how firestore work, read [object typing](#-object-typing) for more info.
 
 `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
 

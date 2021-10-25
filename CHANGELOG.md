@@ -2,7 +2,7 @@
 
 Change log
 
-## 0.3.0 25-Oct-2021
+## 0.3.0 26-Oct-2021
 
 - now support object type(important upgrade)
 - now all base type members are required, no more partial

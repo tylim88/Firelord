@@ -365,6 +365,7 @@ type Nested = Firelord.ReadWriteCreator<
 	'Nested',
 	string
 >
+const nested = wrapper<Nested>().col('Nested')
 
 // read type, does not flatten because no need to
 type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }	}
@@ -374,8 +375,6 @@ type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue,
 
 // compare type
 type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
-
-const nested = wrapper<Nested>().col('Nested')
 
 const data = {
 	a: 1,
