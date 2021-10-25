@@ -1,3 +1,5 @@
+import { FirelordFirestore } from './firelordFirestore'
+import { CheckObjectHasDuplicateEndName } from 'flat'
 export type OmitKeys<T, K extends keyof T> = Omit<T, K>
 
 export type RemoveArray<T extends unknown[]> = T extends (infer A)[] ? A : never
@@ -26,8 +28,6 @@ export type PartialNoImplicitUndefinedAndNoExtraMember<
 			keyof L & keyof T
 	  >
 	: never
-
-import { FirelordFirestore } from './firelordFirestore'
 
 export namespace Firelord {
 	export type ServerTimestamp = 'ServerTimestamp'
@@ -119,19 +119,25 @@ export namespace Firelord {
 		}
 	> = {
 		base: B
-		read: ReadDeepConvert<B> & {
-			[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
-		} // so it looks more explicit in typescript hint
-		write: {
-			[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
-		} & {
-			[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
-		} // so it looks more explicit in typescript hint
-		compare: {
-			[J in keyof FlattenObject<B>]: CompareConverter<FlattenObject<B>[J]>
-		} & {
-			[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
-		} // so it looks more explicit in typescript hint
+		read: CheckObjectHasDuplicateEndName<
+			ReadDeepConvert<B> & {
+				[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
+			}
+		> // so it looks more explicit in typescript hint
+		write: CheckObjectHasDuplicateEndName<
+			{
+				[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
+			} & {
+				[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
+			}
+		> // so it looks more explicit in typescript hint
+		compare: CheckObjectHasDuplicateEndName<
+			{
+				[J in keyof FlattenObject<B>]: CompareConverter<FlattenObject<B>[J]>
+			} & {
+				[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
+			}
+		> // so it looks more explicit in typescript hint
 
 		colPath: E extends {
 			colPath: never

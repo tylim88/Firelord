@@ -486,16 +486,6 @@ Api is exactly same as Collection Operations: [Query](#-collection-operations-qu
 
 just use collection group reference instead of collection reference, refer back [Getting Started](#-getting-started) on how to create collection group reference
 
-## 🐇 Limitation
-
-While the wrapper try to solve as much as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
-
-1. object data type is not supported.
-
-2. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
-
-3. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
-
 ## 🐕 Opinionated
 
 There is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
@@ -563,14 +553,14 @@ nested.doc('123456').set(data) // ERROR, because the input type is {a: number | 
 nested.doc('123456').update(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
 ```
 
-to flat your object, use [object-flat](https://www.npmjs.com/package/object-flat)
+to flatten your object, import `flatten` (Reminder, you don't need flatten if your data type is not nested object)
 
 solution:
 
 ```ts
 // import nested
 
-import { flatten } from 'object-flat'
+import { flatten } from 'firelord'
 
 const data = {
 	a: 1,
@@ -578,8 +568,105 @@ const data = {
 	d: { e: { f: [new Date(0)], g: { h: [{ a: 123 }] } } },
 }
 
-nested.doc('123456').set(data)
-nested.doc('123456').update(data)
-nested.doc('123456').set(flatten(data, '.')) // ok
-nested.doc('123456').update(flatten(data, '.')) // ok
+nested.doc('123456').set(data) // ERROR
+nested.doc('123456').update(data) // ERROR
+nested.doc('123456').set(flatten(data, {})) // ok, see explanation for 2nd argument `{}` in 1st caveat
+nested.doc('123456').update(flatten(data, {})) // ok, see explanation for 2nd argument `{}` in 1st caveat
 ```
+
+### Caveat
+
+There are 2 caveats that you need to keep in mind (it is ok if you don't keep in mind, because typescript will stop you if anything goes wrong)
+
+The first caveat: object like `Date`, `Firestore.FieldValue`, `Firestore.Timestamp`, `Firestore.Geopoint` are treated as primitive data type, which mean `flatten` will not try to flatten object like this, we will refer these 4 types as `primitive object`.
+
+```ts
+// import Firelord
+// import flatten
+type HasPrimitiveObject = Firelord.ReadWriteCreator<
+	{
+		a: Date
+		b: { c: string }
+		d: { e: Date }
+	},
+	'Primitive',
+	string
+>
+
+const primitive = wrapper<HasPrimitiveObject>().col('Primitive')
+
+const flattenData = flatten(
+	{
+		a: new Date(0),
+		b: { c: '123' },
+		d: { e: new Date(0) },
+	},
+	{ a: 'a', e: 'e' } // create a mirror object (name same as value) for any property that the value is `primitive object`, in this case, it is `a` and `e`
+)
+
+primitive.doc('12345').set(flattenData)
+```
+
+put empty object `{}` as 2nd argument if you don't have any primitive object type.
+
+and don't worry, as always typescript will stop you if any step goes wrong
+
+=====
+
+caveat 2, by now you may notice there is some loophole in caveat 1 solution, what if we have 2 property that share the same name? How the wrapper handle this?
+
+This is not a problem(at least not a problem the wrapper cant handle)
+
+in such case, `read`, `write`, and `compare` data type will become `never` and you cannot do anything with it, `flatten` will also reject such data type.
+
+```ts
+// import Firelord
+// import flatten
+type DuplicatePropsName = Firelord.ReadWriteCreator<
+	{
+		a: Date
+		b: { a: string }
+	},
+	'Duplicate',
+	string
+>
+type read = DuplicatePropsName['read'] // never
+type write = DuplicatePropsName['write'] // never
+type compare = DuplicatePropsName['compare'] // never
+
+const duplicate = wrapper<DuplicatePropsName>().col('Duplicate')
+
+const flattenData = flatten(
+	{
+		a: new Date(0),
+		b: { a: '123' },
+	}, // ERROR, cannot assign to `never`
+	{ a: 'a' }
+)
+
+duplicate.doc('12345').set(flattenData)
+```
+
+array however is fine, you can use the same props name if one of it is in array type
+
+```ts
+type ThisIsFine = Firelord.ReadWriteCreator<
+	{
+		a: Date
+		b: { a: string }[]
+		c: { d: { a: string }[] }
+	},
+	'Fine',
+	string
+>
+```
+
+The solution for caveats is quite awkward(caveat 1) and require tolerance from developer(caveat 2). But the reality it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
+
+## 🐇 Limitation
+
+While the wrapper try to solve as much as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
+
+1. FirebaseFirestore.FieldValue is not narrowed down.(there should be simple solution for this)
+
+2. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
