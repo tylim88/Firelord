@@ -545,7 +545,7 @@ nested.doc('123456').set(data) // ERROR, because the input type is {a: number | 
 nested.doc('123456').update(data) // ERROR, because the input type is PartialNoExplicitUndefinedNoExcessMember<{a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}>
 ```
 
-to flatten your object, import `flatten` (Reminder, you don't need flatten if your data type is not nested object)
+to flatten your object, import `flatten` (Reminder, you don't need flatten if your data type is not nested object, but nothing will happen if you accidentally did it)
 
 solution:
 
@@ -689,3 +689,5 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 ## 💍 Utility
 
 Since write operation reject stranger member (member that not defined in type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library return exact type, so it should works well with this library.
+
+If you are looking for npm library like `flatten`, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a more general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native flatten instead.
