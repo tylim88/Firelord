@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.3.8 26-Oct-2021
+
+- fix `CheckObjectHasDuplicateEndName` not exported bug
+
 ## 0.3.0 26-Oct-2021
 
 - now support object type(important upgrade, lot of thing added)
