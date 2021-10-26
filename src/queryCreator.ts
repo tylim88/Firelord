@@ -197,7 +197,10 @@ export const queryCreator = <
 		) => {
 			const ref = (query || colRefRead).where(fieldPath, opStr, value)
 
-			const queryRef = queryCreator(colRefRead, ref)
+			const queryRef = queryCreator<Read, Compare, WithoutArrayTypeMember>(
+				colRefRead,
+				ref
+			)
 
 			const { orderBy: orderBy1, ...rest } = orderBy
 				? orderByCreator(colRefRead, ref)(
