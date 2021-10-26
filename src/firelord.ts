@@ -112,18 +112,19 @@ export namespace Firelord {
 			? ReadDeepConvert<ReadConverter<T[K]>>
 			: ReadConverter<T[K]>
 	}
+	// for some reason this does not work
+	// type WriteDeepConvert<T extends Record<string, unknown>> = {
+	// 	[K in keyof T]: WriteConverter<T[K]> extends Record<string, unknown>
+	// 		? WriteDeepConvert<WriteConverter<T[K]>>
+	// 		: WriteConverter<T[K]>
+	// }
 
-	type WriteDeepConvert<T extends Record<string, unknown>> = {
-		[K in keyof T]: WriteConverter<T[K]> extends Record<string, unknown>
-			? WriteDeepConvert<WriteConverter<T[K]>>
-			: WriteConverter<T[K]>
-	}
-
-	type CompareDeepConvert<T extends Record<string, unknown>> = {
-		[K in keyof T]: CompareConverter<T[K]> extends Record<string, unknown>
-			? CompareDeepConvert<CompareConverter<T[K]>>
-			: CompareConverter<T[K]>
-	}
+	// for some reason this does not work
+	// type CompareDeepConvert<T extends Record<string, unknown>> = {
+	// 	[K in keyof T]: CompareConverter<T[K]> extends Record<string, unknown>
+	// 		? CompareDeepConvert<CompareConverter<T[K]>>
+	// 		: CompareConverter<T[K]>
+	// }
 
 	export type ReadWriteCreator<
 		B extends { [index: string]: unknown },
@@ -141,14 +142,19 @@ export namespace Firelord {
 			}
 		> // so it looks more explicit in typescript hint
 		write: CheckObjectHasDuplicateEndName<
-			WriteDeepConvert<FlattenObject<B>> & {
+			{
+				[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
+			} & {
 				[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
 			}
 		> // so it looks more explicit in typescript hint
-		compare: CheckObjectHasDuplicateEndName<// CompareDeepConvert<FlattenObject<B>> &
-		{
-			[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
-		}> // so it looks more explicit in typescript hint
+		compare: CheckObjectHasDuplicateEndName<
+			{
+				[J in keyof FlattenObject<B>]: CompareConverter<FlattenObject<B>[J]>
+			} & {
+				[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
+			}
+		> // so it looks more explicit in typescript hint
 
 		colPath: E extends {
 			colPath: never
