@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD010 -->
 
-# firelord(BETA, Nodejs ONLY)
+# firelord(BETA, Nodejs)
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
@@ -40,6 +40,7 @@ Overview:
   - number: `{write: FieldValue | number, read: number, compare:number}`
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
+- `Firestore.FieldValue`, `Firestore.TimeStamp`,`Firestore.GeoPoint`,`Date` are treated as primitive types.
 - Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
 - Preventing you from write stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
 - typed collection path and document path.
@@ -103,7 +104,7 @@ const userCreator = wrapper<User>()
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
 const userGroup = userCreator.colGroup('Users') // collection path type is "Users"
-// user reference
+// document reference
 const user = users.doc('1234567890') // document path is string
 
 // subCollection of User
@@ -157,11 +158,11 @@ compare type: `string | number | number[] | (string | number)[] | (string | numb
 
 In practice, any union is not recommended, data should has only one type, except `undefined` or `null` union that bear certain meaning(value missing or never initialized).
 
+NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
+
 \*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
 
 \*\* the wrapper flatten nested object, however there is not much thing to do with object[] type due to how firestore work, read [object typing](#-object-typing) for more info.
-
-`Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -368,7 +369,7 @@ all the api are similar to [firestore order and limit](https://firebase.google.c
 
 The type rule obey [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
 
-you may want to read this before proceed: [Firestore OrderBy and Where conflict](https://stackoverflow.com/questions/56614131/firestore-orderby-and-where-conflict) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain orderBy limitation, this is also considered into typing.
+you may want to read this before proceed: [Firestore OrderBy and Where conflict](https://stackoverflow.com/a/56620325/5338829) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain orderBy limitation, this is also considered into typing.
 
 any `orderBy` that is not follow `where` clause does not abide by rule and limitation mentioned above.
 
@@ -398,7 +399,7 @@ users
 	.get()
 
 // for '==' | 'in' comparators:
-// no order for '==' | 'in' comparator for SAME field name
+// no order for '==' | 'in' comparator for SAME field name, read https://stackoverflow.com/a/56620325/5338829 before proceed
 users.where('age', '==', 20).orderBy('age', 'desc').get()
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '==', 20).orderBy('name', 'desc').get()
@@ -490,7 +491,7 @@ just use collection group reference instead of collection reference, refer back 
 
 ## 🌻 Object Typing
 
-the (nested or not)object[] type, document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member in array, nested or not, similar rule apply to nested array.
+as for (nested or not)object[] type, its document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member in array, nested or not, similar rule apply to nested array.
 
 however, it is very much possible to query and modify object member(nested or not), as long as it is not array, the typing logic works just like other primitive data type in document/collection operation, because this wrapper will flatten all the in object type, nested or not.
 
@@ -515,7 +516,7 @@ type Nested = Firelord.ReadWriteCreator<
 >
 
 // read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }	}
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }, createdAt: firestore.Timestamp, updatedAt: firestore.Timestamp	}
 
 // write type
 type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
@@ -541,7 +542,7 @@ const data = {
 	d: { e: { f: [new Date(0)], g: { h: [{ a: '123' }] } } },
 }
 nested.doc('123456').set(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
-nested.doc('123456').update(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
+nested.doc('123456').update(data) // ERROR, because the input type is PartialNoExplicitUndefinedNoExcessMember<{a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}>
 ```
 
 to flatten your object, import `flatten` (Reminder, you don't need flatten if your data type is not nested object)
@@ -569,7 +570,7 @@ nested.doc('123456').update(flatten(data, {})) // ok, see explanation for 2nd ar
 
 There are 2 caveats that you need to keep in mind (it is ok if you don't keep in mind, because typescript will stop you if anything goes wrong)
 
-The first caveat: object like `Date`, `Firestore.FieldValue`, `Firestore.Timestamp`, `Firestore.Geopoint` are treated as primitive data type, which mean `flatten` will not try to flatten object like this, we will refer these 4 types as `primitive object`.
+The first caveat: object like `Date`, `Firestore.FieldValue`, `Firestore.Timestamp`, `Firestore.GeoPoint` are treated as primitive data type, which mean `flatten` will not try to flatten object like this, we will refer these 4 types as `primitive object`.
 
 ```ts
 // import Firelord
@@ -601,6 +602,8 @@ primitive.doc('12345').set(flattenData)
 put empty object `{}` as 2nd argument if you don't have any primitive object type.
 
 and don't worry, as always typescript will stop you if any step goes wrong
+
+It is better to generate tuple type instead of mirror object type as 2nd parameter, however tuple type is hit with [order inconsistency](https://stackoverflow.com/a/55128956/5338829).
 
 ### Caveat 2
 
@@ -652,7 +655,7 @@ type ThisIsFine = Firelord.ReadWriteCreator<
 >
 ```
 
-The solution for caveats is little bit awkward(caveat 1) and require tolerance from developer(caveat 2). But the reality is, it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
+The solution for caveats is little bit awkward(caveat 1 mirror object) and require tolerance from developer(caveat 2). But the reality is, it is not easy to begin with, the library priority is to make sure the safety of the type 1st.
 
 ## 🐕 Opinionated
 
@@ -671,6 +674,7 @@ Typing wise, there are few opinionated elements:
 
 1. `set`(without option) and `create` operations require all member to present.
 2. all write operations reject stranger members.
+3. although `updatedAt` and `createdAt` is included in type, all write operation exclude them, which mean you cant write the value of `updatedAt` and `createdAt`.
 
 I believe this decision is practical for cases and not planning to change it in forseeable future.
 
