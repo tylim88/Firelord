@@ -1,36 +1,46 @@
 export namespace FirelordFirestore {
 	export type Firestore = typeof import('firebase-admin').firestore
 
-	export type FieldValue = import('firebase-admin').firestore.FieldValue
+	export type FirebaseFirestore = FirebaseFirestore.Firestore
 
-	export type DocumentData = import('firebase-admin').firestore.DocumentData
+	export type FieldValue = FirebaseFirestore.FieldValue
 
-	export type DocumentReference<T = FirebaseFirestore.DocumentData> =
-		import('firebase-admin').firestore.DocumentReference<T>
+	export type DocumentData = FirebaseFirestore.DocumentData
 
-	export type CollectionReference<T = FirebaseFirestore.DocumentData> =
-		import('firebase-admin').firestore.CollectionReference<T>
+	export type DocumentReference<T = DocumentData> =
+		FirebaseFirestore.DocumentReference<T>
 
-	export type CollectionGroup<T = FirebaseFirestore.DocumentData> =
-		import('firebase-admin').firestore.CollectionGroup<T>
+	export type CollectionReference<T = DocumentData> =
+		FirebaseFirestore.CollectionReference<T>
 
-	export type Query<T = FirebaseFirestore.DocumentData> =
-		import('firebase-admin').firestore.Query<T>
+	export type CollectionGroup<T = DocumentData> =
+		FirebaseFirestore.CollectionGroup<T>
 
-	export type DocumentSnapshot<T = FirebaseFirestore.DocumentData> =
-		import('firebase-admin').firestore.DocumentSnapshot<T>
+	export type Query<T = DocumentData> = FirebaseFirestore.Query<T>
 
-	export type Transaction = import('firebase-admin').firestore.Transaction
+	export type DocumentSnapshot<T = DocumentData> =
+		FirebaseFirestore.DocumentSnapshot<T>
 
-	export type ReadOptions = import('firebase-admin').firestore.ReadOptions
+	export type Transaction = FirebaseFirestore.Transaction
 
-	export type WriteBatch = import('firebase-admin').firestore.WriteBatch
+	export type ReadOptions = FirebaseFirestore.ReadOptions
+
+	export type WriteBatch = FirebaseFirestore.WriteBatch
+
+	export type QuerySnapshot<T = DocumentData> =
+		FirebaseFirestore.QuerySnapshot<T>
+
+	export type WriteResult = FirebaseFirestore.WriteResult
 
 	export type WhereFilterOp = FirebaseFirestore.WhereFilterOp
 
 	export type OrderByDirection = FirebaseFirestore.OrderByDirection
 
 	export type GeoPoint = Firestore['GeoPoint']
+
+	export type Timestamp = FirebaseFirestore.Timestamp
+
+	export type Stream = NodeJS.ReadableStream
 
 	export type CreatedUpdatedWrite = {
 		createdAt: FieldValue
@@ -44,6 +54,4 @@ export namespace FirelordFirestore {
 		createdAt: Date | Timestamp
 		updatedAt: Date | Timestamp
 	}
-
-	export type Timestamp = import('firebase-admin').firestore.Timestamp
 }

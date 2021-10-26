@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "0.3.10-beta.19",
+	"version": "0.3.10-beta.20",
 	"description": "🔥 admin firestore wrapper with deeper typing solution, handle nested object, nested array, array object, object array..etc types!",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",

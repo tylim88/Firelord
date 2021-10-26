@@ -112,14 +112,14 @@ export namespace Firelord {
 			? ReadDeepConvert<ReadConverter<T[K]>>
 			: ReadConverter<T[K]>
 	}
-	// for some reason this does not work
+	// ! for some reason this does not work, WHY
 	// type WriteDeepConvert<T extends Record<string, unknown>> = {
 	// 	[K in keyof T]: WriteConverter<T[K]> extends Record<string, unknown>
 	// 		? WriteDeepConvert<WriteConverter<T[K]>>
 	// 		: WriteConverter<T[K]>
 	// }
 
-	// for some reason this does not work
+	// ! for some reason this does not work. WHY
 	// type CompareDeepConvert<T extends Record<string, unknown>> = {
 	// 	[K in keyof T]: CompareConverter<T[K]> extends Record<string, unknown>
 	// 		? CompareDeepConvert<CompareConverter<T[K]>>
@@ -137,9 +137,10 @@ export namespace Firelord {
 	> = {
 		base: B
 		read: CheckObjectHasDuplicateEndName<
-			ReadDeepConvert<B> & {
-				[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
-			}
+			ReadDeepConvert<B> & FirelordFirestore.CreatedUpdatedRead
+			//  {
+			// 	[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
+			// }
 		> // so it looks more explicit in typescript hint
 		write: CheckObjectHasDuplicateEndName<
 			{
