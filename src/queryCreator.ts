@@ -19,7 +19,10 @@ export type QueryCreator<
 	stream: typeof colRefRead.stream
 	offset: (
 		offset: number
-	) => ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
+	) => OmitKeys<
+		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
+		'offset'
+	>
 	where: <
 		P extends string & keyof Read,
 		J extends FirelordFirestore.WhereFilterOp,
@@ -70,10 +73,16 @@ export type QueryCreator<
 		: ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
 	limit: (
 		limit: number
-	) => ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
+	) => OmitKeys<
+		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
+		'limit' | 'limitToLast'
+	>
 	limitToLast: (
 		limit: number
-	) => ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
+	) => OmitKeys<
+		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
+		'limit' | 'limitToLast'
+	>
 	orderBy: <P extends WithoutArrayTypeMember>(
 		fieldPath: P,
 		directionStr: FirelordFirestore.OrderByDirection,

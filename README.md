@@ -50,11 +50,14 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - finally, type complicated data type like nested object, nested array, object array, array object and all their operations!! Read [object typing](#-object-typing) for more info.
   ![flatten object](img/flattenObject.png)
+- preventing user from chain `offset` after `offset`(reduce mistake, however cannot guarantee there is only 1 offset till the end of chain).
+- preventing user from chain `limit` or `limit to last` after `limit` or `limit to last`(reduce mistake, however cannot guarantee there is only 1 limit or limit to last till the end of chain).
 - much better `where` and `orderBy` clause
   - field value are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
     ![orderBy limitation](img/orderBy.png)
+- and much more!
 
 basically all read operation return `read type` data, all write operation require `write type` data and all query require `compare type` data, you only need to define `base type` and the wrapper will generates the other 3 types for you.
 

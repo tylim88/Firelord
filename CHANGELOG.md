@@ -2,6 +2,13 @@
 
 Change log
 
+## 0.3.10 27-Oct-2021
+
+- preventing user from chain `offset` after `offset`(reduce mistake, however cannot guarantee there is only 1 offset till the end of chain).
+- preventing user from chain `limit` or `limit to last` after `limit` or `limit to last`(reduce mistake, however cannot guarantee there is only 1 limit or limit to last till the end of chain).
+- fix "Type instantiation is excessively deep and possibly infinite", cause is known but found no explanation for this.
+- fix recursive type become `any` after declaration is emitted, that causing the build file query type is not working(becoming un-chain-able, a lot of works done to fix this).
+
 ## 0.3.8 26-Oct-2021
 
 - fix `CheckObjectHasDuplicateEndName` not exported bug
