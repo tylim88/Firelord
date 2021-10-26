@@ -7,7 +7,8 @@ import { FirelordFirestore } from './firelordFirestore'
 import { queryCreator } from './queryCreator'
 import { firelord as fl } from './index_'
 
-export const firelord = ((firestore: FirelordFirestore.Firestore) =>
+export const firelord: fl =
+	(firestore: FirelordFirestore.Firestore) =>
 	<
 		T extends {
 			colPath: string
@@ -247,7 +248,9 @@ export const firelord = ((firestore: FirelordFirestore.Firestore) =>
 		}
 
 		return { col, colGroup }
-	}) as unknown as fl // ! it is working but this is not good!
+	}
+
+export const ozai = firelord
 
 export { flatten } from './flat'
 
