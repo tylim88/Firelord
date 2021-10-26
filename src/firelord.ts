@@ -34,12 +34,15 @@ export namespace Firelord {
 
 	// https://javascript.plainenglish.io/using-firestore-with-more-typescript-8058b6a88674
 	type DeepKey<T, K extends keyof T> = K extends string
-		? T[K] extends
-				| FirelordFirestore.Timestamp
-				| Date
-				| FirelordFirestore.GeoPoint
-			? K
-			: T[K] extends Record<string, unknown>
+		? // T[K] will never extends Date, timestamp and geo point, so no need
+		  // ! however why these few line cause <Type instantiation is excessively deep and possibly infinite> if enabled? WHY?
+		  // T[K] extends
+		  // 		| Date
+		  // 		| FirelordFirestore.Timestamp
+		  // 		| FirelordFirestore.GeoPoint
+		  // 	? K
+		  // 	:
+		  T[K] extends Record<string, unknown>
 			? `${K}.${DeepKey<T[K], keyof T[K]>}`
 			: K
 		: never
@@ -82,15 +85,9 @@ export namespace Firelord {
 		: T extends FirelordFirestore.GeoPoint
 		? FirelordFirestore.GeoPoint
 		: T
-	// solve "Type instantiation is excessively deep and possibly infinite" error
-	type ReadDeepConvert<T extends Record<string, unknown>> = {
-		[K in keyof T]: ReadConverter<T[K]> extends Record<string, unknown>
-			? ReadDeepConvert<ReadConverter<T[K]>>
-			: ReadConverter<T[K]>
-	}
 
-	type CompareConverter<T> = T extends (infer P)[]
-		? CompareConverter<P>[]
+	type CompareConverter<T> = T extends (infer A)[]
+		? CompareConverter<A>[]
 		: T extends ServerTimestamp | Date | FirelordFirestore.Timestamp
 		? FirelordFirestore.Timestamp | Date
 		: T extends FirelordFirestore.GeoPoint
@@ -109,6 +106,25 @@ export namespace Firelord {
 		? FirelordFirestore.GeoPoint
 		: T
 
+	// solve "Type instantiation is excessively deep and possibly infinite" error
+	type ReadDeepConvert<T extends Record<string, unknown>> = {
+		[K in keyof T]: ReadConverter<T[K]> extends Record<string, unknown>
+			? ReadDeepConvert<ReadConverter<T[K]>>
+			: ReadConverter<T[K]>
+	}
+
+	type WriteDeepConvert<T extends Record<string, unknown>> = {
+		[K in keyof T]: WriteConverter<T[K]> extends Record<string, unknown>
+			? WriteDeepConvert<WriteConverter<T[K]>>
+			: WriteConverter<T[K]>
+	}
+
+	type CompareDeepConvert<T extends Record<string, unknown>> = {
+		[K in keyof T]: CompareConverter<T[K]> extends Record<string, unknown>
+			? CompareDeepConvert<CompareConverter<T[K]>>
+			: CompareConverter<T[K]>
+	}
+
 	export type ReadWriteCreator<
 		B extends { [index: string]: unknown },
 		C extends string,
@@ -125,19 +141,14 @@ export namespace Firelord {
 			}
 		> // so it looks more explicit in typescript hint
 		write: CheckObjectHasDuplicateEndName<
-			{
-				[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
-			} & {
+			WriteDeepConvert<FlattenObject<B>> & {
 				[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
 			}
 		> // so it looks more explicit in typescript hint
-		compare: CheckObjectHasDuplicateEndName<
-			{
-				[J in keyof FlattenObject<B>]: CompareConverter<FlattenObject<B>[J]>
-			} & {
-				[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
-			}
-		> // so it looks more explicit in typescript hint
+		compare: CheckObjectHasDuplicateEndName<// CompareDeepConvert<FlattenObject<B>> &
+		{
+			[index in keyof FirelordFirestore.CreatedUpdatedCompare]: FirelordFirestore.CreatedUpdatedCompare[index]
+		}> // so it looks more explicit in typescript hint
 
 		colPath: E extends {
 			colPath: never

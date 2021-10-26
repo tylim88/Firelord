@@ -19,5 +19,5 @@
 		"typeRoots": ["./node_modules/@types"]
 	},
 	"include": ["src/**/*"],
-	"exclude": ["src/dontRunThis.test.ts"]
+	"exclude": ["src/dontRunThis.test.ts", "src/dontRunThis2.ts"]
 }
