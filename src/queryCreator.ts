@@ -9,12 +9,7 @@ export type QueryCreator<
 	Compare extends FirelordFirestore.DocumentData &
 		FirelordFirestore.CreatedUpdatedCompare,
 	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>
-> = (
-	colRefRead:
-		| FirelordFirestore.CollectionReference<Read>
-		| FirelordFirestore.CollectionGroup<Read>,
-	query: FirelordFirestore.Query<Read>
-) => {
+> = (query: FirelordFirestore.Query<Read>) => {
 	firestore: typeof query.firestore
 	stream: typeof query.stream
 	offset: (
@@ -91,13 +86,12 @@ export type QueryCreator<
 			fieldValue: Compare[P] | FirelordFirestore.DocumentSnapshot
 		}
 	) => ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
-	get: () => ReturnType<typeof colRefRead.get>
+	get: () => ReturnType<typeof query.get>
 }
 
 // need to make generic mandatory https://stackoverflow.com/questions/55610260/how-to-make-generics-mandatory
 // however due to this is a recursive function, it is not possible
-// luckily this is only used in 2 places
-// but nevertheless still a potential point of failure
+// luckily this is only used in 2 places and is explicitly typed, so everything is good
 export const queryCreator = <
 	Read extends FirelordFirestore.DocumentData &
 		FirelordFirestore.CreatedUpdatedRead,
@@ -105,18 +99,10 @@ export const queryCreator = <
 		FirelordFirestore.CreatedUpdatedCompare,
 	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>
 >(
-	colRefRead:
-		| FirelordFirestore.CollectionReference<Read>
-		| FirelordFirestore.CollectionGroup<Read>,
 	query: FirelordFirestore.Query<Read>
 ): ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>> => {
 	const orderByCreator =
-		(
-			colRefRead:
-				| FirelordFirestore.CollectionReference<Read>
-				| FirelordFirestore.CollectionGroup<Read>,
-			query: FirelordFirestore.Query<Read>
-		) =>
+		(query: FirelordFirestore.Query<Read>) =>
 		<P extends WithoutArrayTypeMember>(
 			fieldPath: P,
 			directionStr: FirelordFirestore.OrderByDirection = 'asc',
@@ -128,7 +114,6 @@ export const queryCreator = <
 			const ref = query.orderBy(fieldPath, directionStr)
 
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				colRefRead,
 				cursor ? ref[cursor.clause](cursor.fieldValue) : ref
 			)
 		}
@@ -140,7 +125,6 @@ export const queryCreator = <
 		},
 		offset: (offset: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				colRefRead,
 				query.offset(offset)
 			)
 		},
@@ -197,13 +181,10 @@ export const queryCreator = <
 		) => {
 			const ref = query.where(fieldPath, opStr, value)
 
-			const queryRef = queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				colRefRead,
-				ref
-			)
+			const queryRef = queryCreator<Read, Compare, WithoutArrayTypeMember>(ref)
 
 			const { orderBy: orderBy1, ...rest } = orderBy
-				? orderByCreator(colRefRead, ref)(
+				? orderByCreator(ref)(
 						orderBy.fieldPath,
 						orderBy.directionStr,
 						orderBy.cursor
@@ -222,17 +203,15 @@ export const queryCreator = <
 		},
 		limit: (limit: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				colRefRead,
 				query.limit(limit)
 			)
 		},
 		limitToLast: (limit: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				colRefRead,
 				query.limitToLast(limit)
 			)
 		},
-		orderBy: orderByCreator(colRefRead, query),
+		orderBy: orderByCreator(query),
 		get: () => {
 			return query.get()
 		},
