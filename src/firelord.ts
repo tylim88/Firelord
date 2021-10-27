@@ -34,7 +34,7 @@ export namespace Firelord {
 
 	// https://javascript.plainenglish.io/using-firestore-with-more-typescript-8058b6a88674
 	type DeepKey<T, K extends keyof T> = K extends string
-		? // T[K] will never extends Date, timestamp and geo point, so no need
+		? // Date, timestamp and geo point will never extends Record<string, unknown>, so we dont need these lines
 		  // ! however why these few line cause <Type instantiation is excessively deep and possibly infinite> if enabled? WHY?
 		  // T[K] extends
 		  // 		| Date

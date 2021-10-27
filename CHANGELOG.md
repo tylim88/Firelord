@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.3.11 27-Oct-2021
+
+- fix orderBy chain-able but no real effect
+
 ## 0.3.10 27-Oct-2021
 
 - preventing user from chain `offset` after `offset`(reduce mistake, however cannot guarantee there is only 1 offset till the end of chain).

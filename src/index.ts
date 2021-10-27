@@ -236,7 +236,10 @@ export const firelord: fl =
 						...data,
 					})
 				},
-				...queryCreator<Read, Compare, WithoutArrayTypeMember>(colRefRead),
+				...queryCreator<Read, Compare, WithoutArrayTypeMember>(
+					colRefRead,
+					colRefRead
+				),
 			}
 		}
 
@@ -244,7 +247,10 @@ export const firelord: fl =
 			const colRefRead = firestore().collectionGroup(
 				collectionPath
 			) as FirelordFirestore.CollectionGroup<Read>
-			return queryCreator<Read, Compare, WithoutArrayTypeMember>(colRefRead)
+			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
+				colRefRead,
+				colRefRead
+			)
 		}
 
 		return { col, colGroup }

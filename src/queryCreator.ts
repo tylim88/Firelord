@@ -13,10 +13,10 @@ export type QueryCreator<
 	colRefRead:
 		| FirelordFirestore.CollectionReference<Read>
 		| FirelordFirestore.CollectionGroup<Read>,
-	query?: FirelordFirestore.Query<Read>
+	query: FirelordFirestore.Query<Read>
 ) => {
-	firestore: typeof colRefRead.firestore
-	stream: typeof colRefRead.stream
+	firestore: typeof query.firestore
+	stream: typeof query.stream
 	offset: (
 		offset: number
 	) => OmitKeys<
@@ -108,14 +108,14 @@ export const queryCreator = <
 	colRefRead:
 		| FirelordFirestore.CollectionReference<Read>
 		| FirelordFirestore.CollectionGroup<Read>,
-	query?: FirelordFirestore.Query<Read>
+	query: FirelordFirestore.Query<Read>
 ): ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>> => {
 	const orderByCreator =
 		(
 			colRefRead:
 				| FirelordFirestore.CollectionReference<Read>
 				| FirelordFirestore.CollectionGroup<Read>,
-			query?: FirelordFirestore.Query<Read>
+			query: FirelordFirestore.Query<Read>
 		) =>
 		<P extends WithoutArrayTypeMember>(
 			fieldPath: P,
@@ -125,7 +125,7 @@ export const queryCreator = <
 				fieldValue: Compare[P] | FirelordFirestore.DocumentSnapshot
 			}
 		) => {
-			const ref = (query || colRefRead).orderBy(fieldPath, directionStr)
+			const ref = query.orderBy(fieldPath, directionStr)
 
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
 				colRefRead,
@@ -134,14 +134,14 @@ export const queryCreator = <
 		}
 
 	return {
-		firestore: colRefRead.firestore,
+		firestore: query.firestore,
 		stream: () => {
-			return colRefRead.stream()
+			return query.stream()
 		},
 		offset: (offset: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
 				colRefRead,
-				(query || colRefRead).offset(offset)
+				query.offset(offset)
 			)
 		},
 		where: <
@@ -195,7 +195,7 @@ export const queryCreator = <
 					: never
 				: never
 		) => {
-			const ref = (query || colRefRead).where(fieldPath, opStr, value)
+			const ref = query.where(fieldPath, opStr, value)
 
 			const queryRef = queryCreator<Read, Compare, WithoutArrayTypeMember>(
 				colRefRead,
@@ -223,18 +223,18 @@ export const queryCreator = <
 		limit: (limit: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
 				colRefRead,
-				(query || colRefRead).limit(limit)
+				query.limit(limit)
 			)
 		},
 		limitToLast: (limit: number) => {
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
 				colRefRead,
-				(query || colRefRead).limitToLast(limit)
+				query.limitToLast(limit)
 			)
 		},
-		orderBy: orderByCreator(colRefRead),
+		orderBy: orderByCreator(colRefRead, query),
 		get: () => {
-			return (query || colRefRead).get()
+			return query.get()
 		},
 	}
 }
