@@ -82,15 +82,20 @@ export namespace Firelord {
 		? ServerTimestampMasked
 		: T extends FirelordFirestore.Timestamp | Date
 		? FirelordFirestore.Timestamp | Date
-		: //   T extends Record<string, unknown> //! the type become any, solution needed
-		  // ? ArrayWriteConverter<T>
-		  // :
-		  T
+		: T extends Record<string, unknown>
+		? {
+				[K in keyof T]: ArrayWriteConverter<T[K]>
+		  }
+		: T
 
 	type ReadConverter<T> = T extends (infer A)[]
 		? ReadConverter<A>[]
 		: T extends ServerTimestamp | Date
 		? FirelordFirestore.Timestamp
+		: T extends Record<string, unknown>
+		? {
+				[K in keyof T]: ReadConverter<T[K]>
+		  }
 		: T
 
 	type CompareConverter<T> = T extends (infer A)[]
@@ -110,11 +115,11 @@ export namespace Firelord {
 		: T
 
 	// solve "Type instantiation is excessively deep and possibly infinite" error
-	type ReadDeepConvert<T extends Record<string, unknown>> = {
-		[K in keyof T]: ReadConverter<T[K]> extends Record<string, unknown>
-			? ReadDeepConvert<ReadConverter<T[K]>>
-			: ReadConverter<T[K]>
-	}
+	// type ReadDeepConvert<T extends Record<string, unknown>> = {
+	// 	[K in keyof T]: ReadConverter<T[K]> extends Record<string, unknown>
+	// 		? ReadDeepConvert<ReadConverter<T[K]>>
+	// 		: ReadConverter<T[K]>
+	// }
 	// ! for some reason this does not work, WHY
 	// type WriteDeepConvert<T extends Record<string, unknown>> = {
 	// 	[K in keyof T]: WriteConverter<T[K]> extends Record<string, unknown>
@@ -139,7 +144,7 @@ export namespace Firelord {
 		}
 	> = {
 		base: B
-		read: ReadDeepConvert<B> & {
+		read: ReadConverter<B> & {
 			[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
 		}
 		// so it looks more explicit in typescript hint

@@ -2,9 +2,10 @@
 
 Change log
 
-## 0.5.0 28-Oct-2021
+## 0.5.0 27-Oct-2021
 
 - solved firestore field value type unsafe issue by using masked type.
+- the typescript hint of read and write now look more explicit
 
 ## 0.4.0 27-Oct-2021
 
