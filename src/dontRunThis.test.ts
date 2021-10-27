@@ -67,6 +67,7 @@ const transactions = wrapper<
 		User // insert parent collection, it will auto construct the collection path for you
 	>
 >().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
+const transactionGroup = wrapper<Transaction>().colGroup('Transactions') // the type for collection group is `Transactions`
 const transaction = users.doc('1234567890') // document path is string
 
 user.get().then(snapshot => {
@@ -394,24 +395,24 @@ nested.doc('123456').update(flatten(data))
 
 type HandleFieldValue = Firelord.ReadWriteCreator<
 	{
-		a: number
-		b: Firelord.ServerTimestamp
-		d: string[]
+		aaa: number
+		bbb: Firelord.ServerTimestamp
+		ddd: string[]
 	},
 	'HandleFieldValue',
 	string
 >
 
-const handleFieldValue = wrapper<HandleFieldValue>().col('HandleFieldValue')
+const example = wrapper<HandleFieldValue>().col('HandleFieldValue')
 
-handleFieldValue.doc('1234567').set({
-	a: increment(1),
-	b: serverTimestamp(),
-	d: arrayUnion('123', '456'),
+example.doc('1234567').set({
+	aaa: serverTimestamp(), // ERROR
+	bbb: increment(11), // ERROR
+	ddd: arrayUnion(123, 456), // ERROR
 })
 
-handleFieldValue.doc('1234567').set({
-	a: increment(''),
-	b: arrayUnion('123', '456'),
-	d: arrayUnion(123, 456),
+example.doc('1234567').set({
+	aaa: increment(1), // ok
+	bbb: serverTimestamp(), // ok
+	ddd: arrayUnion('123', '456'), // ok
 })
