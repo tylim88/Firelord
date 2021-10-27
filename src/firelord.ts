@@ -37,7 +37,7 @@ export namespace Firelord {
 		'please import `increment` from `firelord` and call it': number
 	}
 	export type ArrayMasked<T> = {
-		'please import `increment` from `firelord` and call it': T
+		'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T
 	}
 
 	// https://javascript.plainenglish.io/using-firestore-with-more-typescript-8058b6a88674

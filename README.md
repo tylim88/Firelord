@@ -593,12 +593,12 @@ The wrapper forbid you to use any firestore field value(serverTimestamp, arrayRe
 
 Basically they still return the same firestore field value but their type is masked, conversion table below show what mask the types.
 
-| Field Value     | Masked Type                                                                                     |
-| --------------- | ----------------------------------------------------------------------------------------------- |
-| increment       | { 'please import `increment` from `firelord` and call it': number }                             |
-| serverTimestamp | {'please import `serverTimestamp` from `firelord` and call it': Firelord.ServerTimestamp }      |
-| arrayUnion      | {'please import `increment` from `firelord` and call it': T } where T is the type of the member |
-| arrayRemove     | {'please import `increment` from `firelord` and call it': T } where T is the type of the member |
+| Field Value     | Masked Type                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| increment       | { 'please import `increment` from `firelord` and call it': number }                                                |
+| serverTimestamp | { 'please import `serverTimestamp` from `firelord` and call it': Firelord.ServerTimestamp }                        |
+| arrayUnion      | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T } where T is the type of the member |
+| arrayRemove     | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T } where T is the type of the member |
 
 the masked type purposely look weird so nobody accidentally use it for something else(as it could be dangerous, because the underneath value is firestore field value, not what typescript think it is)
 
