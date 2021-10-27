@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "0.4.2",
+	"version": "0.5.0",
 	"description": "🔥 Write scalable firestore code with complete deep typing firestore wrapper, handle nested object, nested array, array object, object array.. and all kinds of type!",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",

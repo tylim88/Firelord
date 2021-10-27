@@ -255,3 +255,5 @@ export const ozai = firelord
 export { flatten } from './flat'
 
 export type { Firelord } from './firelord'
+
+export * from './fieldValue'

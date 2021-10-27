@@ -55,3 +55,5 @@ export namespace FirelordFirestore {
 		updatedAt: Date | Timestamp
 	}
 }
+
+export { firestore } from 'firebase-admin'

@@ -1,5 +1,5 @@
 import { firelord } from '.'
-
+import { increment, arrayUnion, serverTimestamp } from './fieldValue'
 import { Firelord } from './firelord'
 import { firestore } from 'firebase-admin'
 import { flatten } from './flat'
@@ -13,7 +13,7 @@ type User = Firelord.ReadWriteCreator<
 		name: string
 		age: number
 		birthday: Date
-		joinDate: 'ServerTimestamp'
+		joinDate: Firelord.ServerTimestamp
 		beenTo: ('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[]
 	}, // base type
 	'Users', // collection path type
@@ -24,7 +24,7 @@ type User = Firelord.ReadWriteCreator<
 type UserRead = User['read'] // {name: string, age:number, birthday:firestore.Timestamp, joinDate: firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
 // write type
-type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt:'ServerTimestamp', updatedAt:'ServerTimestamp'}
+type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt:Firelord.ServerTimestamp, updatedAt:Firelord.ServerTimestamp}
 
 // compare type
 type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
@@ -44,7 +44,7 @@ const user = users.doc('1234567890') // document path is string
 type Transaction = Firelord.ReadWriteCreator<
 	{
 		amount: number
-		date: 'ServerTimestamp'
+		date: Firelord.ServerTimestamp
 		status: 'Fail' | 'Success'
 	}, // base type
 	'Transactions', // collection path type
@@ -57,7 +57,7 @@ const transactions = wrapper<
 	Firelord.ReadWriteCreator<
 		{
 			amount: number
-			date: 'ServerTimestamp'
+			date: Firelord.ServerTimestamp
 			status: 'Fail' | 'Success'
 		}, // base type
 		'Transactions', // collection path type
@@ -75,8 +75,6 @@ user.onSnapshot(snapshot => {
 	const data = snapshot.data()
 })
 
-const serverTimestamp = firestore.FieldValue.serverTimestamp()
-
 // create if only exist, else fail
 // require all members in `write type` except `updatedAt` and `createdAt`
 // auto add `createdAt` and `updatedAt`
@@ -84,7 +82,7 @@ user.create({
 	name: 'John',
 	age: 24,
 	birthday: new Date(1995, 11, 17),
-	joinDate: serverTimestamp,
+	joinDate: serverTimestamp(),
 	beenTo: ['RUSSIA'],
 })
 
@@ -96,7 +94,7 @@ user.set({
 	name: 'John',
 	age: 24,
 	birthday: new Date(1995, 11, 17),
-	joinDate: serverTimestamp,
+	joinDate: serverTimestamp(),
 	beenTo: ['RUSSIA'],
 })
 
@@ -140,7 +138,7 @@ user.runTransaction(async transaction => {
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
-		joinDate: serverTimestamp,
+		joinDate: serverTimestamp(),
 		beenTo: ['RUSSIA'],
 	})
 
@@ -152,7 +150,7 @@ user.runTransaction(async transaction => {
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
-		joinDate: serverTimestamp,
+		joinDate: serverTimestamp(),
 		beenTo: ['RUSSIA'],
 	})
 
@@ -391,3 +389,27 @@ nested.doc('123456').set(data)
 nested.doc('123456').update(data)
 nested.doc('123456').set(flatten(data))
 nested.doc('123456').update(flatten(data))
+
+type HandleFieldValue = Firelord.ReadWriteCreator<
+	{
+		a: number
+		b: Firelord.ServerTimestamp
+		d: string[]
+	},
+	'HandleFieldValue',
+	string
+>
+
+const handleFieldValue = wrapper<HandleFieldValue>().col('HandleFieldValue')
+
+handleFieldValue.doc('1234567').set({
+	a: increment(1),
+	b: serverTimestamp(),
+	d: arrayUnion('123', '456'),
+})
+
+handleFieldValue.doc('1234567').set({
+	a: increment(''),
+	b: arrayUnion('123', '456'),
+	d: arrayUnion(123, 456),
+})

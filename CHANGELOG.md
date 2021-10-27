@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.5.0 28-Oct-2021
+
+- solved firestore field value type unsafe issue by using masked type.
+
 ## 0.4.0 27-Oct-2021
 
 - simpler solution for caveat 1 and 2,flatten no longer need 2nd argument

@@ -91,7 +91,7 @@ type User = Firelord.ReadWriteCreator<
 		name: string
 		age: number
 		birthday: Date
-		joinDate: 'ServerTimestamp'
+		joinDate: Firelord.ServerTimestamp
 		beenTo: ('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[]
 	}, // base type
 	'Users', // collection path type
@@ -120,7 +120,7 @@ const user = users.doc('1234567890') // document path is string
 type Transaction = Firelord.ReadWriteCreator<
 	{
 		amount: number
-		date: 'ServerTimestamp'
+		date: Firelord.ServerTimestamp
 		status: 'Fail' | 'Success'
 	}, // base type
 	'Transactions', // collection path type
@@ -137,27 +137,27 @@ Normally a collection should only have one type of document(recommended), howeve
 
 ## 🦔 Conversion Table
 
-| Base                      | Read                  | Write                                                                                                                                               | Compare                                      |
-| ------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| number                    | number                | number \| FirebaseFirestore.FieldValue (firestore.FieldValue.increment\*)                                                                           | number                                       |
-| string                    | string                | string                                                                                                                                              | string                                       |
-| null                      | null                  | null                                                                                                                                                | null                                         |
-| undefined                 | undefined             | undefined                                                                                                                                           | undefined                                    |
-| Date                      | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
-| firestore.Timestamp       | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                                                          | firestore.Timestamp \|Date                   |
-| 'ServerTimestamp'\*\*\*   | firestore.Timestamp   | FirebaseFirestore.FieldValue (firestore.FieldValue.ServerTimestamp\*)                                                                               | firestore.Timestamp \|Date                   |
-| firestore.GeoPoint        | firestore.GeoPoint    | firestore.GeoPoint                                                                                                                                  | firestore.GeoPoint                           |
-| object\*\*                | object                | object                                                                                                                                              | object                                       |
-| number[]                  | number[]              | number[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | number[]                                     |
-| string[]                  | string[]              | string[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                              | string[]                                     |
-| null[]                    | null[]                | null[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                                | null[]                                       |
-| undefined[]               | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                                           | undefined[]                                  |
-| Date[]                    | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
-| firestore.Timestamp[]     | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*)                                       | (Date \| firestore.Timestamp)[]              |
-| 'ServerTimestamp'[]\*\*\* | firestore.Timestamp[] | FirebaseFirestore.FieldValue (firestore.FieldValue.ServerTimestamp*)[] \|FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion*) | (Date \| firestore.Timestamp)[]              |
-| firestore.GeoPoint[]      | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                                                                | firestore.GeoPoint[]                         |
-| object[]\*\*              | object[]              | object[]                                                                                                                                            | object[]                                     |
-| n-dimension array         | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(firestore.FieldValue.arrayRemove/arrayUnion\*) only supported for 1st dimension array             | compare only elements in 1st dimension array |
+| Base                             | Read                  | Write                                                                                                              | Compare                                      |
+| -------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| number                           | number                | number \| FirebaseFirestore.FieldValue(increment\*)                                                                | number                                       |
+| string                           | string                | string                                                                                                             | string                                       |
+| null                             | null                  | null                                                                                                               | null                                         |
+| undefined                        | undefined             | undefined                                                                                                          | undefined                                    |
+| Date                             | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
+| firestore.Timestamp              | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
+| Firelord.ServerTimestamp\*\*\*   | firestore.Timestamp   | FirebaseFirestore.FieldValue(ServerTimestamp\*)                                                                    | firestore.Timestamp \|Date                   |
+| firestore.GeoPoint               | firestore.GeoPoint    | firestore.GeoPoint                                                                                                 | firestore.GeoPoint                           |
+| object\*\*                       | object                | object                                                                                                             | object                                       |
+| number[]                         | number[]              | number[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | number[]                                     |
+| string[]                         | string[]              | string[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | string[]                                     |
+| null[]                           | null[]                | null[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                    | null[]                                       |
+| undefined[]                      | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                               | undefined[]                                  |
+| Date[]                           | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
+| firestore.Timestamp[]            | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
+| Firelord.ServerTimestamp[]\*\*\* | firestore.Timestamp[] | FirebaseFirestore.FieldValue (ServerTimestamp*)[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion*)          | (Date \| firestore.Timestamp)[]              |
+| firestore.GeoPoint[]             | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                               | firestore.GeoPoint[]                         |
+| object[]\*\*                     | object[]              | object[]                                                                                                           | object[]                                     |
+| n-dimension array                | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*) only supported for 1st dimension array | compare only elements in 1st dimension array |
 
 you can union any types, it will generates the types distributively, for example type `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]` generates:
 
@@ -171,11 +171,11 @@ In practice, any union is not recommended, data should has only one type, except
 
 NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
 
-\*I am not able to narrow down FirebaseFirestore.FieldValue, you might end up using increment on array or assign server time stamp on number or array union number onto string array field, solution is welcomed.
+\* (starting from v0.5.0)In this library, any FirebaseFirestore.FieldValue type will replaced by masked type, see [Handling Firestore Field Value](#-handling-firestore-field-value) for more info.
 
 \*\* the wrapper flatten nested object, however there is not much thing to do with object[] type due to how firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
-\*\*\* `'ServerTimestamp'` is a reserved type, you cannot use it as literal type, you can only use this type if you want your type to be `Firestore.ServerTimestamp`.
+\*\*\* `Firelord.ServerTimestamp`(underneath it is `ServerTimestamp`) is a reserved type, you cannot use it as string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -386,7 +386,7 @@ you may want to read this before proceed: [Firestore OrderBy and Where conflict]
 
 any `orderBy` that is not follow `where` clause does not abide by rule and limitation mentioned above.
 
-Note: The wrapper will not stop you from using multiple orderBy clause because it is possible to have multiple `orderBy` clause, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
+Note: The wrapper will not stop you from using multiple `orderBy` clause because multiple `orderBy` clause is possible, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
 
 Tips: to make thing easier, whenever you want to use `where` + `orderBy`, use the shorthand form (see example code below).
 
@@ -506,7 +506,9 @@ simply use collection group reference instead of collection reference, refer bac
 
 ## 🌻 Complex Data Typing
 
-as for (nested or not)object[] type, its document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member or array member in array, nested or not, similar rule apply to nested array. Long thing short, any thing that is in the array, will not get flatten and will not have it field path built.
+as for (nested or not)object[] type, its document/collection operations work the same as other array, it will not be flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member or array member in array, nested or not, similar rule apply to nested array.
+
+Long thing short, any thing that is in the array, be it another array or another object with array member, will not get flatten and will not have it field path built nor you can use field value (arrayRemove, arrayUnion and increment) except serverTimestamp field value.
 
 however, it is very much possible to query and modify object member(nested or not), as long as it is not array, the typing logic works just like other primitive data type in document/collection operation, because this wrapper will flatten all the in object type, nested or not.
 
@@ -583,6 +585,49 @@ nested.doc('123456').update(flatten(data)) // ok
 
 As for query, since the type is flatten, just query like you would normally query in firelord.
 
+## Handling Firestore Field Value
+
+Firestore field value, aka serverTimestamp, arrayRemove, arrayUnion and increment, they all return `FieldValue`, this is problematic, as you may use increment on array or serverTimeStamp on number, kudo whoever design this for making our life harder.
+
+The wrapper forbid you to use any firestore field value(serverTimestamp, arrayRemove, arrayUnion and increment) instance, we prepare another field value generators for you where the return type is masked.
+
+Basically they still return the same firestore field value but their type is masked, conversion table below show what mask the types.
+
+| Field Value     | Masked Type                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| increment       | number                                                                                                                   |
+| serverTimestamp | Firelord.ServerTimestamp(underneath it is { maskedValue: 'please import `serverTimestamp` from `firelord` and call it' } |
+| arrayUnion      | T[], where T is the type of the member                                                                                   |
+| arrayRemove     | T[], where T is the type of the member                                                                                   |
+
+this is how you use it
+
+```ts
+// import Firelord
+// import wrapper
+import { increment, arrayUnion, serverTimestamp } from 'firelord'
+
+type HandleFieldValue = Firelord.ReadWriteCreator<
+	{
+		a: number
+		b: Firelord.ServerTimestamp
+		d: string[]
+	},
+	'HandleFieldValue',
+	string
+>
+
+const handleFieldValue = wrapper<HandleFieldValue>().col('HandleFieldValue')
+
+handleFieldValue.doc('1234567').set({
+	a: increment(1),
+	b: serverTimestamp(),
+	d: arrayUnion('123', '456'),
+})
+```
+
+the api is similar to firestore api, same working logic apply to complex data type.
+
 ## 🐕 Opinionated Elements
 
 Code wise, there is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
@@ -601,7 +646,7 @@ Typing wise, there are few opinionated elements:
 1. `set`(without option) and `create` operations require all member to present.
 2. all write operations reject stranger members.
 3. although `updatedAt` and `createdAt` is included in type, all write operation exclude them, which mean you cant write the value of `updatedAt` and `createdAt`.
-4. `'ServerTimestamp'` is a reserved type, you cannot use it as literal type.
+4. `ServerTimestamp` is a reserved type, you cannot use it as string literal type.
 
 I believe this decision is practical for cases and not planning to change it in forseeable future.
 
@@ -617,4 +662,4 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 
 Since write operations reject stranger members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library return exact type, so it should works well with this library.
 
-If you are looking for npm library like `flatten`, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a more general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
+Do not use `flatten` for other purpose, if you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.

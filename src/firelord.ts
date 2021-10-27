@@ -30,6 +30,9 @@ export type PartialNoImplicitUndefinedAndNoExtraMember<
 
 export namespace Firelord {
 	export type ServerTimestamp = 'ServerTimestamp'
+	export type ServerTimestampMasked = {
+		maskedValue: 'please import `serverTimestamp` from `firelord` and call it'
+	}
 
 	// https://javascript.plainenglish.io/using-firestore-with-more-typescript-8058b6a88674
 	type DeepKey<T, K extends keyof T> = K extends string
@@ -70,39 +73,29 @@ export namespace Firelord {
 	type ArrayWriteConverter<T> = T extends (infer A)[]
 		? ArrayWriteConverter<A>[]
 		: T extends ServerTimestamp
-		? FirelordFirestore.FieldValue
+		? ServerTimestampMasked
 		: T extends FirelordFirestore.Timestamp | Date
 		? FirelordFirestore.Timestamp | Date
-		: T extends FirelordFirestore.GeoPoint
-		? FirelordFirestore.GeoPoint
 		: T
 
 	type ReadConverter<T> = T extends (infer A)[]
 		? ReadConverter<A>[]
 		: T extends ServerTimestamp | Date
 		? FirelordFirestore.Timestamp
-		: T extends FirelordFirestore.GeoPoint
-		? FirelordFirestore.GeoPoint
 		: T
 
 	type CompareConverter<T> = T extends (infer A)[]
 		? CompareConverter<A>[]
 		: T extends ServerTimestamp | Date | FirelordFirestore.Timestamp
 		? FirelordFirestore.Timestamp | Date
-		: T extends FirelordFirestore.GeoPoint
-		? FirelordFirestore.GeoPoint
 		: T
 
 	type WriteConverter<T> = T extends (infer A)[]
-		? ArrayWriteConverter<A>[] | FirelordFirestore.FieldValue
+		? ArrayWriteConverter<A>[]
 		: T extends ServerTimestamp
-		? FirelordFirestore.FieldValue
+		? ServerTimestampMasked
 		: T extends FirelordFirestore.Timestamp | Date
 		? FirelordFirestore.Timestamp | Date
-		: T extends number
-		? FirelordFirestore.FieldValue | number
-		: T extends FirelordFirestore.GeoPoint
-		? FirelordFirestore.GeoPoint
 		: T
 
 	// solve "Type instantiation is excessively deep and possibly infinite" error
