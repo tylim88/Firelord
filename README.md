@@ -607,7 +607,7 @@ this is how you use it
 ```ts
 // import Firelord
 // import wrapper
-import { increment, arrayUnion, serverTimestamp } from 'firelord'
+const { increment, arrayUnion, serverTimestamp } = wrapper().fieldValue
 
 type HandleFieldValue = Firelord.ReadWriteCreator<
 	{

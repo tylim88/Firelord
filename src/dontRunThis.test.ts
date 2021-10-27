@@ -1,11 +1,13 @@
 import { firelord } from '.'
-import { increment, arrayUnion, serverTimestamp } from './fieldValue'
+
 import { Firelord } from './firelord'
 import { firestore } from 'firebase-admin'
 import { flatten } from './flat'
 
 // create wrapper
 const wrapper = firelord(firestore)
+
+const { increment, arrayUnion, serverTimestamp } = wrapper().fieldValue
 
 // use base type to generate read and write type
 type User = Firelord.ReadWriteCreator<

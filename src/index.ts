@@ -2,6 +2,7 @@ import {
 	OmitKeys,
 	PartialNoImplicitUndefinedAndNoExtraMember,
 	ExcludePropertyKeys,
+	Firelord,
 } from './firelord'
 import { FirelordFirestore } from './firelordFirestore'
 import { queryCreator } from './queryCreator'
@@ -247,7 +248,32 @@ export const firelord: fl =
 			return queryCreator<Read, Compare, WithoutArrayTypeMember>(colRefRead)
 		}
 
-		return { col, colGroup }
+		return {
+			col,
+			colGroup,
+			fieldValue: {
+				increment: (value: number) => {
+					return firestore.FieldValue.increment(
+						value
+					) as unknown as Firelord.NumberMasked
+				},
+
+				serverTimestamp: () => {
+					return firestore.FieldValue.serverTimestamp() as unknown as Firelord.ServerTimestampMasked
+				},
+
+				arrayUnion: <T>(...values: T[]) => {
+					return firestore.FieldValue.arrayUnion(
+						...values
+					) as unknown as Firelord.ArrayMasked<T>
+				},
+				arrayRemove: <T>(...values: T[]) => {
+					return firestore.FieldValue.arrayRemove(
+						...values
+					) as unknown as Firelord.ArrayMasked<T>
+				},
+			},
+		}
 	}
 
 export const ozai = firelord
@@ -255,5 +281,3 @@ export const ozai = firelord
 export { flatten } from './flat'
 
 export type { Firelord } from './firelord'
-
-export * from './fieldValue'
