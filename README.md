@@ -14,6 +14,8 @@
 
 ✋🏻 Not only it safeguards your types, but it also stops you from making any incorrect implementation(use the wrapper incorrectly).
 
+💥 Even Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) is typed, no more terror!
+
 ✨ Api closely resemble firestore api, low learning curve.
 
 🐉 Zero dependency.
@@ -63,6 +65,7 @@ Overview:
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
     ![orderBy limitation](img/orderBy.png)
+- Even the seemly untyped-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) is taken care of, EVERYTHING is typed!!
 - and much more!
 
 basically all read operation return `read type` data, all write operation require `write type` data and all query require `compare type` data, you only need to define `base type` and the wrapper will generates the other 3 types for you.
