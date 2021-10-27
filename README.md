@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
 
-🐤 Write scalable firestore code with complete deep typing firestore wrapper, no more typing hell in your firestore code.
+🐤 Write truly scalable firestore code with complete deep typing firestore wrapper, no more typing hell in your firestore code.
 
 💪🏻 handle object, array, array object, object array...and all kinds of type, regardless of the nesting level!
 
