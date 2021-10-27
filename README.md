@@ -27,7 +27,7 @@ Variants:
 
 ## 🦙 Purpose
 
-You need to prepare 3 set of data type in order to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`. Actually it is more than this, but this is what the library offer now.
+You need to prepare 3 set of data type in order to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
 
 Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types in read, write and compare(query) are needed. This library is a wrapper that introduce deeper typing solution to handle each case.
 
@@ -593,12 +593,14 @@ The wrapper forbid you to use any firestore field value(serverTimestamp, arrayRe
 
 Basically they still return the same firestore field value but their type is masked, conversion table below show what mask the types.
 
-| Field Value     | Masked Type                                                                                                              |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| increment       | number                                                                                                                   |
-| serverTimestamp | Firelord.ServerTimestamp(underneath it is { maskedValue: 'please import `serverTimestamp` from `firelord` and call it' } |
-| arrayUnion      | T[], where T is the type of the member                                                                                   |
-| arrayRemove     | T[], where T is the type of the member                                                                                   |
+| Field Value     | Masked Type                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------------------- |
+| increment       | { 'please import `increment` from `firelord` and call it': number }                             |
+| serverTimestamp | {'please import `serverTimestamp` from `firelord` and call it': Firelord.ServerTimestamp }      |
+| arrayUnion      | {'please import `increment` from `firelord` and call it': T } where T is the type of the member |
+| arrayRemove     | {'please import `increment` from `firelord` and call it': T } where T is the type of the member |
+
+the masked type purposely look weird so nobody accidentally use it for something else(as it could be dangerous, because the underneath value is firestore field value, not what typescript think it is)
 
 this is how you use it
 

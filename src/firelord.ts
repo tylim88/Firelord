@@ -31,7 +31,13 @@ export type PartialNoImplicitUndefinedAndNoExtraMember<
 export namespace Firelord {
 	export type ServerTimestamp = 'ServerTimestamp'
 	export type ServerTimestampMasked = {
-		maskedValue: 'please import `serverTimestamp` from `firelord` and call it'
+		'please import `serverTimestamp` from `firelord` and call it': ServerTimestamp
+	}
+	export type NumberMasked = {
+		'please import `increment` from `firelord` and call it': number
+	}
+	export type ArrayMasked<T> = {
+		'please import `increment` from `firelord` and call it': T
 	}
 
 	// https://javascript.plainenglish.io/using-firestore-with-more-typescript-8058b6a88674
@@ -76,7 +82,10 @@ export namespace Firelord {
 		? ServerTimestampMasked
 		: T extends FirelordFirestore.Timestamp | Date
 		? FirelordFirestore.Timestamp | Date
-		: T
+		: //   T extends Record<string, unknown> //! the type become any, solution needed
+		  // ? ArrayWriteConverter<T>
+		  // :
+		  T
 
 	type ReadConverter<T> = T extends (infer A)[]
 		? ReadConverter<A>[]
@@ -91,9 +100,11 @@ export namespace Firelord {
 		: T
 
 	type WriteConverter<T> = T extends (infer A)[]
-		? ArrayWriteConverter<A>[]
+		? ArrayWriteConverter<A>[] | ArrayMasked<ArrayWriteConverter<A>>
 		: T extends ServerTimestamp
 		? ServerTimestampMasked
+		: T extends number
+		? number | NumberMasked
 		: T extends FirelordFirestore.Timestamp | Date
 		? FirelordFirestore.Timestamp | Date
 		: T
