@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.5.1 28-Oct-2021
+
+- compare type now also convert object in array recursively
+
 ## 0.5.0 27-Oct-2021
 
 - solved firestore field value type unsafe issue by using masked type.
