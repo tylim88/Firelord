@@ -2,7 +2,7 @@
 
 Change log
 
-## 0.5.1 28-Oct-2021
+## 0.5.2 28-Oct-2021
 
 - compare type now also convert object in array recursively
 

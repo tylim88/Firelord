@@ -365,7 +365,7 @@ type Nested = Firelord.ReadWriteCreator<
 	{
 		a: number
 		b: { c: string }
-		d: { e: { f: Date[]; g: { h: { a: number }[] } } }
+		d: { e: { f: Date[]; g: { h: { a: Date }[] } } }
 	},
 	'Nested',
 	string
@@ -373,18 +373,18 @@ type Nested = Firelord.ReadWriteCreator<
 const nested = wrapper<Nested>().col('Nested')
 
 // read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }	}
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: firestore.Timestamp }[] } } }	}
 
 // write type
-type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: Date | firestore.Timestamp }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
 
 // compare type
-type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: Date | firestore.Timestamp }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
 const data = {
 	a: 1,
 	b: { c: 'abc' },
-	d: { e: { f: [new Date(0)], g: { h: [{ a: 123 }] } } },
+	d: { e: { f: [new Date(0)], g: { h: [{ a: new Date(0) }] } } },
 }
 
 nested.doc('123456').set(data)
