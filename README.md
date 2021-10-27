@@ -33,7 +33,7 @@ Unfortunately `withConverter` is not enough to solve the type problems, there is
 
 Not only this library deal with data type, it also provide type safe for collection path, document path, firestore limitations(whenever is possible).
 
-Best thing of all: it handles complicated data type and type all their operations.
+Best thing of all: it handles complex data type and type all their operations.
 
 require typescript 4.1 and above
 
@@ -54,8 +54,10 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - finally, type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level!! Read [Complex Data Typing](#-complex-data-typing) for more info.
   ![flatten object](img/flattenObject.png)
-- preventing user from chain `offset` after `offset`(reduce mistake, however cannot guarantee there is only 1 offset till the end of chain).
-- preventing user from chain `limit` or `limit to last` after `limit` or `limit to last`(reduce mistake, however cannot guarantee there is only 1 limit or limit to last till the end of chain).
+- preventing user from chain <`offset`> and <`limit` and `limit to last`> for the 2nd time.
+
+  ![orderBy limitation](img/limitOffset.png)
+
 - much better `where` and `orderBy` clause
   - field value are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
@@ -384,6 +386,8 @@ you may want to read this before proceed: [Firestore OrderBy and Where conflict]
 
 any `orderBy` that is not follow `where` clause does not abide by rule and limitation mentioned above.
 
+Note: The wrapper will not stop you from using multiple orderBy clause because it is possible to have multiple `orderBy` clause, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
+
 Tips: to make thing easier, whenever you want to use `where` + `orderBy`, use the shorthand form (see example code below).
 
 ```ts
@@ -612,11 +616,11 @@ const flattenData = flatten(
 primitive.doc('12345').set(flattenData)
 ```
 
-put empty object `{}` as 2nd argument if you don't have any primitive object type.
+create mirror object if you have primitive object type, else put empty object `{}` as 2nd argument.
 
 and don't worry, as always typescript will stop you if any step goes wrong
 
-It is better to generate tuple type instead of mirror object type as 2nd parameter, however tuple type is hit with [order inconsistency](https://stackoverflow.com/a/55128956/5338829).
+It is better to generate tuple type instead of mirror object type as 2nd parameter, however union to tuple type is hit with [order inconsistency](https://stackoverflow.com/a/55128956/5338829).
 
 ### Caveat 2
 

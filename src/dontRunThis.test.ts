@@ -319,6 +319,11 @@ users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 
+// only 1 limit or limitToLast and 1 offset
+users.limit(1).where('age', '!=', 20).limitToLast(2)
+users.limit(1).where('age', '!=', 20).limit(2)
+users.offset(1).where('age', '!=', 20).offset(2)
+
 type a = Firelord.ReadWriteCreator<
 	{
 		a:

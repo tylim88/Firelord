@@ -8,15 +8,25 @@ export type QueryCreator<
 		FirelordFirestore.CreatedUpdatedRead,
 	Compare extends FirelordFirestore.DocumentData &
 		FirelordFirestore.CreatedUpdatedCompare,
-	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>
+	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>,
+	PermanentlyOmittedKeys extends keyof ReturnType<
+		QueryCreator<Read, Compare, WithoutArrayTypeMember, PermanentlyOmittedKeys>
+	> = never
 > = (query: FirelordFirestore.Query<Read>) => {
 	firestore: typeof query.firestore
 	stream: typeof query.stream
 	offset: (
 		offset: number
 	) => OmitKeys<
-		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
-		'offset'
+		ReturnType<
+			QueryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				'offset' | PermanentlyOmittedKeys
+			>
+		>,
+		'offset' | PermanentlyOmittedKeys
 	>
 	where: <
 		P extends string & keyof Read,
@@ -62,21 +72,52 @@ export type QueryCreator<
 			: never
 	) => J extends '<' | '<=' | '>' | '>' | '==' | 'in'
 		? OmitKeys<
-				ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
-				'orderBy'
+				ReturnType<
+					QueryCreator<
+						Read,
+						Compare,
+						WithoutArrayTypeMember,
+						PermanentlyOmittedKeys
+					>
+				>,
+				'orderBy' | PermanentlyOmittedKeys
 		  >
-		: ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
+		: OmitKeys<
+				ReturnType<
+					QueryCreator<
+						Read,
+						Compare,
+						WithoutArrayTypeMember,
+						PermanentlyOmittedKeys
+					>
+				>,
+				PermanentlyOmittedKeys
+		  >
 	limit: (
 		limit: number
 	) => OmitKeys<
-		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
-		'limit' | 'limitToLast'
+		ReturnType<
+			QueryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				'limit' | 'limitToLast' | PermanentlyOmittedKeys
+			>
+		>,
+		'limit' | 'limitToLast' | PermanentlyOmittedKeys
 	>
 	limitToLast: (
 		limit: number
 	) => OmitKeys<
-		ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>,
-		'limit' | 'limitToLast'
+		ReturnType<
+			QueryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				'limit' | 'limitToLast' | PermanentlyOmittedKeys
+			>
+		>,
+		'limit' | 'limitToLast' | PermanentlyOmittedKeys
 	>
 	orderBy: <P extends WithoutArrayTypeMember>(
 		fieldPath: P,
@@ -85,7 +126,17 @@ export type QueryCreator<
 			clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
 			fieldValue: Compare[P] | FirelordFirestore.DocumentSnapshot
 		}
-	) => ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>>
+	) => OmitKeys<
+		ReturnType<
+			QueryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>
+		>,
+		PermanentlyOmittedKeys
+	>
 	get: () => ReturnType<typeof query.get>
 }
 
@@ -97,7 +148,10 @@ export const queryCreator = <
 		FirelordFirestore.CreatedUpdatedRead,
 	Compare extends FirelordFirestore.DocumentData &
 		FirelordFirestore.CreatedUpdatedCompare,
-	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>
+	WithoutArrayTypeMember extends ExcludePropertyKeys<Compare, unknown[]>,
+	PermanentlyOmittedKeys extends keyof ReturnType<
+		QueryCreator<Read, Compare, WithoutArrayTypeMember, PermanentlyOmittedKeys>
+	> = never
 >(
 	query: FirelordFirestore.Query<Read>
 ): ReturnType<QueryCreator<Read, Compare, WithoutArrayTypeMember>> => {
@@ -113,9 +167,12 @@ export const queryCreator = <
 		) => {
 			const ref = query.orderBy(fieldPath, directionStr)
 
-			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				cursor ? ref[cursor.clause](cursor.fieldValue) : ref
-			)
+			return queryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>(cursor ? ref[cursor.clause](cursor.fieldValue) : ref)
 		}
 
 	return {
@@ -124,9 +181,12 @@ export const queryCreator = <
 			return query.stream()
 		},
 		offset: (offset: number) => {
-			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				query.offset(offset)
-			)
+			return queryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>(query.offset(offset))
 		},
 		where: <
 			P extends string & keyof Read,
@@ -181,7 +241,12 @@ export const queryCreator = <
 		) => {
 			const ref = query.where(fieldPath, opStr, value)
 
-			const queryRef = queryCreator<Read, Compare, WithoutArrayTypeMember>(ref)
+			const queryRef = queryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>(ref)
 
 			const { orderBy: orderBy1, ...rest } = orderBy
 				? orderByCreator(ref)(
@@ -202,14 +267,20 @@ export const queryCreator = <
 				: typeof queryRef
 		},
 		limit: (limit: number) => {
-			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				query.limit(limit)
-			)
+			return queryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>(query.limit(limit))
 		},
 		limitToLast: (limit: number) => {
-			return queryCreator<Read, Compare, WithoutArrayTypeMember>(
-				query.limitToLast(limit)
-			)
+			return queryCreator<
+				Read,
+				Compare,
+				WithoutArrayTypeMember,
+				PermanentlyOmittedKeys
+			>(query.limitToLast(limit))
 		},
 		orderBy: orderByCreator(query),
 		get: () => {
