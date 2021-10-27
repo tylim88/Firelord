@@ -577,8 +577,8 @@ const data = {
 
 nested.doc('123456').set(data) // ERROR
 nested.doc('123456').update(data) // ERROR
-nested.doc('123456').set(flatten(data)) // ok, see explanation for 2nd argument `{}` in 1st caveat
-nested.doc('123456').update(flatten(data)) // ok, see explanation for 2nd argument `{}` in 1st caveat
+nested.doc('123456').set(flatten(data)) // ok
+nested.doc('123456').update(flatten(data)) // ok
 ```
 
 As for query, since the type is flatten, just query like you would normally query in firelord.
