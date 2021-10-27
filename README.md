@@ -609,7 +609,7 @@ I believe this decision is practical for cases and not planning to change it in 
 
 While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
 
-1. FirebaseFirestore.FieldValue is not narrowed down, this remain as the biggest regret in this wrapper, there should be a simple solution for this.
+1. FirebaseFirestore.FieldValue is not narrowed down (v0.4.0 solved half of this problem, the rest will be solved in v0.5.0)
 
 2. despite able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
 
