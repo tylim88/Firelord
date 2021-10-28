@@ -59,7 +59,7 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level!! Read [Complex Data Typing](#-complex-data-typing) for more info.
   ![flatten object](img/flattenObject.png)
-- preventing user from chain <`offset`> and <`limit` and `limit to last`> for the 2nd time.
+- preventing user from chain <`offset`> and <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
 
   ![limit offset](img/limitOffset.png)
 

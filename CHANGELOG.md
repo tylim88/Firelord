@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.6.1 28-Oct-2021
+
+- simplify queryCreator a bit
+
 ## 0.6.0 28-Oct-2021
 
 - create DeepRequired type and implement it in FlattenObject

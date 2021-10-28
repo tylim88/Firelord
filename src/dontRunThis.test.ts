@@ -329,6 +329,7 @@ users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 users.limit(1).where('age', '!=', 20).limitToLast(2)
 users.limit(1).where('age', '!=', 20).limit(2)
 users.offset(1).where('age', '!=', 20).offset(2)
+users.where('age', '!=', 20).limitToLast(2).offset(3).limit(1)
 
 type a = Firelord.ReadWriteCreator<
 	{
