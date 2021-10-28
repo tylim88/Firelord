@@ -61,7 +61,7 @@ Overview:
   ![flatten object](img/flattenObject.png)
 - preventing user from chain <`offset`> and <`limit` and `limit to last`> for the 2nd time.
 
-  ![orderBy limitation](img/limitOffset.png)
+  ![limit offset](img/limitOffset.png)
 
 - much better `where` and `orderBy` clause
   - field values are typed accordingly to field path
@@ -70,9 +70,11 @@ Overview:
     ![orderBy limitation](img/orderBy.png)
 - The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed!
 
-  ![orderBy limitation](img/fieldValue.png)
+  ![field value](img/fieldValue.png)
 
-- and much more!
+- Check your type regardless of how deep it is.
+
+  ![type check](img/checkType.png)
 
 ## 🦜 Getting Started
 
@@ -584,7 +586,7 @@ As you can see, the object flattens down and the wrapper converted all the value
 
 so the next question is, how are you going to shape your object so you can use it in `set`, `create` and `update` operation?
 
-## Set and Create
+## Set, Create and Add
 
 Please read [set and dot syntax](https://stackoverflow.com/a/60879213/5338829) before you proceed.
 
@@ -608,6 +610,8 @@ nested.doc('123456').set(completeData) // need complete data if no merge option
 nested.doc('123456').create(completeData) // create also require complete data
 nested.doc('123456').set(data, { merge: true })
 ```
+
+`add` typing logic works like `create`.
 
 ### Update
 
@@ -752,3 +756,8 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 Since write operations reject stranger members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library returns the exact type, so it should work well with the wrapper.
 
 Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
+
+## Road Map
+
+- automate flatten (difficult).
+- wrap document reference that `add` operation return.
