@@ -4,10 +4,17 @@ Change log
 
 ## 0.6.0 28-Oct-2021
 
-- fix set and create parameter type, set merge actually work different than update, set no longer accept flatten object
 - create DeepRequired type and implement it in FlattenObject
 - add writeNested object type that return un-flatten form of write type
 - reuse type for `flatten`
+- fix `set` and create parameter type, `set` merge actually work different than update, `set` no longer accept flatten object
+- no longer allow user to mark as optional in base type
+- DeepRequire also recursive into array and object literal
+- the `read`, `write` and `compare` type of `serverTimestamp[]` are now `never[]`
+- remove `IncludeKeys` type as it is redundant
+- fix forgot to convert `FirelordFirestore.Timestamp` in read converter
+- `PartialNoImplicitUndefinedAndNoExtraMember` now recursive into object and array
+- fix `set` type logic(the long one is better)
 
 ## 0.5.4 28-Oct-2021
 

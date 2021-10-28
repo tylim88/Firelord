@@ -78,7 +78,10 @@ Overview:
 
 ```bash
 npm i firelord
+npm i -D ts-essentials
 ```
+
+The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
 ### Collection
 
@@ -190,7 +193,7 @@ You SHOULD NOT try to memorize how the typing work, keep in mind the purpose is 
 | undefined[]                      | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                               | undefined[]                                  |
 | Date[]                           | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
 | firestore.Timestamp[]            | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
-| Firelord.ServerTimestamp[]\*\*\* | firestore.Timestamp[] | FirebaseFirestore.FieldValue (ServerTimestamp*)[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion*)          | (Date \| firestore.Timestamp)[]              |
+| Firelord.ServerTimestamp[]\*\*\* | never[]               | never[]                                                                                                            | never[]                                      |
 | firestore.GeoPoint[]             | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                               | firestore.GeoPoint[]                         |
 | object[]\*\*                     | object[]              | object[]                                                                                                           | object[]                                     |
 | n-dimension array                | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*) only supported for 1st dimension array | compare only elements in 1st dimension array |
@@ -211,7 +214,7 @@ NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[
 
 \*\* the wrapper flatten nested object, however, there are not many things to do with object[] type due to how firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
-\*\*\* `Firelord.ServerTimestamp`(underneath it is `ServerTimestamp`) is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`.
+\*\*\* `Firelord.ServerTimestamp`(underneath it is `ServerTimestamp`) is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in array, see [Complex Data Typing](#-complex-data-typing) for more info.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -259,7 +262,7 @@ user.set({
 
 // create if not exist, else update
 // although it can create if not exist, we intend this to use as an update operation
-// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` or mark it as optional in the `base type`
+// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be typescript missing property error if all member is not present, to fix this just fill in `{ merge:true }` in option as shown below.
@@ -267,7 +270,7 @@ user.set({ name: 'Michael' }, { merge: true })
 
 // create if not exist, else update
 // although it can create if not exist, we intend this to use as an update operation
-// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` or mark it as optional in the `base type`
+// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in option as shown below.
@@ -277,7 +280,7 @@ user.set(
 )
 
 // update if exist, else fail
-// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` or mark it as optional in the `base type`
+// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 user.update({ name: 'Michael' })
 
@@ -309,7 +312,7 @@ userBatch.delete()
 userBatch.create({ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) })
 
 // update if exist, else fail
-// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` or mark it as optional in the `base type`
+// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 userBatch.update({ name: 'Ozai' })
 
@@ -355,7 +358,7 @@ user.runTransaction(async transaction => {
 
 	// create if not exist, else update
 	// although it can create if not exist, we intend this to use as an update operation
-	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` or mark it as optional in the `base type`
+	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in the option as shown below.
@@ -363,7 +366,7 @@ user.runTransaction(async transaction => {
 
 	// create if not exist, else update
 	// although it can create if not exist, we intend this to use as an update operation
-	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` or mark it as optional in the `base type`
+	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in the option as shown below.
@@ -373,7 +376,7 @@ user.runTransaction(async transaction => {
 	)
 
 	// update if exist, else fail
-	// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` or mark it as optional in the `base type`
+	// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
 	await transaction.update({ name: 'Michael' })
 	// delete document
@@ -562,22 +565,19 @@ type Nested = Firelord.ReadWriteCreator<
 	{
 		a: number
 		b: { c: string }
-		d: { e: { f: Date[]; g: { h: { a: number }[] } } }
+		d: { e: { f: Date[]; g: { h: { i: { j: Date }[] }[] } } }
 	},
 	'Nested',
 	string
 >
+const nested = wrapper<Nested>().col('Nested')
 
 // read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: number }[] } } }, createdAt: firestore.Timestamp, updatedAt: firestore.Timestamp	}
-
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: firestore.Timestamp}[] }[] } } }	}
 // write type
-type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
-
+type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
 // compare type
-type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
-
-const nested = wrapper<Nested>().col('Nested')
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 ```
 
 As you can see, the object flattens down and the wrapper converted all the value types
@@ -593,7 +593,20 @@ In short, you cannot use dot syntax with `set` (`create` should have the same be
 consider this example:
 
 ```ts
+// import nested
+const completeData = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
+}
+const data = {
+	a: 1,
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
+}
 
+nested.doc('123456').set(completeData) // need complete data if no merge option
+nested.doc('123456').create(completeData) // create also require complete data
+nested.doc('123456').set(data, { merge: true })
 ```
 
 ### Update
@@ -609,15 +622,16 @@ consider this example:
 
 const data = {
 	a: 1,
-	d: { e: { f: [new Date(0)] } },
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
 }
-nested.doc('123456').update(data) // ERROR, because the input type is Partial<{a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}>
+
+nested.doc('123456').update(data) // ERROR, type mismatch, if your data is nested object, please flatten your data first
 ```
 
 If you want to update fields in nested objects, there are 2 ways:
 
 1. create the flattened object yourself.
-2. You need to flatten your object. To do so, import `flatten` from `firelord`. (recommended, because it is easier)
+2. use helper function: import `flatten` from `firelord`. (recommended, because it is easier)
 
 Reminder:
 
@@ -631,14 +645,20 @@ solution:
 
 import { flatten } from 'firelord'
 
-const data = {
+// flatten by yourself
+const flattenedData = {
 	a: 1,
-	d: { e: { f: [new Date(0)] } },
+	'd.e.f': [new Date(0)],
+	'd.e.g.h': [{ i: [{ j: new Date(0) }] }],
 }
 
-const flattenedData = { a: 1, 'd.e.f': [new Date(0)] }
-
 nested.doc('123456').update(flattenedData) // ok
+
+// use helper function
+const data = {
+	a: 1,
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
+}
 nested.doc('123456').update(flatten(data)) // ok, recommended, because it is easier
 ```
 

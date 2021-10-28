@@ -55,21 +55,25 @@ export const firelord: fl =
 					transaction: FirelordFirestore.Transaction
 				) => {
 					return {
-						create: (data: Write) => {
+						create: (data: WriteNested) => {
 							return transaction.create(docWrite, {
 								...newTime,
 								...data,
 							})
 						},
 						set: <
-							J extends Partial<Write>,
+							J extends Partial<WriteNested>,
 							Z extends { merge?: true; mergeField?: (keyof Write)[] }
 						>(
 							data: J extends never
 								? J
 								: Z extends undefined
-								? Write
-								: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>,
+								? WriteNested
+								: Z['merge'] extends true
+								? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
+								: Z['mergeField'] extends (keyof Write)[]
+								? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
+								: WriteNested,
 							options?: Z
 						) => {
 							if (options) {
@@ -140,25 +144,25 @@ export const firelord: fl =
 							}
 						)
 					},
-					create: (data: Write) => {
+					create: (data: WriteNested) => {
 						return docWrite.create({
 							...newTime,
 							...data,
 						})
 					},
 					set: <
-						J extends Partial<Write>,
+						J extends Partial<WriteNested>,
 						Z extends { merge?: true; mergeField?: (keyof Write)[] }
 					>(
 						data: J extends never
 							? J
 							: Z extends undefined
-							? Write
+							? WriteNested
 							: Z['merge'] extends true
-							? PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
+							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
 							: Z['mergeField'] extends (keyof Write)[]
-							? PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
-							: Write,
+							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
+							: WriteNested,
 						options?: Z
 					) => {
 						if (options) {
@@ -205,7 +209,7 @@ export const firelord: fl =
 							) => {
 								return batch.update(docWrite, { updatedAt: time, ...data })
 							},
-							create: (data: Write) => {
+							create: (data: WriteNested) => {
 								return batch.create(docWrite, {
 									...newTime,
 									...data,
@@ -235,7 +239,7 @@ export const firelord: fl =
 					return colRefRead.listDocuments()
 				},
 				doc,
-				add: (data: Write) => {
+				add: (data: WriteNested) => {
 					return colRefWrite.add({
 						...newTime,
 						...data,

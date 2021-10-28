@@ -4,7 +4,6 @@ import {
 	OmitKeys,
 	PartialNoImplicitUndefinedAndNoExtraMember,
 	ExcludePropertyKeys,
-	DeepRequired,
 	Firelord,
 } from './firelord'
 import { firestore } from 'firebase-admin'
@@ -372,7 +371,7 @@ type Nested = Firelord.ReadWriteCreator<
 	{
 		a: number
 		b: { c: string }
-		d: { e: { f: Date[]; g: { h: { a: Date }[] } } }
+		d: { e: { f: Date[]; g: { h: { i: { j: Date }[] }[] } } }
 	},
 	'Nested',
 	string
@@ -380,22 +379,43 @@ type Nested = Firelord.ReadWriteCreator<
 const nested = wrapper<Nested>().col('Nested')
 
 // read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { a: firestore.Timestamp }[] } } }	}
-
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: firestore.Timestamp}[] }[] } } }	}
 // write type
-type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: Date | firestore.Timestamp }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
-type NestedWriteOriginal = Firelord.FlattenObject<
-	Partial<OmitKeys<Nested['writeNested'], 'updatedAt' | 'createdAt'>>
->
+type NestedWrite = Nested['write']['d.e.g.h'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+
 // compare type
-type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: Date | firestore.Timestamp }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
 const data = {
 	a: 1,
-	d: { e: { f: [new Date(0)], g: { h: [{ a: new Date(0) }] } } },
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
+}
+const incorrectData = {
+	a: 1,
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: true }] }] } } },
 }
 
+const completeData = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
+}
+
+const incorrectCompleteData = {
+	a: 1,
+	b: { c: 'abc' },
+	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: true }] }] } } },
+}
+
+nested.doc('123456').set(data) // need complete data if no merge option
+nested.doc('123456').set(completeData)
+nested.doc('123456').create(completeData)
+nested.doc('123456').set(data, { merge: true })
 nested.doc('123456').update(flatten(data))
+
+nested.doc('123456').set(incorrectCompleteData)
+nested.doc('123456').set(incorrectData, { merge: true })
+nested.doc('123456').update(flatten(incorrectData))
 
 type HandleFieldValue = Firelord.ReadWriteCreator<
 	{
