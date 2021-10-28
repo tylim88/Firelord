@@ -8,17 +8,17 @@
 
 💪🏻 handle object, array, array object, object array...and all kinds of type, regardless of the nesting level!
 
-🚀 All read and write operation are typed, query field path, field value, collection path, document path, everything is typed!
+🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path, type everything!
 
-🔥 Automatically convert all value type to corresponding read type, write type and compare type(good at handling timestamp and field value).
+🔥 Automatically convert all value types to corresponding read types, write types and compare types (good at handling timestamp and field values).
 
-✋🏻 Not only it safeguards your types, but it also stops you from making any incorrect implementation(use the wrapper incorrectly).
+✋🏻 Not only does it safeguard your types, but it also stops you from making any incorrect implementation(use the wrapper incorrectly).
 
 💥 Even the seemly untyped-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) is taken care of, EVERYTHING is typed, NO TYPE IS LEFT BEHIND!!
 
-✨ Api closely resemble firestore API, low learning curve.
+✨ API closely resembles firestore API, low learning curve.
 
-🌈 Strictly onetime setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
+🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
 
 🐉 Zero dependencies.
 
@@ -29,9 +29,23 @@ Variants:
 1. [react native](https://www.npmjs.com/package/firelordrn)
 2. [js](https://www.npmjs.com/package/firelordjs)
 
+## 🦊 Project Status
+
+Current Status: Beta
+
+Starting from 0.6.0, the library implemented all core functionalities, and it will slowly exit beta and become production-ready. I will not add tests aggressively because I am exhausted, and to begin with, this thing is not easy(I don't know, maybe I am bad at typescript).
+
+However, one thing for sure, this is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
+
+Ok, I may exaggerate a little, but I welcome you to prove me wrong.
+
+Anyway, star⭐ the project if you like what I am doing, thank you.
+
+Note: any version that is not mentioned in the changelog is document update.
+
 ## 🦙 Purpose
 
-You need to prepare 3 sets of data types to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
+You may not notice this but you need to prepare 3 sets of data types to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
 
 Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types are needed in read, write and compare(query). This library is a wrapper that introduces deep type solutions to handle each case.
 
@@ -49,8 +63,8 @@ Overview:
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
 - `Firestore.FieldValue`, `Firestore.TimeStamp`,`Firestore.GeoPoint`,`Date` are treated as primitive types.
-- Preventing you from explicitly assign `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
-- Preventing you from write stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
+- Prevent you from explicitly assigning `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
+- Prevent you from writing stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
 - One time setting per document type: define a data type, a collection path and a document path, and you are ready to go.
   - type collection path, collection group path and document path.
   - auto generate sub collection path type.
@@ -59,7 +73,7 @@ Overview:
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level!! Read [Complex Data Typing](#-complex-data-typing) for more info.
   ![flatten object](img/flattenObject.png)
-- preventing user from chain <`offset`> and <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
+- Prevent you from chaining <`offset`> or <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
 
   ![limit offset](img/limitOffset.png)
 
@@ -84,6 +98,8 @@ npm i -D ts-essentials
 ```
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
+
+The package is only 15KB before zip and uglify, it looks big due to the images in documentation.
 
 ### Collection
 
