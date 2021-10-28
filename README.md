@@ -563,15 +563,15 @@ simply use collection group reference instead of collection reference, refer bac
 
 ## 🌻 Complex Data Typing
 
-As for (nested or not)object[] type, its document/collection operations work the same as other arrays, it will not flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member or array member in the array, nested or not, a similar rule applies to a nested array.
+As for (nested or not)object[] type, its document/collection operations work the same as other arrays, it will not flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) specific object member or array member in the array, nested or not, similar rule applies to a nested array.
 
 Long thing short, anything that is in the array, be it another array or another object with array member, will not get flattened and will not have its field path built nor you can use field value (arrayRemove, arrayUnion and increment, serverTimestamp). Read [Firestore append to array (field type) an object with server timestamp](https://stackoverflow.com/a/66353116/5338829) and [How to increment a map value in a Firestore array](https://stackoverflow.com/a/58310449/5338829), both are negative.
 
-However, it is very much possible to query and write a specific object member (nested or not), as long as it is not in an array, the typing logic works just like other primitive data types' document/collection operation because the wrapper will flatten all the in object type, nested or not.
+However, it is possible to query or write a specific object member (nested or not), as long as it is not in an array, the typing logic works just like other primitive data types' document/collection operation because the wrapper will flatten all the members in object type, nested or not.
 
 NOTE: read type does not flatten, because there is no need to
 
-Last, both object, object[], array, array object, nested or not, no matter how deep, all the field values (not specifically referring to Firestore.FieldValue, but field value) of all data types will undergo data type conversion.
+Last, both object, object[], array, array object, nested or not, no matter how deep, all the field values (not specifically referring to Firestore.FieldValue) of all data types will undergo data type conversion according to the [conversion table](#-conversion-table).
 
 consider this example
 
@@ -701,7 +701,7 @@ It still returns the same firestore field value but with a masked return type, c
 | arrayUnion      | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T }            | where T is the type of the member |
 | arrayRemove     | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T }            | where T is the type of the member |
 
-the masked type purposely looks weird, so nobody accidentally uses it for something else(as it could be dangerous, because the underneath value is firestore field value, not what typescript think it is)
+the mask types purposely looks weird, so nobody accidentally uses it for something else(as it could be dangerous, because the underneath value is firestore field value, not what typescript really think it is).
 
 this is how you use it
 
@@ -737,7 +737,7 @@ handleFieldValue.doc('1234567').set({
 
 The API is like firestore API, same working logic apply to complex data type.
 
-if you try to use the original firestore field value, typescript will stop you.
+if you try to use the original firestore field value, the wrapper will stop you.
 
 ## 🐕 Opinionated Elements
 
