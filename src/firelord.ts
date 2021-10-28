@@ -1,7 +1,14 @@
 import { FirelordFirestore } from './firelordFirestore'
+
 export type OmitKeys<T, K extends keyof T> = Omit<T, K>
 
 export type RemoveArray<T extends unknown[]> = T extends (infer A)[] ? A : never
+
+export type DeepRequired<T> = Required<{
+	[P in keyof T]: T[P] extends Record<string, unknown>
+		? DeepRequired<T[P]>
+		: T[P]
+}>
 
 export type ExcludePropertyKeys<A, U = undefined> = string &
 	{
@@ -70,17 +77,15 @@ export namespace Firelord {
 		? T[P]
 		: never
 
-	type FlattenObject<T extends Record<string, unknown>> = {
-		[TKey in DeepKeyS<T>]: DeepValue<T, TKey>
+	export type FlattenObject<T extends Record<string, unknown>> = {
+		[TKey in DeepKeyS<DeepRequired<T>>]: DeepValue<DeepRequired<T>, TKey>
 	}
 
 	// https://stackoverflow.com/questions/69628967/typescript-distribute-over-union-doesnt-work-in-index-signature
 
 	type ArrayWriteConverter<T> = T extends (infer A)[]
 		? ArrayWriteConverter<A>[]
-		: T extends ServerTimestamp
-		? ServerTimestampMasked
-		: T extends FirelordFirestore.Timestamp | Date
+		: T extends FirelordFirestore.Timestamp | Date | ServerTimestamp
 		? FirelordFirestore.Timestamp | Date
 		: T extends Record<string, unknown>
 		? {
@@ -152,6 +157,11 @@ export namespace Firelord {
 			[index in keyof FirelordFirestore.CreatedUpdatedRead]: FirelordFirestore.CreatedUpdatedRead[index]
 		}
 		// so it looks more explicit in typescript hint
+		writeNested: {
+			[J in keyof B]: WriteConverter<B[J]>
+		} & {
+			[index in keyof FirelordFirestore.CreatedUpdatedWrite]: FirelordFirestore.CreatedUpdatedWrite[index]
+		}
 		write: {
 			[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
 		} & {

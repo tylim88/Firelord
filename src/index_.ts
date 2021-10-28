@@ -15,6 +15,8 @@ export type firelord = (firestore: FirelordFirestore.Firestore) => <
 		read: FirelordFirestore.DocumentData & FirelordFirestore.CreatedUpdatedRead
 		write: FirelordFirestore.DocumentData &
 			FirelordFirestore.CreatedUpdatedWrite
+		writeNested: FirelordFirestore.DocumentData &
+			FirelordFirestore.CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData &
 			FirelordFirestore.CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData

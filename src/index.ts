@@ -19,12 +19,15 @@ export const firelord: fl =
 				FirelordFirestore.CreatedUpdatedRead
 			write: FirelordFirestore.DocumentData &
 				FirelordFirestore.CreatedUpdatedWrite
+			writeNested: FirelordFirestore.DocumentData &
+				FirelordFirestore.CreatedUpdatedWrite
 			compare: FirelordFirestore.DocumentData &
 				FirelordFirestore.CreatedUpdatedCompare
 			base: FirelordFirestore.DocumentData
 		} = never
 	>() => {
 		type Write = OmitKeys<T['write'], 'updatedAt' | 'createdAt'>
+		type WriteNested = OmitKeys<T['writeNested'], 'updatedAt' | 'createdAt'>
 		type Read = T['read']
 		type Compare = T['compare']
 		type WithoutArrayTypeMember = ExcludePropertyKeys<Compare, unknown[]>

@@ -18,7 +18,7 @@
 
 ✨ Api closely resemble firestore API, low learning curve.
 
-🌈 Strictly onetime setup per document. Once configured, you are ready, no more confusing setup in the future, simplicity at its finest.
+🌈 Strictly onetime setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
 
 🐉 Zero dependencies.
 
@@ -544,7 +544,7 @@ simply use collection group reference instead of collection reference, refer bac
 
 As for (nested or not)object[] type, its document/collection operations work the same as other arrays, it will not flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) object member or array member in the array, nested or not, a similar rule applies to a nested array.
 
-Long thing short, anything that is in the array, be it another array or another object with array member, will not get flattened and will not have its field path built nor you can use field value (arrayRemove, arrayUnion and increment) except serverTimestamp field value.
+Long thing short, anything that is in the array, be it another array or another object with array member, will not get flattened and will not have its field path built nor you can use field value (arrayRemove, arrayUnion and increment, serverTimestamp). Read [Firestore append to array (field type) an object with server timestamp](https://stackoverflow.com/a/66353116/5338829) and [How to increment a map value in a Firestore array](https://stackoverflow.com/a/58310449/5338829), both are negative.
 
 However, it is very much possible to query and write a specific object member (nested or not), as long as it is not in an array, the typing logic works just like other primitive data types' document/collection operation because the wrapper will flatten all the in object type, nested or not.
 
@@ -584,6 +584,24 @@ As you can see, the object flattens down and the wrapper converted all the value
 
 so the next question is, how are you going to shape your object so you can use it in `set`, `create` and `update` operation?
 
+## Set and Create
+
+Please read [set and dot syntax](https://stackoverflow.com/a/60879213/5338829) before you proceed.
+
+In short, you cannot use dot syntax with `set` (`create` should have the same behaviour, need more clarification).
+
+consider this example:
+
+```ts
+
+```
+
+### Update
+
+Please read [Cloud Firestore: Update fields in nested objects with dynamic key](https://stackoverflow.com/a/47296152/5338829) before you proceed,
+
+Yes, `update` can use dot syntax to update specific fields.
+
 consider this example:
 
 ```ts
@@ -591,14 +609,20 @@ consider this example:
 
 const data = {
 	a: 1,
-	b: { c: 'abc' },
-	d: { e: { f: [new Date(0)], g: { h: [{ a: '123' }] } } },
+	d: { e: { f: [new Date(0)] } },
 }
-nested.doc('123456').set(data) // ERROR, because the input type is {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}
-nested.doc('123456').update(data) // ERROR, because the input type is PartialNoExplicitUndefinedNoExcessMember<{a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}>
+nested.doc('123456').update(data) // ERROR, because the input type is Partial<{a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { a: number }[]}>
 ```
 
-to flatten your object, import `flatten` (Reminder, you don't need to flatten non-nested object, but nothing will happen if you accidentally did it)
+If you want to update fields in nested objects, there are 2 ways:
+
+1. create the flattened object yourself.
+2. You need to flatten your object. To do so, import `flatten` from `firelord`. (recommended, because it is easier)
+
+Reminder:
+
+1. you don't need to flatten non-nested object, but nothing will happen if you accidentally did it
+2. `update` does not require all members to exist, it will simply update that particular field.
 
 solution:
 
@@ -609,15 +633,18 @@ import { flatten } from 'firelord'
 
 const data = {
 	a: 1,
-	b: { c: 'abc' },
-	d: { e: { f: [new Date(0)], g: { h: [{ a: 123 }] } } },
+	d: { e: { f: [new Date(0)] } },
 }
 
-nested.doc('123456').set(flatten(data)) // ok
-nested.doc('123456').update(flatten(data)) // ok
+const flattenedData = { a: 1, 'd.e.f': [new Date(0)] }
+
+nested.doc('123456').update(flattenedData) // ok
+nested.doc('123456').update(flatten(data)) // ok, recommended, because it is easier
 ```
 
 As for query, since the type is flattened, just query like you would normally query in firelord.
+
+That is all. Call `flatten` to flatten the complex data and the rest work just like simple data, clean and simple.
 
 ## Handling Firestore Field Value
 

@@ -2,6 +2,18 @@
 
 Change log
 
+## 0.6.0 28-Oct-2021
+
+- fix set and create parameter type, set merge actually work different than update, set no longer accept flatten object
+- create DeepRequired type and implement it in FlattenObject
+- add writeNested object type that return un-flatten form of write type
+- reuse type for `flatten`
+
+## 0.5.4 28-Oct-2021
+
+- can no longer use serverTimestamp in array
+- fix collection groupe path not working
+
 ## 0.5.2 28-Oct-2021
 
 - compare type now also convert object in array recursively
