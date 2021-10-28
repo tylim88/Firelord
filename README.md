@@ -63,8 +63,10 @@ Overview:
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
 - `Firestore.FieldValue`, `Firestore.TimeStamp`,`Firestore.GeoPoint`,`Date` are treated as primitive types.
-- Prevent you from explicitly assigning `undefined` to partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(There is option to explicitly assign `undefined` if you still want to).
+- Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(You can override this behaviour by explicitly union `undefined` in the `base type`).
+
   ![update and undefined](img/updateAndUndefined.png)
+
 - Prevent you from writing stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
 - One time setting per document type: define a data type, a collection path and a document path, and you are ready to go.
   - type collection path, collection group path and document path.
@@ -73,16 +75,21 @@ Overview:
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info.
+
   ![flatten object](img/flattenObject.png)
+
 - Prevent you from chaining <`offset`> or <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
 
   ![limit offset](img/limitOffset.png)
 
 - much better `where` and `orderBy` clause
+
   - field values are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
+
     ![orderBy limitation](img/orderBy.png)
+
 - The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed!
 
   ![field value](img/fieldValue.png)
