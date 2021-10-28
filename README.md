@@ -105,6 +105,7 @@ The package is only 15KB before zip and uglify, it looks big due to the images i
 
 ```ts
 import { firelord, Firelord } from 'firelord'
+import { firestore } from 'firebase-admin'
 
 // create wrapper
 const wrapper = firelord(firestore)
