@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.7.0 29-Oct-2021
+
+- default value of `updatedAt` is `null` rather than `new Date(0)`.
+- FirelordFirebase.CreatedUpdatedXXX type is now Firelord.CreatedUpdatedXXX
+
 ## 0.6.1 28-Oct-2021
 
 - simplify queryCreator a bit

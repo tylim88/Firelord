@@ -41,19 +41,6 @@ export namespace FirelordFirestore {
 	export type Timestamp = FirebaseFirestore.Timestamp
 
 	export type Stream = NodeJS.ReadableStream
-
-	export type CreatedUpdatedWrite = {
-		createdAt: FieldValue
-		updatedAt: FieldValue
-	}
-	export type CreatedUpdatedRead = {
-		createdAt: Timestamp
-		updatedAt: Timestamp
-	}
-	export type CreatedUpdatedCompare = {
-		createdAt: Date | Timestamp
-		updatedAt: Date | Timestamp
-	}
 }
 
 export { firestore } from 'firebase-admin'
