@@ -47,7 +47,7 @@ Note: any version that is not mentioned in the changelog is document update.
 
 You may not notice this but you need to prepare 3 sets of data types to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
 
-Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types are needed in read, write and compare(query). This library is a wrapper that introduces deep type solutions to handle each case.
+Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types are needed in read, write and compare(query). This library is a wrapper that introduces deep typing solutions to handle each case.
 
 Not only does the wrapper deal with data types, but it also provides type safety for collection path, document path, firestore limitations(whenever is possible).
 
@@ -63,11 +63,6 @@ Overview:
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
   - see [conversion table](#-conversion-table) for more
 - `Firestore.FieldValue`, `Firestore.TimeStamp`,`Firestore.GeoPoint`,`Date` are treated as primitive types.
-- Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member.(You can override this behaviour by explicitly union `undefined` in the `base type`).
-
-  ![update and undefined](img/updateAndUndefined.png)
-
-- Prevent you from writing stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore.
 - One time setting per document type: define a data type, a collection path and a document path, and you are ready to go.
   - type collection path, collection group path and document path.
   - auto generate sub collection path type.
@@ -77,6 +72,18 @@ Overview:
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![flatten object](img/flattenObject.png)
+
+- Check your type regardless of how deep it is.
+
+  ![type check](img/checkType.png)
+
+- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(object only).(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note you cannot skip any member in array due to how firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
+
+  ![partial but no undefined](img/updateAndUndefined.png)
+
+- Reject stranger member: prevent you from writing stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore, regardless of how deep the strange member is located.
+
+  ![reject stranger member](img/strangerMember.png)
 
 - Prevent you from chaining <`offset`> or <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
 
@@ -88,15 +95,11 @@ Overview:
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
   - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
-    ![orderBy limitation](img/orderBy.png)
+  ![orderBy limitation](img/orderBy.png)
 
 - The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed!
 
   ![field value](img/fieldValue.png)
-
-- Check your type regardless of how deep it is.
-
-  ![type check](img/checkType.png)
 
 ## 🦜 Getting Started
 
@@ -579,7 +582,10 @@ simply use collection group reference instead of collection reference, refer bac
 
 As for (nested or not)object[] type, its document/collection operations work the same as other arrays: it will not flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) specific object member or array member in the array, nested or not, similar rule applies to a nested array.
 
-Long thing short, anything that is in an array, be it another array or another object with array member, will not get flattened and will not have its field path built nor you can use field value (arrayRemove, arrayUnion and increment, serverTimestamp). Read [Firestore append to array (field type) an object with server timestamp](https://stackoverflow.com/a/66353116/5338829) and [How to increment a map value in a Firestore array](https://stackoverflow.com/a/58310449/5338829), both are negative.
+Long thing short, any data type that is in an array, be it another array or another object with array member:
+
+1. will not get flattened and will not have its field path built nor you can use field value (arrayRemove, arrayUnion and increment, serverTimestamp). Read [Firestore append to array (field type) an object with server timestamp](https://stackoverflow.com/a/66353116/5338829) and [How to increment a map value in a Firestore array](https://stackoverflow.com/a/58310449/5338829), both are negative.
+2. unable to skip any member, object must have exact shape. If you need undefined, assign undefined to the member in the `base type` instead.
 
 However, it is possible to query or write a specific object member (nested or not), as long as it is not in an array, the typing logic works just like other primitive data types' document/collection operation because the wrapper will flatten all the members in object type, nested or not.
 

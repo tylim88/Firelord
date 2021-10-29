@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.7.1 29-Oct-2021
+
+- fix PartialNoImplicitUndefinedAndNoExtraMember not properly handle array and array field value
+
 ## 0.7.0 29-Oct-2021
 
 - default value of `updatedAt` is `null` rather than `new Date(0)`.
