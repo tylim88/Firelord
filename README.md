@@ -110,7 +110,7 @@ npm i -D ts-essentials
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
-The package is only 15KB before zip and uglify, it looks big due to the images in documentation.
+The package is only 15KB before zipping and uglify, it looks big due to the images in the documentation.
 
 ### Collection
 
@@ -211,27 +211,27 @@ The documentation explains how the types work, the wrapper itself is intuitive i
 
 You SHOULD NOT try to memorize how the typing work, keep in mind the purpose is not for you to fit into the type, but is to let the type GUIDE you.
 
-| Base                      | Read                  | Write                                                                                                              | Compare                                      |
-| ------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
-| number                    | number                | number \| FirebaseFirestore.FieldValue(increment\*)                                                                | number                                       |
-| string                    | string                | string                                                                                                             | string                                       |
-| null                      | null                  | null                                                                                                               | null                                         |
-| undefined                 | undefined             | undefined                                                                                                          | undefined                                    |
-| Date                      | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
-| firestore.Timestamp       | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
-| 'ServerTimestamp'\*\*\*   | firestore.Timestamp   | FirebaseFirestore.FieldValue(ServerTimestamp\*)                                                                    | firestore.Timestamp \|Date                   |
-| firestore.GeoPoint        | firestore.GeoPoint    | firestore.GeoPoint                                                                                                 | firestore.GeoPoint                           |
-| object\*\*                | object                | object                                                                                                             | object                                       |
-| number[]                  | number[]              | number[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | number[]                                     |
-| string[]                  | string[]              | string[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | string[]                                     |
-| null[]                    | null[]                | null[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                    | null[]                                       |
-| undefined[]               | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                               | undefined[]                                  |
-| Date[]                    | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
-| firestore.Timestamp[]     | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
-| 'ServerTimestamp'[]\*\*\* | never[]               | never[]                                                                                                            | never[]                                      |
-| firestore.GeoPoint[]      | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                               | firestore.GeoPoint[]                         |
-| object[]\*\*              | object[]              | object[]                                                                                                           | object[]                                     |
-| n-dimension array         | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*) only supported for 1st dimension array | compare only elements in 1st dimension array |
+| Base                             | Read                  | Write                                                                                                              | Compare                                      |
+| -------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| number                           | number                | number \| FirebaseFirestore.FieldValue(increment\*)                                                                | number                                       |
+| string                           | string                | string                                                                                                             | string                                       |
+| null                             | null                  | null                                                                                                               | null                                         |
+| undefined                        | undefined             | undefined                                                                                                          | undefined                                    |
+| Date                             | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
+| firestore.Timestamp              | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
+| Firelord.ServerTimestamp\*\*\*   | firestore.Timestamp   | FirebaseFirestore.FieldValue(ServerTimestamp\*)                                                                    | firestore.Timestamp \|Date                   |
+| firestore.GeoPoint               | firestore.GeoPoint    | firestore.GeoPoint                                                                                                 | firestore.GeoPoint                           |
+| object\*\*                       | object                | object                                                                                                             | object                                       |
+| number[]                         | number[]              | number[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | number[]                                     |
+| string[]                         | string[]              | string[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | string[]                                     |
+| null[]                           | null[]                | null[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                    | null[]                                       |
+| undefined[]                      | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                               | undefined[]                                  |
+| Date[]                           | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
+| firestore.Timestamp[]            | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
+| Firelord.ServerTimestamp[]\*\*\* | never[]               | never[]                                                                                                            | never[]                                      |
+| firestore.GeoPoint[]             | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                               | firestore.GeoPoint[]                         |
+| object[]\*\*                     | object[]              | object[]                                                                                                           | object[]                                     |
+| n-dimension array                | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*) only supported for 1st dimension array | compare only elements in 1st dimension array |
 
 you can union any types, it will generate the types distributively, for example type `string | number | number[] | (string | number)[] | (string | number)[][] | (string | number)[][][]` generates:
 
@@ -249,7 +249,7 @@ NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[
 
 \*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object, however, there are not many things to do with object[] type due to how firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
-\*\*\* `Firelord.ServerTimestamp`(underneath it is `ServerTimestamp`) is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in array, see [Complex Data Typing](#-complex-data-typing) for more info.
+\*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in array, see [Complex Data Typing](#-complex-data-typing) for more info.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -786,7 +786,8 @@ I believe this decision is practical for cases and not planning to change it in 
 While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
 
 1. despite being able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type-safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
-2. `ServerTimestamp` is a reserved type, you cannot use it as a string literal type.
+2. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
+3. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
 
 ## 💍 Utility
 
@@ -794,7 +795,46 @@ Since write operations reject stranger members (member that are not defined in b
 
 Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
 
+## Advices
+
+### Array
+
+_You can ≠ You should_
+
+Although the wrapper can handle virtually any complex data type, it doesn't mean you should model the data in such a way, especially when dealing with the array.
+
+When dealing with an array, avoid:
+
+- array of objects
+- array of arrays
+
+not only data types are hard to query and hard to massage, but they also pose great difficulty to security rule, especially if the permission is relying on the data.
+
+Use array on primitive data types, or timestamp and geo point(objects that have consistent structure).
+
+Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in firestore because your data model affects the pricing, firestore incentives you to put more data in the same document, hence you see all kind of array of objects and array of arrays data types.
+
+Anyway, do not resort to complex data types easily. Always keep your data type straightforward if possible.
+
+### Nested Object
+
+In firestore, nested object working logic is like a flat object, as long as you get the path right, you can query and write them with no issue. A nested object is fine, as long as you structure it in how a human mind can easily comprehend it, eg do not nest too deep.
+
+### Don't Bother Cost Focus Data Modelling
+
+Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, it increases your project complexity, and it doesn't worth the time and money to aggregate the data.
+
+So don't do it, if aggregation can save you a significant amount of money, then you should use other databases (psql or mongodb), it is much better and easier.
+
+### One Collection One Document Type
+
+It is possible to have multiple document types under the same collection. For example under a `User` collection, you may be tempted to create `profile` and `setting` documents in it. I would recommend instead of creating `profile` and `setting`, you create `profile` and `setting` top collections instead.
+
+Logically speaking there should be one type of document in on collection(hence the name `collections`).
+
+But in the end, both should work fine, there are some considerations behind this but it doesn't matter much, use whatever you like.
+
 ## Road Map
 
 - automate flatten (difficult).
-- wrap document reference that `add` operation return.
+- wrap document reference that `add` operation returns.

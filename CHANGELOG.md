@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.7.2 29-Oct-2021
+
+- stop use from accidentally using mask types
+- use longer string for 'ServerTimestamp' type to virtually reduce collision chance to 0
+
 ## 0.7.1 29-Oct-2021
 
 - fix PartialNoImplicitUndefinedAndNoExtraMember not properly handle array and array field value
