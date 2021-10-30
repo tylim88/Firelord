@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.7.3 29-Oct-2021
+
+- `add` now return properly typed document reference
+
 ## 0.7.2 29-Oct-2021
 
 - stop use from accidentally using mask types

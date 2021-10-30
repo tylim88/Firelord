@@ -837,4 +837,3 @@ But in the end, both should work fine, there are some considerations behind this
 ## Road Map
 
 - automate flatten (difficult).
-- wrap document reference that `add` operation returns.
