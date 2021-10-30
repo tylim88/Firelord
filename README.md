@@ -77,7 +77,7 @@ Overview:
 
   ![type check](img/checkType.png)
 
-- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(object only).(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note you cannot skip any member in array due to how firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
+- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note that you cannot skip any member of an object in an array due to how firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![partial but no undefined](img/updateAndUndefined.png)
 
