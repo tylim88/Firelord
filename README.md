@@ -10,7 +10,7 @@
 
 🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path, type everything!
 
-🔥 Automatically convert all value types to corresponding read types, write types and compare types (good at handling timestamp and field values).
+🔥 Automatically convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
 ✋🏻 Not only does it safeguard your types, but it also stops you from making any incorrect implementation(use the wrapper incorrectly).
 
@@ -69,7 +69,7 @@ Overview:
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
-- type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info.
+- type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info. NOTE: There is no path for `d.e.g.h.a` because it is inside an array, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![flatten object](img/flattenObject.png)
 
@@ -97,7 +97,7 @@ Overview:
 
   ![orderBy limitation](img/orderBy.png)
 
-- The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed!
+- The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed:
 
   ![field value](img/fieldValue.png)
 
@@ -620,7 +620,7 @@ Long thing short, any data type that is in an array, be it another array or anot
 
 However, it is possible to query or write a specific object member (nested or not), as long as it is not in an array, the typing logic works just like other primitive data types' document/collection operation because the wrapper will flatten all the members in object type, nested or not.
 
-NOTE: read type does not flatten, because there is no need to
+NOTE: `read` type does not flatten, because there is no need to.
 
 Last, all the object, object[], array, array object, nested or not, no matter how deep, all the field values (not specifically referring to Firestore.FieldValue) of all data types will undergo data type conversion according to the [conversion table](#-conversion-table).
 
