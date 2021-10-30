@@ -2,7 +2,11 @@
 
 Change log
 
-## 0.7.3 29-Oct-2021
+## 0.7.4 30-Oct-2021
+
+- fix missing batch's `set` operation.
+
+## 0.7.3 30-Oct-2021
 
 - `add` now return properly typed document reference
 

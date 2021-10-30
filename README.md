@@ -300,7 +300,7 @@ user.set({
 // all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 // the only value for `merge` is `true`
-// NOTE: there will be typescript missing property error if all member is not present, to fix this just fill in `{ merge:true }` in option as shown below.
+// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
 user.set({ name: 'Michael' }, { merge: true })
 
 // create if not exist, else update
@@ -308,7 +308,7 @@ user.set({ name: 'Michael' }, { merge: true })
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 // auto update `updatedAt`
 // the only value for `merge` is `true`
-// NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in option as shown below.
+// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeField: fieldPath[] }` in the option, as shown below.
 user.set(
 	{ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) },
 	{ mergeField: ['name', 'age'] } // update only `name` and `age` fields
@@ -345,6 +345,37 @@ userBatch.delete()
 // require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 // auto add `updatedAt` and `createdAt`
 userBatch.create({ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) })
+
+// create if not exist, else overwrite
+// although it can overwrite, we intend this to use as create
+// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
+// auto add `createdAt` and `updatedAt`
+userBatch.set({
+	name: 'John',
+	age: 24,
+	birthday: new Date(1995, 11, 17),
+	joinDate: ServerTimestamp,
+	beenTo: ['RUSSIA'],
+})
+
+// create if not exist, else update
+// although it can create if not exist, we intend this to use as an update operation
+// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
+// auto update `updatedAt`
+// the only value for `merge` is `true`
+// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
+userBatch.set({ name: 'Michael' }, { merge: true })
+
+// create if not exist, else update
+// although it can create if not exist, we intend this to use as an update operation
+// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
+// auto update `updatedAt`
+// the only value for `merge` is `true`
+// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeField: fieldPath[] }` in the option, as shown below.
+userBatch.set(
+	{ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) },
+	{ mergeField: ['name', 'age'] } // update only `name` and `age` fields
+)
 
 // update if exist, else fail
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
@@ -396,7 +427,7 @@ user.runTransaction(async transaction => {
 	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
-	// NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in the option as shown below.
+	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
 	await transaction.set({ name: 'Michael' }, { merge: true })
 
 	// create if not exist, else update
@@ -404,7 +435,7 @@ user.runTransaction(async transaction => {
 	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
-	// NOTE: there will be a missing property error from typescript if all member is not present, to fix this just fill in `{ merge:true }` in the option as shown below.
+	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeKey: fieldPath[] }` in the option, as shown below.
 	await transaction.set(
 		{ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) },
 		{ mergeField: ['name', 'age'] } // update only `name` and `age` fields
@@ -795,7 +826,7 @@ Since write operations reject stranger members (member that are not defined in b
 
 Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
 
-## Advices
+## 🐬 Advices
 
 ### Array
 
@@ -820,11 +851,13 @@ Anyway, do not resort to complex data types easily. Always keep your data type s
 
 In firestore, nested object working logic is like a flat object, as long as you get the path right, you can query and write them with no issue. A nested object is fine, as long as you structure it in how a human mind can easily comprehend it, eg do not nest too deep.
 
-### Don't Bother Cost Focus Data Modelling
+### Do Not Bother Cost Focus Data Modelling
 
 Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, it increases your project complexity, and it doesn't worth the time and money to aggregate the data.
 
-So don't do it, if aggregation can save you a significant amount of money, then you should use other databases (psql or mongodb), it is much better and easier.
+So don't do it.
+
+However, if aggregation can save you a significant amount of money(assuming you already model your data correctly), chances are, you are probably not using the right database, use other databases (PSQL or MongoDB), it is much better and easier in terms of cost handling.
 
 ### One Collection One Document Type
 
@@ -834,6 +867,10 @@ Logically speaking there should be one type of document in on collection(hence t
 
 But in the end, both should work fine, there are some considerations behind this but it doesn't matter much, use whatever you like.
 
-## Road Map
+## 🦎 Caveats
+
+Because of the heavy use of generic types and utility types, typescript hints may look chaotic. However, there is no need to be panic. Simply check your data type carefully. The wrapper priority is to make sure you cannot go wrong.
+
+## 🐎 Road Map
 
 - automate flatten (difficult).
