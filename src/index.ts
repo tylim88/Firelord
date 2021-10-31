@@ -22,9 +22,6 @@ export const firelord: FirelordWrapper =
 		type Write = Firelord.InternalReadWriteConverter<T>['write']
 		type WriteNested = Firelord.InternalReadWriteConverter<T>['writeNested']
 		type Read = Firelord.InternalReadWriteConverter<T>['read']
-		type Compare = Firelord.InternalReadWriteConverter<T>['compare']
-		type WithoutArrayTypeMember =
-			Firelord.InternalReadWriteConverter<T>['withoutArrayTypeMember']
 
 		const { createdAt } = createTime(firestore)
 
@@ -37,6 +34,7 @@ export const firelord: FirelordWrapper =
 
 			// https://github.com/microsoft/TypeScript/issues/32022
 			// https://stackoverflow.com/questions/51591335/typescript-spead-operator-on-object-with-method
+			// conclusion: do not spread
 			return {
 				parent: colRefRead.parent,
 				path: colRefRead.path,
@@ -44,7 +42,7 @@ export const firelord: FirelordWrapper =
 				listDocuments: () => {
 					return colRefRead.listDocuments()
 				},
-				doc: docCreator<T>(firestore, colRefWrite),
+				doc: docCreator<T>(firestore, colRefWrite, undefined),
 				add: (data: WriteNested) => {
 					return colRefWrite
 						.add({
@@ -69,7 +67,7 @@ export const firelord: FirelordWrapper =
 			) as FirelordFirestore.CollectionGroup<Read>
 			return queryCreator<T, never, 'colGroup'>(
 				firestore,
-				colRefRead,
+				undefined,
 				colRefRead
 			)
 		}

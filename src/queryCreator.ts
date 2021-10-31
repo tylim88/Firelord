@@ -29,7 +29,7 @@ export type QueryCreator<
 	colRef: M extends 'col'
 		? FirelordFirestore.CollectionReference<T['read']>
 		: M extends 'colGroup'
-		? FirelordFirestore.Query<T['read']>
+		? undefined
 		: never,
 	query: FirelordFirestore.Query<T['read']>
 ) => {
@@ -145,7 +145,7 @@ export const queryCreator = <
 	colRef: M extends 'col'
 		? FirelordFirestore.CollectionReference<T['read']>
 		: M extends 'colGroup'
-		? FirelordFirestore.Query<T['read']>
+		? undefined
 		: never,
 	query: FirelordFirestore.Query<T['read']>
 ): ReturnType<QueryCreator<T>> => {
@@ -291,7 +291,7 @@ type QuerySnapshotCreator<
 	colRef: M extends 'col'
 		? FirelordFirestore.CollectionReference<T['read']>
 		: M extends 'colGroup'
-		? FirelordFirestore.Query<T['read']>
+		? undefined
 		: never,
 	querySnapshot: FirelordFirestore.QuerySnapshot<T['read']>
 ) => {
@@ -323,7 +323,7 @@ const querySnapshotCreator = <
 	colRef: M extends 'col'
 		? FirelordFirestore.CollectionReference<T['read']>
 		: M extends 'colGroup'
-		? FirelordFirestore.Query<T['read']>
+		? undefined
 		: never,
 	querySnapshot: FirelordFirestore.QuerySnapshot<T['read']>
 ): ReturnType<QuerySnapshotCreator<T, M>> => {

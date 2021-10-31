@@ -101,6 +101,8 @@ Overview:
 
   ![field value](img/fieldValue.png)
 
+- Any document reference or query document reference that read or query operation returns has exactly the same behaviour.
+
 ## 🦜 Getting Started
 
 ```bash
@@ -888,3 +890,4 @@ Because of the heavy use of generic types and utility types, typescript hints ma
 ## 🐎 Road Map
 
 - automate flatten (difficult).
+- jsDoc

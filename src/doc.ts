@@ -16,11 +16,16 @@ export const docSnapshotCreator = <
 		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData
-	}
+	},
+	M extends 'col' | 'colGroup' = 'col'
 >(
 	firestore: FirelordFirestore.Firestore,
-	colRef: FirelordFirestore.CollectionReference<T['read']>,
-	documentSnapshot: FirelordFirestore.DocumentSnapshot<T['read']>
+	colRef: M extends 'col'
+		? FirelordFirestore.CollectionReference
+		: M extends 'colGroup'
+		? undefined
+		: never,
+	documentSnapshot: FirelordFirestore.DocumentSnapshot
 ): ReturnType<DocSnapshotCreator<T>> => {
 	type Read = Firelord.InternalReadWriteConverter<T>['read']
 
@@ -30,7 +35,7 @@ export const docSnapshotCreator = <
 		exists: documentSnapshot.exists,
 		id: documentSnapshot.id,
 		readTime: documentSnapshot.readTime,
-		ref: docCreator<T>(
+		ref: docCreator<T, M>(
 			firestore,
 			colRef,
 			documentSnapshot.ref
@@ -59,11 +64,16 @@ export type DocSnapshotCreator<
 		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData
-	}
+	},
+	M extends 'col' | 'colGroup' = 'col'
 > = (
 	firestore: FirelordFirestore.Firestore,
-	colRef: FirelordFirestore.CollectionReference<T['read']>,
-	documentSnapshot: FirelordFirestore.DocumentSnapshot<T['read']>
+	colRef: M extends 'col'
+		? FirelordFirestore.CollectionReference
+		: M extends 'colGroup'
+		? undefined
+		: never,
+	documentSnapshot: FirelordFirestore.DocumentSnapshot
 ) => {
 	createTime?: FirelordFirestore.Timestamp
 	updateTime?: FirelordFirestore.Timestamp
@@ -87,11 +97,18 @@ export const docCreator =
 			writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
 			compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
 			base: FirelordFirestore.DocumentData
-		}
+		},
+		M extends 'col' | 'colGroup' = 'col'
 	>(
 		firestore: FirelordFirestore.Firestore,
-		colRef: FirelordFirestore.CollectionReference<T['read']>,
-		docRef?: FirelordFirestore.DocumentReference<T['read']>
+		colRef: M extends 'col'
+			? FirelordFirestore.CollectionReference
+			: M extends 'colGroup'
+			? undefined
+			: never,
+		docRef:
+			| FirelordFirestore.DocumentReference
+			| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
 	) =>
 	(documentID: T['docID']): ReturnType<ReturnType<DocCreator<T>>> => {
 		type Write = Firelord.InternalReadWriteConverter<T>['write']
@@ -100,7 +117,10 @@ export const docCreator =
 
 		const { createdAt, updatedAt } = createTime(firestore)
 
-		const docRef_ = docRef || colRef.doc(documentID)
+		const docRef_ =
+			docRef ||
+			((colRef as FirelordFirestore.CollectionReference).add &&
+				(colRef as FirelordFirestore.CollectionReference).doc(documentID))
 
 		const docWrite = docRef_ as FirelordFirestore.DocumentReference<Write>
 
@@ -157,7 +177,7 @@ export const docCreator =
 				},
 				get: () => {
 					return transaction.get(docRead).then(documentSnapshot => {
-						return docSnapshotCreator<T>(firestore, colRef, documentSnapshot)
+						return docSnapshotCreator<T, M>(firestore, colRef, documentSnapshot)
 					})
 				},
 				getAll: <J extends [...FirelordFirestore.DocumentData[]]>(
@@ -190,7 +210,9 @@ export const docCreator =
 					documentSnapshot => {
 						return (
 							next &&
-							next(docSnapshotCreator<T>(firestore, colRef, documentSnapshot))
+							next(
+								docSnapshotCreator<T, M>(firestore, colRef, documentSnapshot)
+							)
 						)
 					},
 					err => {
@@ -246,7 +268,7 @@ export const docCreator =
 			},
 			get: () => {
 				return docRead.get().then(documentSnapshot => {
-					return docSnapshotCreator<T>(firestore, colRef, documentSnapshot)
+					return docSnapshotCreator<T, M>(firestore, colRef, documentSnapshot)
 				})
 			},
 			delete: () => docWrite.delete(),
@@ -326,11 +348,18 @@ export type DocCreator<
 		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData
-	}
+	},
+	M extends 'col' | 'colGroup' = 'col'
 > = (
 	firestore: FirelordFirestore.Firestore,
-	colRef: FirelordFirestore.CollectionReference<T['read']>,
-	docRef?: FirelordFirestore.DocumentReference<T['read']>
+	colRef: M extends 'col'
+		? FirelordFirestore.CollectionReference
+		: M extends 'colGroup'
+		? undefined
+		: never,
+	docRef:
+		| FirelordFirestore.DocumentReference
+		| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
 ) => (documentID: T['docID']) => {
 	firestore: FirelordFirestore.FirebaseFirestore
 	id: string
