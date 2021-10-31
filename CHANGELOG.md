@@ -2,6 +2,19 @@
 
 Change log
 
+## 0.8.0 31-Oct-2021
+
+- rename `docPath` to `docId`
+- rename `colGroupPath` to `colName`
+- `ReadWriteCreator` now output `docID`, `docPath`, `colName`,`colPath`
+- created `docSnapshot` function to wrap `documentSnapshot`
+- wrap all documentSnapshot(lot of works)
+- fix `getAll` parameter type
+- rename file `flat` to `utils`
+- `read` type now union with `undefined`
+- revamp `QueryCreator`
+- add new type `FirelordFirebase.DocumentChange`
+
 ## 0.7.4 30-Oct-2021
 
 - fix missing batch's `set` operation.

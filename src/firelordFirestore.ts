@@ -3,6 +3,9 @@ export namespace FirelordFirestore {
 
 	export type FirebaseFirestore = FirebaseFirestore.Firestore
 
+	export type DocumentChange<T = DocumentData> =
+		FirebaseFirestore.DocumentChange<T>
+
 	export type FieldValue = FirebaseFirestore.FieldValue
 
 	export type DocumentData = FirebaseFirestore.DocumentData
@@ -29,6 +32,9 @@ export namespace FirelordFirestore {
 
 	export type QuerySnapshot<T = DocumentData> =
 		FirebaseFirestore.QuerySnapshot<T>
+
+	export type QueryDocumentSnapshot<T = DocumentData> =
+		FirebaseFirestore.QueryDocumentSnapshot<T>
 
 	export type WriteResult = FirebaseFirestore.WriteResult
 

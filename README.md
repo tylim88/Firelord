@@ -97,7 +97,7 @@ Overview:
 
   ![orderBy limitation](img/orderBy.png)
 
-- The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed:
+- The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed, see [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking) for more info.
 
   ![field value](img/fieldValue.png)
 
@@ -131,7 +131,7 @@ type User = Firelord.ReadWriteCreator<
 		beenTo: ('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[]
 	}, // base type
 	'Users', // collection path type
-	string // document path type
+	string // document ID type
 >
 
 // implement wrapper
@@ -141,7 +141,7 @@ const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
 const userGroup = userCreator.colGroup('Users') // collection group path type is "Users"
 // document reference
-const user = users.doc('1234567890') // document path is string
+const user = users.doc('1234567890') // document ID is string
 ```
 
 if you need the types, here is how you get it.
@@ -157,6 +157,18 @@ type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.Fi
 
 // compare type
 type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+
+// collection name
+type UserColName = User['colName'] //"Users"
+
+// collection path
+type UserColPath = User['colPath'] // "Users"
+
+// document ID
+type UserDocId = User['docID'] // string
+
+// documentPath
+type UserDocPath = User['docPath']
 ```
 
 ### Sub-Collection
@@ -178,14 +190,14 @@ type Transaction = Firelord.ReadWriteCreator<
 		status: 'Fail' | 'Success'
 	}, // base type
 	'Transactions', // collection path type
-	string, // document path type
+	string, // document ID type
 	User // insert parent collection, it will auto construct the sub collection path for you
 >
 
 // implement the wrapper
 const transactions = wrapper<Transaction>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
 const transactionGroup = wrapper<Transaction>().colGroup('Transactions') // the type for collection group is `Transactions`
-const transaction = users.doc('1234567890') // document path is string
+const transaction = users.doc('1234567890') // document ID is string
 ```
 
 Normally a collection should only have one type of document(recommended), however if your collection has more than one type of document, the solution is to simply define more base type.
@@ -861,11 +873,13 @@ However, if aggregation can save you a significant amount of money(assuming you 
 
 ### One Collection One Document Type
 
-It is possible to have multiple document types under the same collection. For example under a `User` collection, you may be tempted to create `profile` and `setting` documents in it. I would recommend instead of creating `profile` and `setting`, you create `profile` and `setting` top collections instead.
+It is possible to have multiple document types under the same collection. For example, under a `User` collection, you may be tempted to create `profile` and `setting`(`User/{userId}/Account/[profile and setting]`) documents in it. Or you may create two collections under `User` that contains only a single document:`User/{userId}/Profile/profile` and `User/{userId}/Setting/Setting`.
 
-Logically speaking there should be one type of document in on collection(hence the name `collections`).
+I would recommend instead of creating `profile` and `setting`, you create two top collections: `profile` and `setting` that contain all user profiles and settings instead.
 
-But in the end, both should work fine, there are some considerations behind this but it doesn't matter much, use whatever you like.
+Logically, there should be one type of document in on collection(hence the name `collections`).
+
+But in the end, both should work fine. There are some considerations behind this but it doesn't matter much. Use whatever you like, even so, I would recommend creating top collections for a more logical structure.
 
 ## 🦎 Caveats
 

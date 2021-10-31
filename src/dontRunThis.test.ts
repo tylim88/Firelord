@@ -7,7 +7,7 @@ import {
 	Firelord,
 } from './firelord'
 import { firestore } from 'firebase-admin'
-import { flatten } from './flat'
+import { flatten } from './utils'
 
 // create wrapper
 const wrapper = firelord(firestore)
@@ -26,6 +26,19 @@ type User = Firelord.ReadWriteCreator<
 	'Users', // collection path type
 	string // document path type
 >
+type aaa<
+	E extends { colPath: string; docID: string } = {
+		colPath: '1234567890'
+		docID: '1234567890'
+	}
+> = E extends {
+	colName: '1234567890'
+	docID: '1234567890'
+}
+	? '123'
+	: `${E['colPath']}/${E['docID']}/${'123'}`
+
+type ccc = aaa
 
 // read type
 type UserRead = User['read'] // {name: string, age:number, birthday:firestore.Timestamp, joinDate: firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
@@ -36,7 +49,17 @@ type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.Fi
 // compare type
 type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
-type colPath = User['colPath']
+// collection name
+type UserColName = User['colName'] //"Users"
+
+// collection path
+type UserColPath = User['colPath'] // "Users"
+
+// document ID
+type UserDocId = User['docID'] // string
+
+// documentPath
+type UserDocPath = User['docPath']
 
 // implement wrapper
 const userCreator = wrapper<User>()
