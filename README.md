@@ -889,5 +889,5 @@ Because of the heavy use of generic types and utility types, typescript hints ma
 
 ## 🐎 Road Map
 
-- automate flatten (difficult).
+- allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult)
 - jsDoc
