@@ -2,7 +2,7 @@
 
 Change log
 
-## 0.8.0 31-Oct-2021
+## 0.8.0 1-Nov-2021
 
 - rename `docPath` to `docId`
 - rename `colGroupPath` to `colName`
@@ -13,7 +13,7 @@ Change log
 - rename file `flat` to `utils`
 - `read` type now union with `undefined`
 - revamp `QueryCreator`
-- add new type `FirelordFirebase.DocumentChange`
+- add new type `FirelordFirebase.DocumentChange` and `FirelordFirebase.QueryDocumentSnapshot`
 
 ## 0.7.4 30-Oct-2021
 

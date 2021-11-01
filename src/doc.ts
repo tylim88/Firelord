@@ -117,10 +117,9 @@ export const docCreator =
 
 		const { createdAt, updatedAt } = createTime(firestore)
 
-		const docRef_ =
-			docRef ||
-			((colRef as FirelordFirestore.CollectionReference).add &&
-				(colRef as FirelordFirestore.CollectionReference).doc(documentID))
+		// undefined type is here but we already make sure that it is impossible for undefined to reach here
+		// if docRef is undefined, colRef will not be undefined and vice versa
+		const docRef_ = docRef || (colRef && colRef.doc(documentID))
 
 		const docWrite = docRef_ as FirelordFirestore.DocumentReference<Write>
 
@@ -368,9 +367,7 @@ export type DocCreator<
 	listCollections: () => Promise<
 		FirelordFirestore.CollectionReference<FirelordFirestore.DocumentData>[]
 	>
-	isEqual: (
-		other: FirelordFirestore.DocumentReference<FirelordFirestore.DocumentData>
-	) => boolean
+	isEqual: (other: FirelordFirestore.DocumentReference) => boolean
 	onSnapshot: (
 		next?:
 			| ((documentSnapshot: ReturnType<DocSnapshotCreator<T>>) => void)
