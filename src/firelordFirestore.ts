@@ -47,6 +47,12 @@ export namespace FirelordFirestore {
 	export type Timestamp = FirebaseFirestore.Timestamp
 
 	export type Stream = NodeJS.ReadableStream
+
+	export type ReadWriteTransactionOptions =
+		FirebaseFirestore.ReadWriteTransactionOptions
+
+	export type ReadOnlyTransactionOptions =
+		FirebaseFirestore.ReadOnlyTransactionOptions
 }
 
 export { firestore } from 'firebase-admin'

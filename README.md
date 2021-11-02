@@ -112,7 +112,7 @@ npm i -D ts-essentials
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
-The package is only 15KB before zipping and uglify, it looks big due to the images in the documentation.
+The package is only 18KB before zipping and uglify, it looks big due to the images in the documentation.
 
 ### Collection
 
@@ -407,16 +407,20 @@ all API is like [firestore transaction](https://firebase.google.com/docs/firesto
 ```ts
 // import user
 
+// `firestore().runTransaction` will also do
 user.runTransaction(async transaction => {
 	// get `read type` data
-	await transaction.get().then(snapshot => {
-		const data = snapshot.data()
-	})
+	await user
+		.transaction(transaction)
+		.get()
+		.then(snapshot => {
+			const data = snapshot.data()
+		})
 
 	// create if only exist, else fail
 	// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
-	await transaction.create({
+	await user.transaction(transaction).create({
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
@@ -428,7 +432,7 @@ user.runTransaction(async transaction => {
 	// although it can overwrite, we intended this to use as create
 	// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
-	user.set({
+	await user.transaction(transaction).set({
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
@@ -442,7 +446,7 @@ user.runTransaction(async transaction => {
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
-	await transaction.set({ name: 'Michael' }, { merge: true })
+	await user.transaction(transaction).set({ name: 'Michael' }, { merge: true })
 
 	// create if not exist, else update
 	// although it can create if not exist, we intend this to use as an update operation
@@ -450,7 +454,7 @@ user.runTransaction(async transaction => {
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeKey: fieldPath[] }` in the option, as shown below.
-	await transaction.set(
+	await user.transaction(transaction).set(
 		{ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) },
 		{ mergeField: ['name', 'age'] } // update only `name` and `age` fields
 	)
@@ -458,9 +462,9 @@ user.runTransaction(async transaction => {
 	// update if exist, else fail
 	// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
-	await transaction.update({ name: 'Michael' })
+	await user.transaction(transaction).update({ name: 'Michael' })
 	// delete document
-	await transaction.delete()
+	await user.transaction(transaction).delete()
 
 	// keep in mind you need to return a promise in transaction
 	// example code here is just an example to show API, this is not the correct way to do it
@@ -848,18 +852,15 @@ _You can ≠ You should_
 
 Although the wrapper can handle virtually any complex data type, it doesn't mean you should model the data in such a way, especially when dealing with the array.
 
-When dealing with an array, avoid:
-
-- array of objects
-- array of arrays
+When dealing with an array, avoid array of objects
 
 not only data types are hard to query and hard to massage, but they also pose great difficulty to security rule, especially if the permission is relying on the data.
 
 Use array on primitive data types, or timestamp and geo point(objects that have consistent structure).
 
-Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in firestore because your data model affects the pricing, firestore incentives you to put more data in the same document, hence you see all kind of array of objects and array of arrays data types.
+Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in firestore because your data model affects the pricing, firestore incentives you to put more data in the same document, hence you see all kind of array of objects types.
 
-Anyway, do not resort to complex data types easily. Always keep your data type straightforward if possible.
+Anyway, do not resort to array of objects types easily, create a new collection instead. Always keep your data type straightforward if possible.
 
 ### Nested Object
 
@@ -867,21 +868,19 @@ In firestore, nested object working logic is like a flat object, as long as you 
 
 ### Do Not Bother Cost Focus Data Modelling
 
-Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, it increases your project complexity, and it doesn't worth the time and money to aggregate the data.
-
-So don't do it.
+Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, because it increases your project complexity, and it doesn't worth the time and money to aggregate the data.
 
 However, if aggregation can save you a significant amount of money(assuming you already model your data correctly), chances are, you are probably not using the right database, use other databases (PSQL or MongoDB), it is much better and easier in terms of cost handling.
 
 ### One Collection One Document Type
 
-It is possible to have multiple document types under the same collection. For example, under a `User` collection, you may be tempted to create `profile` and `setting`(`User/{userId}/Account/[profile and setting]`) documents in it. Or you may create two collections under `User` that contains only a single document:`User/{userId}/Profile/profile` and `User/{userId}/Setting/Setting`.
+It is possible to have multiple document types under the same collection. For example, under a `User` collection, you may be tempted to create `profile` and `setting`(`User/{userId}/Account/[profile and setting]`) documents in it. Or you may create two collections under `User` that contains only a single document:`User/{userId}/Profile/profile` and `User/{userId}/Setting/setting`.
 
-I would recommend instead of creating `profile` and `setting`, you create two top collections: `profile` and `setting` that contain all user profiles and settings instead.
+I would recommend instead of creating `profile` and `setting`, you create two top collections: `profile` and `setting` that contain all users' profiles and settings instead.
 
 Logically, there should be one type of document in on collection(hence the name `collections`).
 
-But in the end, both should work fine. There are some considerations behind this but it doesn't matter much. Use whatever you like, even so, I would recommend creating top collections for a more logical structure.
+But in the end, both should work fine. There are some considerations behind this but it doesn't matter much. Use whatever you like. Still, I would recommend creating top collections for a more logical structure.
 
 ## 🦎 Caveats
 
@@ -891,3 +890,4 @@ Because of the heavy use of generic types and utility types, typescript hints ma
 
 - allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult)
 - jsDoc
+- validation with `zod`

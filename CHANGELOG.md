@@ -2,6 +2,12 @@
 
 Change log
 
+## 0.9.0 2-Nov-2021
+
+- transaction now receive transaction as argument
+- add transaction option argument for transaction (nodejs only)
+- allow documentID to be empty so it will auto generate ID instead
+
 ## 0.8.0 1-Nov-2021
 
 - rename `docPath` to `docId`
