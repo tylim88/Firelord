@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.9.1 2-Nov-2021
+
+- fix bug where docID still cant receive undefined.
+
 ## 0.9.0 2-Nov-2021
 
 - transaction now receive transaction as argument
