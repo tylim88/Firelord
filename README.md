@@ -406,9 +406,9 @@ all API is like [firestore transaction](https://firebase.google.com/docs/firesto
 
 ```ts
 // import user
+// import firestore
 
-// `firestore().runTransaction` will also do
-user.runTransaction(async transaction => {
+firestore().runTransaction(async transaction => {
 	// get `read type` data
 	await user
 		.transaction(transaction)
