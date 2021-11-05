@@ -333,16 +333,6 @@ export const docCreator =
 					},
 				}
 			},
-			runTransaction: <Y>(
-				updateFunction: (
-					transaction: FirelordFirestore.Transaction
-				) => Promise<Y>,
-				transactionOptions?:
-					| FirelordFirestore.ReadWriteTransactionOptions
-					| FirelordFirestore.ReadOnlyTransactionOptions
-			) => {
-				return firestore().runTransaction<Y>(updateFunction, transactionOptions)
-			},
 		}
 	}
 
@@ -527,10 +517,4 @@ export type DocCreator<
 			options: FirelordFirestore.ReadOptions
 		) => Promise<FirelordFirestore.DocumentSnapshot<J_6>[]>
 	}
-	runTransaction: <Y>(
-		updateFunction: (transaction: FirelordFirestore.Transaction) => Promise<Y>,
-		transactionOptions?:
-			| FirelordFirestore.ReadWriteTransactionOptions
-			| FirelordFirestore.ReadOnlyTransactionOptions
-	) => Promise<Y>
 }

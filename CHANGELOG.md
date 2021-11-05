@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.9.2 6-Nov-2021
+
+- Move run transactional to outside
+- add collection onSnapshot
+
 ## 0.9.1 2-Nov-2021
 
 - fix bug where docID still cant receive undefined.
