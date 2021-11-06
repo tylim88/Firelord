@@ -119,6 +119,10 @@ export type QueryCreator<
 		ReturnType<QueryCreator<T, PermanentlyOmittedKeys, M>>,
 		PermanentlyOmittedKeys
 	>
+	onSnapshot: (
+		onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, M>>) => void,
+		onError?: (error: Error) => void
+	) => () => void
 	get: () => Promise<ReturnType<QuerySnapshotCreator<T>>>
 }
 
@@ -266,6 +270,14 @@ export const queryCreator = <
 			)
 		},
 		orderBy: orderByCreator(query),
+		onSnapshot: (
+			onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, 'col'>>) => void,
+			onError?: (error: Error) => void
+		) => {
+			return query.onSnapshot(snapshot => {
+				return onNext(querySnapshotCreator<T, M>(firestore, colRef, snapshot))
+			}, onError)
+		},
 		get: () => {
 			return query.get().then(querySnapshot => {
 				return querySnapshotCreator<T, M>(firestore, colRef, querySnapshot)

@@ -1,6 +1,6 @@
 import { OmitKeys, Firelord } from './firelord'
 import { FirelordFirestore } from './firelordFirestore'
-import { QueryCreator, QuerySnapshotCreator } from './queryCreator'
+import { QueryCreator } from './queryCreator'
 import { DocCreator } from './doc'
 
 export type firelord = (firestore: FirelordFirestore.Firestore) => <
@@ -19,10 +19,6 @@ export type firelord = (firestore: FirelordFirestore.Firestore) => <
 		parent: FirelordFirestore.DocumentReference<FirelordFirestore.DocumentData> | null
 		path: string
 		id: string
-		onSnapshot: (
-			onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, 'col'>>) => void,
-			onError?: (error: Error) => void
-		) => () => void
 		listDocuments: () => Promise<
 			FirelordFirestore.DocumentReference<T['read']>[]
 		>

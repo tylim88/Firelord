@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.9.4 6-Nov-2021
+
+- Move onSnapshot to query
+
 ## 0.9.2 6-Nov-2021
 
 - Move run transactional to outside

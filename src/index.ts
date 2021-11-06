@@ -1,10 +1,6 @@
 import { Firelord } from './firelord'
 import { FirelordFirestore } from './firelordFirestore'
-import {
-	queryCreator,
-	querySnapshotCreator,
-	QuerySnapshotCreator,
-} from './queryCreator'
+import { queryCreator } from './queryCreator'
 import { firelord as FirelordWrapper } from './index_'
 import { docCreator } from './doc'
 import { createTime } from './utils'
@@ -43,18 +39,6 @@ export const firelord: FirelordWrapper =
 				parent: colRefRead.parent,
 				path: colRefRead.path,
 				id: colRefRead.id,
-				onSnapshot: (
-					onNext: (
-						snapshot: ReturnType<QuerySnapshotCreator<T, 'col'>>
-					) => void,
-					onError?: (error: Error) => void
-				) => {
-					return colRefRead.onSnapshot(snapshot => {
-						return onNext(
-							querySnapshotCreator<T, 'col'>(firestore, colRefRead, snapshot)
-						)
-					}, onError)
-				},
 				listDocuments: () => {
 					return colRefRead.listDocuments()
 				},
