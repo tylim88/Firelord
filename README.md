@@ -29,13 +29,17 @@ Variants:
 1. [react native](https://www.npmjs.com/package/firelordrn)
 2. [js](https://www.npmjs.com/package/firelordjs)
 
+## 🎃 Notice
+
+Please download from `npm` because code in GitHub is not documented.
+
 ## 🦊 Project Status
 
 Current Status: Beta
 
-Starting from 0.6.0, the library implemented all core functionalities, it will slowly exit beta and become production-ready. I will not add tests aggressively because I am exhausted, and to begin with, this thing is not easy(I don't know, maybe I am bad at typescript).
+Starting from 0.6.0, the library implemented all core functionalities, it will slowly exit beta and become production-ready.
 
-However, one thing for sure, this is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
+This is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
 
 Ok, I may exaggerate a little, but I welcome you to prove me wrong.
 
@@ -420,7 +424,7 @@ firestore().runTransaction(async transaction => {
 	// create if only exist, else fail
 	// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
-	await user.transaction(transaction).create({
+	user.transaction(transaction).create({
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
@@ -432,7 +436,7 @@ firestore().runTransaction(async transaction => {
 	// although it can overwrite, we intended this to use as create
 	// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 	// auto add `createdAt` and `updatedAt`
-	await user.transaction(transaction).set({
+	user.transaction(transaction).set({
 		name: 'John',
 		age: 24,
 		birthday: new Date(1995, 11, 17),
@@ -446,7 +450,7 @@ firestore().runTransaction(async transaction => {
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
-	await user.transaction(transaction).set({ name: 'Michael' }, { merge: true })
+	user.transaction(transaction).set({ name: 'Michael' }, { merge: true })
 
 	// create if not exist, else update
 	// although it can create if not exist, we intend this to use as an update operation
@@ -454,7 +458,7 @@ firestore().runTransaction(async transaction => {
 	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeKey: fieldPath[] }` in the option, as shown below.
-	await user.transaction(transaction).set(
+	user.transaction(transaction).set(
 		{ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) },
 		{ mergeField: ['name', 'age'] } // update only `name` and `age` fields
 	)
@@ -462,9 +466,9 @@ firestore().runTransaction(async transaction => {
 	// update if exist, else fail
 	// all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 	// auto update `updatedAt`
-	await user.transaction(transaction).update({ name: 'Michael' })
+	user.transaction(transaction).update({ name: 'Michael' })
 	// delete document
-	await user.transaction(transaction).delete()
+	user.transaction(transaction).delete()
 
 	// keep in mind you need to return a promise in transaction
 	// example code here is just an example to show API, this is not the correct way to do it
