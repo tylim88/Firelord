@@ -31,8 +31,14 @@ export type firelord = (firestore: FirelordFirestore.Firestore) => <
 	fieldValue: {
 		increment: (value: number) => Firelord.NumberMasked
 		serverTimestamp: () => Firelord.ServerTimestampMasked
-		arrayUnion: <T>(...values: T[]) => Firelord.ArrayMasked<T>
-		arrayRemove: <T>(...values: T[]) => Firelord.ArrayMasked<T>
+		arrayUnion: <T extends string, Y>(
+			key: T,
+			...values: Y[]
+		) => { [key in T]: Firelord.ArrayMasked<Y> }
+		arrayRemove: <T extends string, Y>(
+			key: T,
+			...values: Y[]
+		) => { [key in T]: Firelord.ArrayMasked<Y> }
 	}
 	runTransaction: <Y>(
 		updateFunction: (transaction: FirelordFirestore.Transaction) => Promise<Y>,

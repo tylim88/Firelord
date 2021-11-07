@@ -2,6 +2,12 @@
 
 Change log
 
+## 0.10.0 8-Nov-2021
+
+- where "in" and "array-contains-any" now return array of query instead (this is to due with 10 element limit)
+- "in", "not-in" and "array-contains-any" will automatic convert empty array to `[some random text]`
+- improve array union and array remove api so they can deals with empty array
+
 ## 0.9.4 6-Nov-2021
 
 - Move onSnapshot to query

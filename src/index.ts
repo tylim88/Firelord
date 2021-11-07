@@ -86,15 +86,23 @@ export const firelord: FirelordWrapper =
 					return firestore.FieldValue.serverTimestamp() as unknown as Firelord.ServerTimestampMasked
 				},
 
-				arrayUnion: <T>(...values: T[]) => {
-					return firestore.FieldValue.arrayUnion(
-						...values
-					) as unknown as Firelord.ArrayMasked<T>
+				arrayUnion: <T extends string, Y>(key: T, ...values: Y[]) => {
+					return (values.length > 0
+						? {
+								[key]: firestore.FieldValue.arrayUnion(...values),
+						  }
+						: {}) as unknown as {
+						[key in T]: Firelord.ArrayMasked<Y>
+					}
 				},
-				arrayRemove: <T>(...values: T[]) => {
-					return firestore.FieldValue.arrayRemove(
-						...values
-					) as unknown as Firelord.ArrayMasked<T>
+				arrayRemove: <T extends string, Y>(key: T, ...values: Y[]) => {
+					return (values.length > 0
+						? {
+								[key]: firestore.FieldValue.arrayRemove(...values),
+						  }
+						: {}) as unknown as {
+						[key in T]: Firelord.ArrayMasked<Y>
+					}
 				},
 			},
 			runTransaction: <Y>(

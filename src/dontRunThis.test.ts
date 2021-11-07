@@ -156,7 +156,7 @@ user.update({ name: 'Michael' })
 // delete document
 user.delete()
 
-user.runTransaction(async transaction => {
+firestore().runTransaction(async transaction => {
 	// get `read type` data
 	await user
 		.transaction(transaction)
