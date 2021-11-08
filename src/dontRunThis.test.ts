@@ -593,6 +593,7 @@ example.doc('1234567').update({
 })
 
 // after all error is fixed
+// There will be no false positive, only misplaced negative(the error appears on another member).
 example.doc('1234567').update({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
