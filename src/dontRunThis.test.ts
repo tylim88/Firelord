@@ -582,19 +582,19 @@ example.doc('1234567').update(
 example.doc('1234567').update({
 	aaa: serverTimestamp(), // ERROR
 	bbb: increment(11), // ERROR\
-	...arrayUnion('ddd', 123, 456), // ERROR
+	...arrayUnion('ddd', 123, 456), // ERROR <-- will show error after you fix all other errors first
 })
 
 example.doc('1234567').update({
+	aaa: increment(11), // ok
+	// due to heavy use of generic type, some error is not shown on proper member
+	bbb: serverTimestamp(), // ok <-- fix the error in array union and this error will goes away
 	...arrayUnion('ddd', 123, 456), // ERROR
 })
 
+// after all error is fixed
 example.doc('1234567').update({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
 	...arrayUnion('ddd', 'abc', 'efg'), // ok
-})
-example.doc('1234567').update({
-	...arrayUnion('ddd', 123, 456), // ERROR
-	aaa: 123,
 })

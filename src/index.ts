@@ -70,11 +70,9 @@ export const firelord: FirelordWrapper =
 						value
 					) as unknown as Firelord.NumberMasked
 				},
-
 				serverTimestamp: () => {
 					return firestore.FieldValue.serverTimestamp() as unknown as Firelord.ServerTimestampMasked
 				},
-
 				arrayUnion: <T extends string, Y>(key: T, ...values: Y[]) => {
 					return (values.length > 0
 						? {

@@ -33,12 +33,12 @@ Variants:
 
 ## 🎃 Notice
 
-0.10.0 breaking change:
+0.10.0 breaking changes:
 
 - Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
 - now you can use `in` and `array-contains-any` with more than 10 elements array.
 
-Other api remain the same.
+Other APIs stay the same.
 
 ## 🦊 Project Status
 
@@ -929,7 +929,15 @@ But in the end, both should work fine. There are some considerations behind this
 
 ## 🦎 Caveats
 
-Because of the heavy use of generic types and utility types, typescript hints may look chaotic. However, there is no need to be panic. Simply check your data type carefully. The wrapper priority is to make sure you cannot go wrong.
+Because of the heavy use of generic types and utility types, typescript hints may look chaotic, also some confusions:
+
+1. no error shown on member that has type error if other members also having type errors
+2. error shown on member that is ok instead
+3. everything has type error
+
+The wrapper priority is to make sure you cannot go wrong. There will be no false positive, only misplaced negative(the error appears on another member).
+
+However, there is no need to be panic. As long as there is an error, then something must be wrong. Simply check your data type carefully.
 
 ## 🐎 Road Map
 
