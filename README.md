@@ -114,7 +114,7 @@ Overview:
 
 - Any document reference or query document reference that read or query operation returns has exactly the same `read`, `write` and `compare` data type for all read write operations.
 
-- Firestore trigger runtime error if your array is empty when dealing with `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`. The wrapper automatic handle this problem for you, you are free to use empty array.
+- Firestore trigger runtime error if your array is empty when dealing with `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`. The wrapper automatic handle this problem for you, you are free to use an empty array.
 
 - Use `in` and `array-contains-any` with over 10 elements array, the wrapper chunk the array and create extra queries. Do not that same method does not work with `not-in`, which is unfortunate.
 
@@ -278,7 +278,7 @@ NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[
 
 \*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object, however, there are not many things to do with object[] type due to how firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
-\*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in array, see [Complex Data Typing](#-complex-data-typing) for more info.
+\*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in an array, see [Complex Data Typing](#-complex-data-typing) for more info.
 
 ## 🐘 Document operations: Write, Read and Listen
 
@@ -891,9 +891,7 @@ Do not use `flatten` for other purposes. If you need it, see [object-flat](https
 
 ## 🐬 Advices
 
-### Array
-
-_You can ≠ You should_
+### You can ≠ You should
 
 Although the wrapper can handle virtually any complex data type, it doesn't mean you should model the data in such a way, especially when dealing with the array.
 
@@ -927,17 +925,37 @@ Logically, there should be one type of document in on collection(hence the name 
 
 But in the end, both should work fine. There are some considerations behind this but it doesn't matter much. Use whatever you like. Still, I would recommend creating top collections for a more logical structure.
 
+### Speed
+
+Don't use firestore if speed matter. The query time of firestore is based on result set, not total data set, which means the more data set you have the better firestore performs against other database.
+
+Though it is unsure at what point firestore performance start to exceed other databases, my guess is most people are not likely to hit that point.
+
+Thus don't expect much from the speed, use firestore for task that is not time critical.
+
 ## 🦎 Caveats
 
-Because of the heavy use of generic types and utility types, typescript hints may look chaotic, also some confusions:
+### Error hint
+
+Because of the heavy use of generic types and utility types, typescript hints may look chaotic. The wrapper priority is to make sure you cannot go wrong. There will be no false positive, only misplaced negative like:
 
 1. no error shown on member that has type error if other members also having type errors
 2. error shown on member that is ok instead
 3. everything has type error
 
-The wrapper priority is to make sure you cannot go wrong. There will be no false positive, only misplaced negative(the error appears on another member).
-
 However, there is no need to be panic. As long as there is an error, then something must be wrong. Simply check your data type carefully.
+
+### `not-in`
+
+Although the wrapper can help you with `array-contains-any` and `in` comparator 10 elements limit.
+
+However, there is no solution for `not-in` now. Chunking the query like `array-contains-any` and `in` doesn't make sense.
+
+Array size can only be determined on runtime, so neither can typescript help you.
+
+Checking the array size in runtime is also meaningless. At most, you prevent the error, but you still don't get any data. There is nothing you can do about it, which is why there is no counter measurement provided by this wrapper.
+
+My advice is to avoid `not-in` if possible, unless the element to filter is less than 10.
 
 ## 🐎 Road Map
 
