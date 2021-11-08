@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.10.3 9-Nov-2021
+
+- expose `docPath` in MetaType
+
 ## 0.10.0 9-Nov-2021
 
 - where "in" and "array-contains-any" now return array of query instead (this is to due with 10 element limit)
