@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.11.0 9-Nov-2021
+
+- set operation no longer auto update date, because it is impossible to know whether it plan to update or create
+
 ## 0.10.3 9-Nov-2021
 
 - expose `docPath` in MetaType

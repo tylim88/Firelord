@@ -33,7 +33,12 @@ Variants:
 
 ## 🎃 Notice
 
-0.10.0 breaking changes:
+### 0.11.0 important change
+
+- `set` operation no longer auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update.
+- However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data, so you can decide on yourself how to use it.
+
+### 0.10.0 breaking changes
 
 - Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
 - now you can use `in` and `array-contains-any` with more than 10 elements array.
@@ -79,7 +84,8 @@ Overview:
   - auto generate sub collection path type.
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
-  - auto add `createdAt` and `updatedAt` server timestamp to **create** and **set** operation.
+  - auto add `createdAt` and `updatedAt` server timestamp to **create** operation.
+  - `set` operation does not auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update. However `set` accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data, so you can decide on yourself how to use it.
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info. NOTE: There is no path for `d.e.g.h.a` because it is inside an array, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![flatten object](img/flattenObject.png)
@@ -313,7 +319,6 @@ user.create({
 })
 
 // create if not exist, else overwrite
-// although it can overwrite, we intend this to use as create
 // require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
 // auto add `createdAt` and `updatedAt`
 user.set({
@@ -325,17 +330,13 @@ user.set({
 })
 
 // create if not exist, else update
-// although it can create if not exist, we intend this to use as an update operation
 // all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
-// auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
 user.set({ name: 'Michael' }, { merge: true })
 
 // create if not exist, else update
-// although it can create if not exist, we intend this to use as an update operation
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
-// auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeField: fieldPath[] }` in the option, as shown below.
 user.set(
@@ -376,9 +377,7 @@ userBatch.delete()
 userBatch.create({ name: 'Michael', age: 32, birthday: new Date(1987, 8, 9) })
 
 // create if not exist, else overwrite
-// although it can overwrite, we intend this to use as create
 // require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
-// auto add `createdAt` and `updatedAt`
 userBatch.set({
 	name: 'John',
 	age: 24,
@@ -388,17 +387,13 @@ userBatch.set({
 })
 
 // create if not exist, else update
-// although it can create if not exist, we intend this to use as an update operation
 // all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
-// auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
 userBatch.set({ name: 'Michael' }, { merge: true })
 
 // create if not exist, else update
-// although it can create if not exist, we intend this to use as an update operation
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
-// auto update `updatedAt`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeField: fieldPath[] }` in the option, as shown below.
 userBatch.set(
@@ -444,9 +439,7 @@ firestore().runTransaction(async transaction => {
 	})
 
 	// create if not exist, else overwrite
-	// although it can overwrite, we intended this to use as create
 	// require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
-	// auto add `createdAt` and `updatedAt`
 	user.transaction(transaction).set({
 		name: 'John',
 		age: 24,
@@ -456,17 +449,13 @@ firestore().runTransaction(async transaction => {
 	})
 
 	// create if not exist, else update
-	// although it can create if not exist, we intend this to use as an update operation
 	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
-	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
 	user.transaction(transaction).set({ name: 'Michael' }, { merge: true })
 
 	// create if not exist, else update
-	// although it can create if not exist, we intend this to use as an update operation
 	// all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
-	// auto update `updatedAt`
 	// the only value for `merge` is `true`
 	// NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ mergeKey: fieldPath[] }` in the option, as shown below.
 	user.transaction(transaction).set(
