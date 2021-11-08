@@ -927,7 +927,7 @@ But in the end, both should work fine. There are some considerations behind this
 
 ### Speed
 
-Don't use firestore if speed matter. The query time of firestore is based on result set, not total data set, which means the more data set you have the better firestore performs against other database.
+Don't use firestore if speed matter. The query time of firestore is [depend on result set, not total data set](https://stackoverflow.com/a/58859764/5338829), which means the more data set you have the better firestore performs against other database.
 
 Though it is unsure at what point firestore performance start to exceed other databases, my guess is most people are not likely to hit that point.
 
