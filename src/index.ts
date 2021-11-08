@@ -7,18 +7,7 @@ import { createTime } from './utils'
 
 export const firelord: FirelordWrapper =
 	(firestore: FirelordFirestore.Firestore) =>
-	<
-		T extends {
-			colPath: string
-			docID: string
-			colName: string
-			read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-			write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-			writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-			compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-			base: FirelordFirestore.DocumentData
-		} = never
-	>() => {
+	<T extends Firelord.MetaType = never>() => {
 		type Write = Firelord.InternalReadWriteConverter<T>['write']
 		type WriteNested = Firelord.InternalReadWriteConverter<T>['writeNested']
 		type Read = Firelord.InternalReadWriteConverter<T>['read']

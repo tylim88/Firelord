@@ -220,56 +220,49 @@ firestore().runTransaction(async transaction => {
 	return Promise.resolve('')
 })
 
-// the field path is the keys of the `compare type`(basically keyof base type plus `createdAt` and `updatedAt`)
+// import users
+
+// the field path is the keys of the `compare type`(basically keyof `base type` plus `createdAt` and `updatedAt`)
 
 // if the member value type is array, type of `opStr` is  'in' | 'array-contains'| 'array-contains-any'
 // if type of opStr is 'array-contains', the value type is the non-array version of member's type in `compare type`
 users.where('beenTo', 'array-contains', 'USA').get()
 // if type of opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
-users.where('beenTo', 'array-contains-any', ['USA']).get()
+users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+	return query.get()
+})
 // if type of opStr is 'in', the value type is the array of member's type in `compare type`
-users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
-
-// orderBy field path only include members that is NOT array type in `compare type`
-users.orderBy('name', 'desc').limit(3).get()
-// the field path is the keys of the `compare type`
-// if the member value type is array, type of `opStr` is  'in' | 'array-contains-any'
-// if type of opStr is 'array-contains', the value type is the non-array version of member's type in `compare type`
-users.where('beenTo', 'array-contains', 'USA').get()
-// if type of opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
-users.where('beenTo', 'array-contains-any', ['USA']).get()
-// if type of opStr is 'in', the value type is the array of member's type in `compare type`
-users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
-
+users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).map(query => {
+	return query.get()
+})
 // orderBy field path only include members that is NOT array type in `compare type`
 users.orderBy('name', 'desc').limit(3).get()
 
-// for `array-contains` and `array-contains-any` comparators, you can chain `orderBy` claus with DIFFERENT field path
+// for `array-contains` and `array-contains-any` comparators, you can chain `orderBy` clause with DIFFERENT field path
 users.where('beenTo', 'array-contains', 'USA').orderBy('age', 'desc').get()
-users
-	.where('beenTo', 'array-contains-any', ['USA', 'CHINA'])
-	.orderBy('age', 'desc')
-	.get()
+users.where('beenTo', 'array-contains-any', ['USA', 'CHINA']).map(query => {
+	return query.orderBy('age', 'desc').get()
+})
 
 // for '==' | 'in' comparators:
-// no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20).orderBy('age', 'desc').get()
+// no order for '==' | 'in' comparator for SAME field name, read https://stackoverflow.com/a/56620325/5338829 before proceed
+users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20).orderBy('name', 'desc').get()
+users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
 users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 // again, no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
 
 // for '<' | '<=]| '>'| '>=' comparator
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20).orderBy('name', 'desc').get()
+users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '>', 20).orderBy('age', 'desc').get()
+users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
@@ -331,25 +324,25 @@ users
 // quick doc
 users.where('age', '!=', 20).orderBy('age', 'desc').get() // ok
 users.where('age', 'not-in', [20]).orderBy('age', 'desc').get() // ok
-users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // no order for array
+users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // ERROR no order for array
 
 // no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20).orderBy('age', 'desc').get()
+users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20).orderBy('name', 'desc').get()
+users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
 users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 // again, no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
 
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20).orderBy('name', 'desc').get()
+users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '>', 20).orderBy('age', 'desc').get()
+users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // only 1 limit or limitToLast and 1 offset
 users.limit(1).where('age', '!=', 20).limitToLast(2)
@@ -588,12 +581,20 @@ example.doc('1234567').update(
 
 example.doc('1234567').update({
 	aaa: serverTimestamp(), // ERROR
-	bbb: increment(11), // ERROR
-	ddd: arrayUnion(123, 456), // ERROR
+	bbb: increment(11), // ERROR\
+	...arrayUnion('ddd', 123, 456), // ERROR
+})
+
+example.doc('1234567').update({
+	...arrayUnion('ddd', 123, 456), // ERROR
 })
 
 example.doc('1234567').update({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
-	ddd: arrayUnion('123', '456'), // ok
+	...arrayUnion('ddd', 'abc', 'efg'), // ok
+})
+example.doc('1234567').update({
+	...arrayUnion('ddd', 123, 456), // ERROR
+	aaa: 123,
 })

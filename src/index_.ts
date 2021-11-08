@@ -4,16 +4,7 @@ import { QueryCreator } from './queryCreator'
 import { DocCreator } from './doc'
 
 export type firelord = (firestore: FirelordFirestore.Firestore) => <
-	T extends {
-		colPath: string
-		docID: string
-		colName: string
-		read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-		base: FirelordFirestore.DocumentData
-	} = never
+	T extends Firelord.MetaType = never
 >() => {
 	col: (collectionPath: T['colPath']) => {
 		parent: FirelordFirestore.DocumentReference<FirelordFirestore.DocumentData> | null

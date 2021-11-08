@@ -11,16 +11,7 @@ import { arrayChunk } from './utils'
 // https://stackoverflow.com/questions/69724861/recursive-type-become-any-after-emit-declaration-need-implicit-solution
 
 export type QueryCreator<
-	T extends {
-		colPath: string
-		docID: string
-		colName: string
-		read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-		base: FirelordFirestore.DocumentData
-	},
+	T extends Firelord.MetaType,
 	PermanentlyOmittedKeys extends keyof ReturnType<
 		QueryCreator<T, PermanentlyOmittedKeys, M>
 	> = never,
@@ -97,7 +88,6 @@ export type QueryCreator<
 					? 'orderBy' | PermanentlyOmittedKeys
 					: PermanentlyOmittedKeys
 		  >
-
 	limit: (
 		limit: number
 	) => OmitKeys<
@@ -136,16 +126,7 @@ export type QueryCreator<
 // however due to this is a recursive function, it is not possible
 // luckily this is only used in 2 places and is explicitly typed, so everything is good
 export const queryCreator = <
-	T extends {
-		colPath: string
-		docID: string
-		colName: string
-		read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-		base: FirelordFirestore.DocumentData
-	},
+	T extends Firelord.MetaType,
 	PermanentlyOmittedKeys extends keyof ReturnType<
 		QueryCreator<T, PermanentlyOmittedKeys, M>
 	> = never,
@@ -329,16 +310,7 @@ export const queryCreator = <
 }
 
 export type QuerySnapshotCreator<
-	T extends {
-		colPath: string
-		docID: string
-		colName: string
-		read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-		base: FirelordFirestore.DocumentData
-	},
+	T extends Firelord.MetaType,
 	M extends 'col' | 'colGroup' = 'col'
 > = (
 	firestore: FirelordFirestore.Firestore,
@@ -361,16 +333,7 @@ export type QuerySnapshotCreator<
 }
 
 export const querySnapshotCreator = <
-	T extends {
-		colPath: string
-		docID: string
-		colName: string
-		read: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		writeNested: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedWrite
-		compare: FirelordFirestore.DocumentData & Firelord.CreatedUpdatedCompare
-		base: FirelordFirestore.DocumentData
-	},
+	T extends Firelord.MetaType,
 	M extends 'col' | 'colGroup' = 'col'
 >(
 	firestore: FirelordFirestore.Firestore,

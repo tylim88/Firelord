@@ -12,13 +12,15 @@
 
 🔥 Automatically convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
-✋🏻 Not only does it safeguard your types, but it also stops you from making any incorrect implementation(use the wrapper incorrectly).
-
 💥 Even the seemly un-type-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) is taken care of, EVERYTHING is typed, NO TYPE IS LEFT BEHIND!!
 
 ✨ API closely resembles firestore API, low learning curve.
 
 🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
+
+🍡 Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, no longer need to check for empty array!
+
+🍧 Use `in` and `array-contains-any` with more than 10 elements array!
 
 🐉 Zero dependencies.
 
@@ -31,7 +33,12 @@ Variants:
 
 ## 🎃 Notice
 
-Please download from `npm` because code in GitHub is not documented.
+0.10.0 breaking change:
+
+- Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
+- now you can use `in` and `array-contains-any` with more than 10 elements array.
+
+Other api remain the same.
 
 ## 🦊 Project Status
 
@@ -105,7 +112,11 @@ Overview:
 
   ![field value](img/fieldValue.png)
 
-- Any document reference or query document reference that read or query operation returns has exactly the same behaviour.
+- Any document reference or query document reference that read or query operation returns has exactly the same `read`, `write` and `compare` data type for all read write operations.
+
+- Firestore trigger runtime error if your array is empty when dealing with `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`. The wrapper automatic handle this problem for you, you are free to use empty array.
+
+- Use `in` and `array-contains-any` with over 10 elements array, the wrapper chunk the array and create extra queries. Do not that same method does not work with `not-in`, which is unfortunate.
 
 ## 🦜 Getting Started
 
@@ -515,6 +526,8 @@ Any `orderBy` that does not follow `where` clause does not abide by the rule and
 
 Note: The wrapper will not stop you from using multiple `orderBy` clause because multiple `orderBy` clause is possible, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
 
+NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation
+
 Tips: to make things easier, whenever you want to use `where` + `orderBy`, use the shorthand form (see example code below).
 
 ```ts
@@ -526,39 +539,47 @@ Tips: to make things easier, whenever you want to use `where` + `orderBy`, use t
 // if type of opStr is 'array-contains', the value type is the non-array version of member's type in `compare type`
 users.where('beenTo', 'array-contains', 'USA').get()
 // if type of opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
-users.where('beenTo', 'array-contains-any', ['USA']).get()
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+		return query.get()
+	})
+)
 // if type of opStr is 'in', the value type is the array of member's type in `compare type`
-users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
-
+Promise.all(
+	users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).map(query => {
+		return query.get()
+	})
+)
 // orderBy field path only include members that is NOT array type in `compare type`
 users.orderBy('name', 'desc').limit(3).get()
 
 // for `array-contains` and `array-contains-any` comparators, you can chain `orderBy` clause with DIFFERENT field path
 users.where('beenTo', 'array-contains', 'USA').orderBy('age', 'desc').get()
-users
-	.where('beenTo', 'array-contains-any', ['USA', 'CHINA'])
-	.orderBy('age', 'desc')
-	.get()
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['USA', 'CHINA']).map(query => {
+		return query.orderBy('age', 'desc').get()
+	})
+)
 
 // for '==' | 'in' comparators:
 // no order for '==' | 'in' comparator for SAME field name, read https://stackoverflow.com/a/56620325/5338829 before proceed
-users.where('age', '==', 20).orderBy('age', 'desc').get()
+users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20).orderBy('name', 'desc').get()
+users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
 users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
 // again, no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
 
 // for '<' | '<=]| '>'| '>=' comparator
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20).orderBy('name', 'desc').get()
+users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '>', 20).orderBy('age', 'desc').get()
+users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
@@ -598,6 +619,24 @@ users
 		directionStr: 'desc',
 	})
 	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc')
+
+//pagination
+// field path only include members that is NOT array type in `base type`
+// field value type is the corresponding field path value type in `compare type`
+// value of cursor clause is 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
+users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5) // equivalent to orderBy("age").startAt(20).offset(5)
+// usage with where
+users
+	.where('name', '!=', 'John')
+	.orderBy('age', 'desc', { clause: 'endAt', fieldValue: 50 })
+// equivalent to shorthand
+users
+	.where('name', '!=', 'John', {
+		fieldPath: 'age',
+		directionStr: 'desc',
+		cursor: { clause: 'endAt', fieldValue: 50 },
+	})
+	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc').endAt(50)
 ```
 
 ## 🌺 Collection Operations: Paginate And Cursor
@@ -797,17 +836,19 @@ const handleFieldValue = wrapper<HandleFieldValue>().col('HandleFieldValue')
 handleFieldValue.doc('1234567').set({
 	aaa: arrayUnion('123', '456'), // ERROR
 	bbb: increment(11), // ERROR
-	ddd: arrayUnion(123, 456), // ERROR
+	ddd: arrayUnion('ddd', 123, 456), // ERROR <- at first typescript will not highlight this error unless you solve other error first, which mean in the end it still able to catch all error, so don't panic
 })
 
 handleFieldValue.doc('1234567').set({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
-	ddd: arrayUnion('123', '456'), // ok
+	...arrayUnion('ddd', '123', '456'), // ok, you can also write this as `...arrayUnion('ddd', ...['123', '456'])`
 })
 ```
 
-The API is like firestore API, same working logic apply to complex data type.
+The API is like firestore API, except `arrayUnion` and `arrayRemove`, the API is designed in such a way to deal with empty array errors while keeping your type safe.
+
+same working logic apply to complex data type.
 
 if you try to use the original firestore field value, the wrapper will stop you.
 
