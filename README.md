@@ -955,7 +955,7 @@ Array size can only be determined on runtime, so neither can typescript help you
 
 Checking the array size in runtime is also meaningless. At most, you prevent the error, but you still don't get any data. There is nothing you can do about it, which is why there is no counter measurement provided by this wrapper.
 
-My advice is to avoid `not-in` if possible, unless the element to filter is less than 10.
+My advice is to avoid `not-in` if possible, unless the number of elements to filter is less than 10.
 
 ## 🐎 Road Map
 
