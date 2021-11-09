@@ -22,7 +22,11 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array! (`not-in` has a caveat)
 
-🍹 Take care of `orderBy` limitation.
+🥙 Even all `Snapshot` are typed, chain your operations without type casting anymore!
+
+🍹 Avoid `orderBy` limitation.
+
+🍁 `write` operations reject unknown member and enforce partial but no undefined.
 
 🐉 Zero dependencies.
 
@@ -107,9 +111,9 @@ Overview:
 
   ![partial but no undefined](img/updateAndUndefined.png)
 
-- Reject stranger member: prevent you from writing stranger member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore, regardless of how deep the strange member is located.
+- Reject unknown member: prevent you from writing unknown member (not exist in type) into `set`,`create` and `update` operations, stop unnecessary data from entering firestore, regardless of how deep the strange member is located.
 
-  ![reject stranger member](img/strangerMember.png)
+  ![reject unknown member](img/unknownMember.png)
 
 - Prevent you from chaining <`offset`> or <`limit` and `limit to last`> for the 2nd time no matter how you chain them.
 
@@ -897,9 +901,9 @@ If this is not enough to convince you, then this will: type safety.
 
 If you have over one type of document, how do you ensure the document you query matches the type you want?
 
-Answer: it is possible, just union the two types but maintenance difficulty escalated quickly because if you can do 2, why not 3, 4, 5, 6?
+Answer: it is possible, by union the two types but maintenance difficulty escalate quickly, imagine union bunch of types.
 
-Hence I am strongly against multi data type per collection, I strongly recommend you to enforce 1 collection 1 document type coding policy is important.
+Avoid multi document types per collection, I strongly recommend enforcing 1 collection 1 document type coding policy.
 
 ### Speed
 
@@ -985,7 +989,7 @@ However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(
 Typing wise, there are few opinionated elements:
 
 1. `set`(without option) and `create` operations require all member to present.
-2. all write operations reject stranger members.
+2. all write operations reject unknown members.
 3. although `updatedAt` and `createdAt` is included in type, all write operation exclude them, which mean you cant write the value of `updatedAt` and `createdAt`.
 
 I believe this decision is practical for cases and not planning to change it in the forseeable future.
@@ -1000,11 +1004,13 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 
 ## 💍 Utility
 
-Since write operations reject stranger members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library returns the exact type, so it should work well with the wrapper.
+Since write operations reject unknown members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact) to remove the unknown members, the library returns the exact type, so it should work well with the wrapper.
 
-Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
+Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
 
-If you are looking to chunk an array: [array-chop](https://www.npmjs.com/package/array-chop)(I am the author)
+If you are looking to chunk an array: [array-chop](https://www.npmjs.com/package/array-chop)
+
+Disclaimer: I am the author of all the packages.
 
 ## 🐎 Road Map
 
