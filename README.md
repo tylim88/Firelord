@@ -1002,6 +1002,8 @@ Since write operations reject stranger members (member that are not defined in b
 
 Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
 
+If you are looking to chunk an array: [array-chop](https://www.npmjs.com/package/array-chop)(I am the author)
+
 ## 🐎 Road Map
 
 - allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult)
