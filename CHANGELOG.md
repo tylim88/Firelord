@@ -2,10 +2,11 @@
 
 Change log
 
-## 0.11.1 9-Nov-2021
+## 0.12.0 9-Nov-2021
 
 - add solution for `not-in` 10 elements limitation, not completely solve it but it is the only solution
 - querySnapshot docChanges document reference now properly typed
+- no api changes.
 
 ## 0.11.0 9-Nov-2021
 

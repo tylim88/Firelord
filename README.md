@@ -31,9 +31,14 @@ Variants:
 1. [react native](https://www.npmjs.com/package/firelordrn)
 2. [js](https://www.npmjs.com/package/firelordjs)
 
-The package is only 22KB before zipping and uglify, it looks big due to the images in the documentation.
+The package is only 22 KB before zipping and uglify, it looks big due to the images in the documentation.
 
 ## 🎃 Notice
+
+### 12 important change
+
+- now you can compare more than 10 elements for `not-in` comparator, details: [`not-in` caveat](#not-in).
+- no API changes.
 
 ### 0.11.0 important change
 
@@ -979,7 +984,7 @@ Seriously doubt this is doable, `not-in` query is like one of the most useful qu
 
 ====
 
-There is only one solution to this problem: first, filter with 10 elements, then filter the rest of the query result with the rest of the elements
+There is only one solution to this problem: first, filter with 10 elements, then filter the rest of the query result with the rest of the elements.
 
 We implemented the solution in the wrapper; you don't need to do anything. The `querySnapshot`'s `forEach`, `docChanges`, `docs`, `empty` and `size` values are all recomputed base on the extra elements to filter.
 
