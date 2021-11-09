@@ -122,7 +122,7 @@ export type QueryCreator<
 		onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, M>>) => void,
 		onError?: (error: Error) => void
 	) => () => void
-	get: () => Promise<ReturnType<QuerySnapshotCreator<T>>>
+	get: () => Promise<ReturnType<QuerySnapshotCreator<T, M>>>
 }
 
 // need to make generic mandatory https://stackoverflow.com/questions/55610260/how-to-make-generics-mandatory

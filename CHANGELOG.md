@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.12.1 9-Nov-2021
+
+- fix some minor type, missing 'colGroup' for M type
+
 ## 0.12.0 9-Nov-2021
 
 - add solution for `not-in` 10 elements limitation, not completely solve it but it is the only solution

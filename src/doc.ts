@@ -61,7 +61,7 @@ export type DocSnapshotCreator<
 	exists: boolean
 	id: string
 	readTime: FirelordFirestore.Timestamp
-	ref: ReturnType<ReturnType<DocCreator<T>>>
+	ref: ReturnType<ReturnType<DocCreator<T, M>>>
 	data: () => T['read'] | undefined
 	get: <F extends string & keyof T['write']>(fieldPath: F) => T['read'][F]
 	isEqual: (other: FirelordFirestore.DocumentSnapshot) => boolean
@@ -79,7 +79,7 @@ export const docCreator =
 			| FirelordFirestore.DocumentReference
 			| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
 	) =>
-	(documentID?: T['docID']): ReturnType<ReturnType<DocCreator<T>>> => {
+	(documentID?: T['docID']): ReturnType<ReturnType<DocCreator<T, M>>> => {
 		type Write = Firelord.InternalReadWriteConverter<T>['write']
 		type WriteNested = Firelord.InternalReadWriteConverter<T>['writeNested']
 		type WriteNestedCreate =
