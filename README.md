@@ -857,43 +857,6 @@ same working logic apply to complex data type.
 
 if you try to use the original firestore field value, the wrapper will stop you.
 
-## 🐕 Opinionated Elements
-
-Code wise, there is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
-
-when a document is created via `add`, `create` or `set` without option, two things will happen:
-
-1. createdAt field path is created, and the value is firestore server timestamp(current server timestamp).
-2. updatedAt field path is created, and the value is `null`.
-
-when a document is updated via `update` or `set` with option:
-
-1. updatedAt field path is updated and the value is firestore server timestamp.
-
-This behaviour may be undesirable for some people. I will improve this in future by giving the developer choice.
-
-Typing wise, there are few opinionated elements:
-
-1. `set`(without option) and `create` operations require all member to present.
-2. all write operations reject stranger members.
-3. although `updatedAt` and `createdAt` is included in type, all write operation exclude them, which mean you cant write the value of `updatedAt` and `createdAt`.
-
-I believe this decision is practical for cases and not planning to change it in the forseeable future.
-
-## 🐇 Limitation
-
-While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
-
-1. despite being able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type-safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
-2. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
-3. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
-
-## 💍 Utility
-
-Since write operations reject stranger members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library returns the exact type, so it should work well with the wrapper.
-
-Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
-
 ## 🐬 Advices
 
 ### You can ≠ You should
@@ -932,9 +895,9 @@ If this is not enough to convince you, then this will: type safety.
 
 If you have over one type of document, how do you ensure the document you query matches the type you want?
 
-Answer: it is impossible.
+Answer: it is possible, just union the two types but maintenance difficulty escalated quickly because if you can do 2, why not 3, 4, 5, 6?
 
-Hence enforcing 1 collection 1 document type coding policy is important.
+Hence I am strongly against multi data type per collection, I strongly recommend you to enforce 1 collection 1 document type coding policy is important.
 
 ### Speed
 
@@ -997,6 +960,47 @@ We implemented the solution in the wrapper; you don't need to do anything. The `
 Not the ideal solution, but this is the only option we have, the wrapper simply help you filter the rest so you don't have to.
 
 There is nothing can be done on our side. It is up to Google to improve this.
+
+## 🐕 Opinionated Elements
+
+Code wise, there is one opinionated element in the wrapper, that is `createdAt` and `updatedAt` timestamp that add or update automatically.
+
+when a document is created via `add`, `create` without option, two things will happen:
+
+1. createdAt field path is created, and the value is firestore server timestamp(current server timestamp).
+2. updatedAt field path is created, and the value is `null`.
+
+when a document is updated via `update` with option:
+
+1. updatedAt field path is updated and the value is firestore server timestamp.
+
+This behaviour may be undesirable for some people. I will improve this in future by giving the developer choice.
+
+Finally there is no auto update/add `updatedAt` and `created` for set operation as it is not possible to tell whether you want to create or update.
+
+However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
+
+Typing wise, there are few opinionated elements:
+
+1. `set`(without option) and `create` operations require all member to present.
+2. all write operations reject stranger members.
+3. although `updatedAt` and `createdAt` is included in type, all write operation exclude them, which mean you cant write the value of `updatedAt` and `createdAt`.
+
+I believe this decision is practical for cases and not planning to change it in the forseeable future.
+
+## 🐇 Limitation
+
+While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
+
+1. despite being able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type-safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
+2. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
+3. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
+
+## 💍 Utility
+
+Since write operations reject stranger members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact)(I am the author) to remove the stranger members, the library returns the exact type, so it should work well with the wrapper.
+
+Do not use `flatten` for other purposes. If you need it, see [object-flat](https://www.npmjs.com/package/object-flat)(I am the author), it is a general purpose library. Do not use `object-flat` in firelord as it is not specifically tailored for firelord, use firelord native `flatten` instead.
 
 ## 🐎 Road Map
 
