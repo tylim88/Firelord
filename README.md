@@ -231,7 +231,7 @@ const transactionGroup = wrapper<Transaction>().colGroup('Transactions') // the 
 const transaction = users.doc('1234567890') // document ID is string
 ```
 
-Normally a collection should only have one type of document(recommended), however if your collection has more than one type of document, the solution is to simply define more base type.
+I strongly against defining over one document type per collection, read [one collection one document type](#one-collection-one-document-type).
 
 ## 🦔 Conversion Table
 
@@ -928,7 +928,13 @@ I would recommend instead of creating `profile` and `setting`, you create two to
 
 Logically, there should be one type of document in on collection(hence the name `collections`).
 
-But in the end, both should work fine. There are some considerations behind this but it doesn't matter much. Use whatever you like. Still, I would recommend creating top collections for a more logical structure.
+If this is not enough to convince you, then this will: type safety.
+
+If you have over one type of document, how do you ensure the document you query matches the type you want?
+
+Answer: it is impossible.
+
+Hence enforcing 1 collection 1 document type coding policy is important.
 
 ### Speed
 
