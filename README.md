@@ -22,9 +22,9 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array! (`not-in` has a caveat)
 
-🥙 Even all `Snapshot` are typed, chain your operations without type casting anymore!
+🥙 All `Snapshot` are typed, chain your operations without type casting anymore!
 
-🍹 Avoid `orderBy` limitation.
+🍹 Avoid `orderBy` and `query` limitations for you.
 
 🍁 `write` operations reject unknown member and enforce partial but no undefined.
 
@@ -41,7 +41,11 @@ The package is only 22 KB before zipping and uglify, it looks big due to the ima
 
 ## 🎃 Notice
 
-### 12 important change
+### 0.13.0
+
+- solved Query limitations, see [Circumvented Firestore Limitations](#-circumvented-firestore-limitations)
+
+### 0.12.0 important change
 
 - now you can compare more than 10 elements for `not-in` comparator, details: [`not-in` caveat](#not-in).
 - no API changes.
@@ -126,6 +130,10 @@ Overview:
   - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
   ![orderBy limitation](img/orderBy.png)
+
+- avoid [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries#query_limitations) for you, no more runtime surprises, prevention >>> cures.
+
+  ![orderBy limitation](img/where.png)
 
 - The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed, see [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking) for more info.
 
@@ -863,6 +871,10 @@ same working logic apply to complex data type.
 
 if you try to use the original firestore field value, the wrapper will stop you.
 
+## 🍝 Circumvented Firestore Limitations
+
+![limitation](img/limitation.png)
+
 ## 🐬 Advices
 
 ### You can ≠ You should
@@ -998,9 +1010,8 @@ I believe this decision is practical for cases and not planning to change it in 
 
 While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
 
-1. despite being able to type [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), there is no type-safe measurement for [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries) because the number of `where` clause is unforeseeable.
-2. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
-3. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
+1. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
+2. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
 
 ## 💍 Utility
 

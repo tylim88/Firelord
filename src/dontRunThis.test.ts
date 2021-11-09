@@ -250,19 +250,9 @@ users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
-users
-	.where('age', '==', 20, {
-		fieldPath: 'name',
-		directionStr: 'desc',
-	})
-	.get() // OK
+users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // OK
 // again, no order for '==' | 'in' comparator for SAME field name
-users
-	.where('age', '==', 20, {
-		fieldPath: 'age',
-		directionStr: 'desc',
-	})
-	.get() // ERROR
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
 
 // for '<' | '<=]| '>'| '>=' comparator
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
@@ -270,19 +260,9 @@ users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
-users
-	.where('age', '>', 20, {
-		fieldPath: 'age',
-		directionStr: 'desc',
-	})
-	.get() // OK
+users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // OK
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users
-	.where('age', '>', 20, {
-		fieldPath: 'name',
-		directionStr: 'desc',
-	})
-	.get() // ERROR
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
@@ -310,17 +290,11 @@ users.where('name', '!=', 'John').orderBy('name', 'desc').get()
 users.where('name', '!=', 'John').orderBy('age', 'desc').get()
 // shorthand different field path:
 users
-	.where('name', '!=', 'John', {
-		fieldPath: 'age',
-		directionStr: 'desc',
-	})
+	.where('name', '!=', 'John', { fieldPath: 'age', directionStr: 'desc' })
 	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc')
 // shorthand same field path:
 users
-	.where('name', '!=', 'John', {
-		fieldPath: 'name',
-		directionStr: 'desc',
-	})
+	.where('name', '!=', 'John', { fieldPath: 'name', directionStr: 'desc' })
 	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc')
 
 //pagination
@@ -351,44 +325,72 @@ users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
-users
-	.where('age', '==', 20, {
-		fieldPath: 'name',
-		directionStr: 'desc',
-	})
-	.get() // OK
+users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // OK
 // again, no order for '==' | 'in' comparator for SAME field name
-users
-	.where('age', '==', 20, {
-		fieldPath: 'age', // ERROR
-		directionStr: 'desc',
-	})
-	.get()
+users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
 
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
-users
-	.where('age', '>', 20, {
-		fieldPath: 'age', // OK
-		directionStr: 'desc',
-	})
-	.get()
+users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // OK
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users
-	.where('age', '>', 20, {
-		fieldPath: 'name', // ERROR
-		directionStr: 'desc',
-	})
-	.get()
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
-// only 1 limit or limitToLast and 1 offset
+// only 1 limit or limitToLast and 1 offset, all should error
 users.limit(1).where('age', '!=', 20).limitToLast(2)
 users.limit(1).where('age', '!=', 20).limit(2)
 users.offset(1).where('age', '!=', 20).offset(2)
 users.where('age', '!=', 20).limitToLast(2).offset(3).limit(1)
+
+// all should be ok
+users.where('age', '==', 20).limit(2).where('name', '!=', 'Sam')
+users.where('age', 'not-in', [20]).limit(2).where('name', '==', 'Taylor')
+users.where('age', '>', 20).limit(2).where('name', 'in', ['Brown'])
+users.where('age', '!=', 20).limit(2).where('age', 'not-in', [30])
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['CHINA']).map(query => {
+		return query.limit(2).where('age', '>', 20)
+	})
+)
+users
+	.where('age', 'not-in', [20])
+	.limit(2)
+	.where('beenTo', 'array-contains', 'USA')
+
+// In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field.
+// all should error
+users.where('age', '!=', 20).limit(2).where('name', 'not-in', ['John'])
+users.where('age', '>', 20).limit(2).where('name', '<', 'Michael')
+users.where('age', 'not-in', [20]).limit(2).where('name', '<', 'Ozai')
+
+// You can use at most one array-contains clause per query. You can't combine array-contains with array-contains-any
+// all should error
+users
+	.where('beenTo', 'array-contains', 'USA')
+	.limit(1)
+	.where('beenTo', 'array-contains', 'CHINA')
+users
+	.where('beenTo', 'array-contains', 'CHINA')
+	.limit(1)
+	.where('beenTo', 'array-contains-any', ['USA'])
+
+// You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query.
+// all should error
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+		return query.limit(1).where('age', 'in', [20])
+	})
+)
+users
+	.where('name', 'not-in', ['ozai'])
+	.limit(1)
+	.where('beenTo', 'array-contains-any', ['USA'])
+users
+	.where('name', 'not-in', ['ozai'])
+	.limit(1)
+	.where('beenTo', 'in', [['USA']])
 
 type a = Firelord.ReadWriteCreator<
 	{

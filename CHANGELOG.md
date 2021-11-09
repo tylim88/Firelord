@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.13.0 10-Nov-2021
+
+- solved Query limitation
+- fix limit and limit to last missing M type
+
 ## 0.12.1 9-Nov-2021
 
 - fix some minor type, missing 'colGroup' for M type
