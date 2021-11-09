@@ -7,9 +7,6 @@ export namespace FirelordFirestore {
 
 	export type DocumentData = FirebaseFirestore.DocumentData
 
-	export type DocumentChange<T = DocumentData> =
-		FirebaseFirestore.DocumentChange<T>
-
 	export type DocumentReference<T = DocumentData> =
 		FirebaseFirestore.DocumentReference<T>
 
@@ -29,6 +26,11 @@ export namespace FirelordFirestore {
 
 	export type DocumentSnapshot<T = DocumentData> =
 		FirebaseFirestore.DocumentSnapshot<T>
+
+	export type DocumentChange<T = DocumentData> =
+		FirebaseFirestore.DocumentChange<T>
+
+	export type DocumentChangeType = FirebaseFirestore.DocumentChangeType
 
 	export type Transaction = FirebaseFirestore.Transaction
 

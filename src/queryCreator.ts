@@ -5,7 +5,10 @@ import {
 	Firelord,
 } from './firelord'
 import { FirelordFirestore } from './firelordFirestore'
-import { docSnapshotCreator, DocSnapshotCreator } from './doc'
+import {
+	QuerySnapshotCreator,
+	querySnapshotCreator,
+} from './querySnapshotCreator'
 import { arrayChunk } from './utils'
 
 // https://stackoverflow.com/questions/69724861/recursive-type-become-any-after-emit-declaration-need-implicit-solution
@@ -159,6 +162,39 @@ export const queryCreator = <
 			)
 		}
 
+	const getAndOnSnapshotCreator = (not_In_Extra?: {
+		key: string
+		elements: unknown[]
+	}) => {
+		return {
+			onSnapshot: (
+				onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, 'col'>>) => void,
+				onError?: (error: Error) => void
+			) => {
+				return query.onSnapshot(snapshot => {
+					return onNext(
+						querySnapshotCreator<T, M>(
+							firestore,
+							colRef,
+							snapshot,
+							not_In_Extra
+						)
+					)
+				}, onError)
+			},
+			get: () => {
+				return query.get().then(querySnapshot => {
+					return querySnapshotCreator<T, M>(
+						firestore,
+						colRef,
+						querySnapshot,
+						not_In_Extra
+					)
+				})
+			},
+		}
+	}
+
 	return {
 		firestore: query.firestore,
 		stream: () => {
@@ -224,6 +260,7 @@ export const queryCreator = <
 		) => {
 			const whereInnerCreator = (innerValue: typeof value) => {
 				let adjustedValue: typeof innerValue = innerValue
+				let not_In_Extra_Elements = [] as typeof innerValue
 
 				if (
 					opStr === 'in' ||
@@ -235,6 +272,9 @@ export const queryCreator = <
 							'This is a very long string to prevent collision: %$GE&^G^*(N Y(&*T^VR&%R&^TN&*^RMN$BEDF^R%TFG%I%TFDH%(UI<)(UKJ^HGFEC#DR^T*&#$%(<RGFESAXSCVBGNHM(&%T^BTNRV%ITB^TJNTN^T^*T',
 						] as typeof value
 					}
+				} else if (opStr === 'not-in') {
+					adjustedValue = innerValue.slice(0, 10)
+					not_In_Extra_Elements = innerValue.slice(10)
 				}
 
 				const ref = query.where(fieldPath, opStr, adjustedValue)
@@ -253,7 +293,15 @@ export const queryCreator = <
 					  )
 					: queryRef
 
-				return finalRef as OmitKeys<
+				return {
+					...finalRef,
+					...(opStr === 'not-in'
+						? getAndOnSnapshotCreator({
+								key: fieldPath,
+								elements: not_In_Extra_Elements as unknown[],
+						  })
+						: {}),
+				} as OmitKeys<
 					typeof finalRef,
 					J extends '<' | '<=' | '>' | '>' | '==' | 'in' ? 'orderBy' : never
 				>
@@ -293,80 +341,6 @@ export const queryCreator = <
 			)
 		},
 		orderBy: orderByCreator(query),
-		onSnapshot: (
-			onNext: (snapshot: ReturnType<QuerySnapshotCreator<T, 'col'>>) => void,
-			onError?: (error: Error) => void
-		) => {
-			return query.onSnapshot(snapshot => {
-				return onNext(querySnapshotCreator<T, M>(firestore, colRef, snapshot))
-			}, onError)
-		},
-		get: () => {
-			return query.get().then(querySnapshot => {
-				return querySnapshotCreator<T, M>(firestore, colRef, querySnapshot)
-			})
-		},
-	}
-}
-
-export type QuerySnapshotCreator<
-	T extends Firelord.MetaType,
-	M extends 'col' | 'colGroup' = 'col'
-> = (
-	firestore: FirelordFirestore.Firestore,
-	colRef: M extends 'col'
-		? FirelordFirestore.CollectionReference<T['read']>
-		: M extends 'colGroup'
-		? undefined
-		: never,
-	querySnapshot: FirelordFirestore.QuerySnapshot<T['read']>
-) => {
-	docChanges: () => FirelordFirestore.DocumentChange<T['read']>[]
-	docs: ReturnType<DocSnapshotCreator<T>>[]
-	empty: boolean
-	forEach: (
-		callback: (result: ReturnType<DocSnapshotCreator<T>>) => void
-	) => void
-	isEqual: (other: FirelordFirestore.QuerySnapshot) => boolean
-	readTime: FirelordFirestore.Timestamp
-	size: number
-}
-
-export const querySnapshotCreator = <
-	T extends Firelord.MetaType,
-	M extends 'col' | 'colGroup' = 'col'
->(
-	firestore: FirelordFirestore.Firestore,
-	colRef: M extends 'col'
-		? FirelordFirestore.CollectionReference<T['read']>
-		: M extends 'colGroup'
-		? undefined
-		: never,
-	querySnapshot: FirelordFirestore.QuerySnapshot<T['read']>
-): ReturnType<QuerySnapshotCreator<T, M>> => {
-	return {
-		docChanges: () => {
-			return querySnapshot.docChanges()
-		},
-		docs: querySnapshot.docs.map(queryDocumentSnapshot => {
-			return docSnapshotCreator<T, M>(firestore, colRef, queryDocumentSnapshot)
-		}),
-		empty: querySnapshot.empty,
-		forEach: (
-			callback: (result: ReturnType<DocSnapshotCreator<T>>) => void
-		) => {
-			querySnapshot.forEach(queryDocumentSnapshot => {
-				return callback(
-					docSnapshotCreator<T, M>(firestore, colRef, queryDocumentSnapshot)
-				)
-			})
-		},
-		isEqual: (other: FirelordFirestore.QuerySnapshot) => {
-			return querySnapshot.isEqual(
-				other as FirelordFirestore.QuerySnapshot<T['read']>
-			)
-		},
-		readTime: querySnapshot.readTime,
-		size: querySnapshot.size,
+		...getAndOnSnapshotCreator(),
 	}
 }

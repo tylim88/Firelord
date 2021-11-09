@@ -20,7 +20,7 @@
 
 🍡 Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, no longer need to check for empty array!
 
-🍧 Use `in` and `array-contains-any` with more than 10 elements array!
+🍧 Use `in`, `not-in` and `array-contains-any` and with more than 10 elements array! (`not-in` has a caveat)
 
 🐉 Zero dependencies.
 
@@ -30,6 +30,8 @@ Variants:
 
 1. [react native](https://www.npmjs.com/package/firelordrn)
 2. [js](https://www.npmjs.com/package/firelordjs)
+
+The package is only 22KB before zipping and uglify, it looks big due to the images in the documentation.
 
 ## 🎃 Notice
 
@@ -53,7 +55,7 @@ Starting from 0.6.0, the library implemented all core functionalities, it will s
 
 This is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
 
-Ok, I may exaggerate a little, but I welcome you to prove me wrong.
+Long thing short: this is the best firestore wrapper, and I welcome you to prove me wrong.
 
 Anyway, star⭐ the project if you like what I am doing, thank you.
 
@@ -118,11 +120,14 @@ Overview:
 
   ![field value](img/fieldValue.png)
 
-- Any document reference or query document reference that read or query operation returns has exactly the same `read`, `write` and `compare` data type for all read write operations.
+- Any document reference or query document reference that read or query operation returns are recursively typed, which means it has exactly the same `read`, `write` and `compare` data type for all read and write operations.
+
+  - document reference return by `get` and `onSnapshot` are typed.
+  - document reference return by `querySnapshot`'s `forEach`, `docChanges`, and `doc` are typed.
 
 - Firestore trigger runtime error if your array is empty when dealing with `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`. The wrapper automatic handle this problem for you, you are free to use an empty array.
 
-- Use `in` and `array-contains-any` with over 10 elements array, the wrapper chunk the array and create extra queries. Do not that same method does not work with `not-in`, which is unfortunate.
+- Use `in`, `not-in` and `array-contains-any` with over 10 elements array, the wrapper chunk the array and create extra queries. `not-in` is not without a caveat, read [`not-in` caveat](#not-in).
 
 ## 🦜 Getting Started
 
@@ -132,8 +137,6 @@ npm i -D ts-essentials
 ```
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
-
-The package is only 18KB before zipping and uglify, it looks big due to the images in the documentation.
 
 ### Collection
 
@@ -556,9 +559,13 @@ users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
 // shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
-users.where('age', '==', 20, { fieldPath: 'name', directionStr: 'desc' }).get()
+users
+	.where('age', '==', 20, { fieldPath:: 'name', directionStr: 'desc' })
+	.get() // OK
 // again, no order for '==' | 'in' comparator for SAME field name
-users.where('age', '==', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // ERROR
+users
+	.where('age', '==', 20, { fieldPath:: 'age', directionStr: 'desc' })
+	.get() // ERROR
 
 // for '<' | '<=]| '>'| '>=' comparator
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
@@ -566,9 +573,13 @@ users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
-users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get()
+users
+	.where('age', '>', 20, { fieldPath:: 'age', directionStr: 'desc' })
+	.get() // OK
 // again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
+users
+	.where('age', '>', 20, { fieldPath:: 'name', directionStr: 'desc' })
+	.get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
@@ -578,14 +589,14 @@ users.where('name', 'not-in', ['John', 'Ozai']).orderBy('age', 'desc').get()
 // shorthand different field path:
 users
 	.where('name', 'not-in', ['John', 'Ozai'], {
-		fieldPath: 'age',
+		fieldPath:: 'age',
 		directionStr: 'desc',
 	})
 	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc')
 // shorthand same field path:
 users
 	.where('name', 'not-in', ['John', 'Ozai'], {
-		fieldPath: 'name',
+		fieldPath:: 'name',
 		directionStr: 'desc',
 	})
 	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('name','desc')
@@ -597,14 +608,14 @@ users.where('name', '!=', 'John').orderBy('age', 'desc').get()
 // shorthand different field path:
 users
 	.where('name', '!=', 'John', {
-		fieldPath: 'age',
+		fieldPath:: 'age',
 		directionStr: 'desc',
 	})
 	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc')
 // shorthand same field path:
 users
 	.where('name', '!=', 'John', {
-		fieldPath: 'name',
+		fieldPath:: 'name',
 		directionStr: 'desc',
 	})
 	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc')
@@ -621,7 +632,7 @@ users
 // equivalent to shorthand
 users
 	.where('name', '!=', 'John', {
-		fieldPath: 'age',
+		fieldPath:: 'age',
 		directionStr: 'desc',
 		cursor: { clause: 'endAt', fieldValue: 50 },
 	})
@@ -646,7 +657,7 @@ users
 // equivalent to shorthand
 users
 	.where('name', '!=', 'John', {
-		fieldPath: 'age',
+		fieldPath:: 'age',
 		directionStr: 'desc',
 		cursor: { clause: 'endAt', fieldValue: 50 },
 	})
@@ -936,18 +947,49 @@ However, there is no need to be panic. As long as there is an error, then someth
 
 ### `not-in`
 
-Although the wrapper can help you with `array-contains-any` and `in` comparator 10 elements limit.
+Although the wrapper can help you with `array-contains-any` and `in` comparator 10 elements limit, it is virtually impossible to overcome the similar limitation on `not-in` comparator.
 
-However, there is no solution for `not-in` now. Chunking the query like `array-contains-any` and `in` doesn't make sense.
+Here are the solutions that will NOT work:
 
-Array size can only be determined on runtime, so neither can typescript help you.
+- _chunk the array and create multiple queries just like what we did to `array-contains-any` and `in`._
 
-Checking the array size in runtime is also meaningless. At most, you prevent the error, but you still don't get any data. There is nothing you can do about it, which is why there is no counter measurement provided by this wrapper.
+This will not work, in fact, this is a very terrible idea. Here is why:
 
-My advice is to avoid `not-in` if possible, unless the number of elements to filter is less than 10.
+you have array like this [1,2,3,4,5,6,7,8,9,10,11], after chunking, you have 2 arrays: [1,2,3,4,5,6,7,8,9,10] and [11] and you run 2 queries with it.
+
+The first query will return all documents that do not contain `1,2,3,4,5,6,7,8,9 or 10`.
+
+The 2nd query, however, will return all documents that do not contain `11`, this includes documents that were filtered by query 1.
+
+As you can see, chunking makes thing worse than what it is now.
+
+- _using typescript to circumvent it._
+
+This is impossible as array size can only be determined on runtime, so neither can typescript help you.
+
+- _Checking the array size in runtime, if over 10, prevent the `not-in` query from running._
+
+So you skip the query, then what? How are you going to fill the data void after that?
+
+You need the query. It is inevitable.
+
+- _not using `not-in` at all._
+
+Seriously doubt this is doable, `not-in` query is like one of the most useful queries in all kinds of databases. I don't think you can survive without it.
+
+====
+
+There is only one solution to this problem: first, filter with 10 elements, then filter the rest of the query result with the rest of the elements
+
+We implemented the solution in the wrapper; you don't need to do anything. The `querySnapshot`'s `forEach`, `docChanges`, `docs`, `empty` and `size` values are all recomputed base on the extra elements to filter.
+
+Not the ideal solution, but this is the only option we have, the wrapper simply help you filter the rest so you don't have to.
+
+There is nothing can be done on our side. It is up to Google to improve this.
 
 ## 🐎 Road Map
 
 - allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult)
 - jsDoc
 - validation with `zod`
+- jest

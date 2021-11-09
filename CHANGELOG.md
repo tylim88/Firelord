@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.11.1 9-Nov-2021
+
+- add solution for `not-in` 10 elements limitation, not completely solve it but it is the only solution
+- querySnapshot docChanges document reference now properly typed
+
 ## 0.11.0 9-Nov-2021
 
 - `set` operation no longer auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update.
