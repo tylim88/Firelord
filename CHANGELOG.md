@@ -4,7 +4,8 @@ Change log
 
 ## 0.11.0 9-Nov-2021
 
-- set operation no longer auto update date, because it is impossible to know whether it plan to update or create
+- `set` operation no longer auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update.
+- However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
 
 ## 0.10.3 9-Nov-2021
 
