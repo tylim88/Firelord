@@ -9,7 +9,8 @@ export const firelord: FirelordWrapper =
 	(firestore: FirelordFirestore.Firestore) =>
 	<T extends Firelord.MetaType = never>() => {
 		type Write = Firelord.InternalReadWriteConverter<T>['write']
-		type WriteNested = Firelord.InternalReadWriteConverter<T>['writeNested']
+		type WriteNestedCreate =
+			Firelord.InternalReadWriteConverter<T>['writeNestedCreate']
 		type Read = Firelord.InternalReadWriteConverter<T>['read']
 
 		const { createdAt } = createTime(firestore)
@@ -32,7 +33,7 @@ export const firelord: FirelordWrapper =
 					return colRefRead.listDocuments()
 				},
 				doc: docCreator<T>(firestore, colRefWrite, undefined),
-				add: (data: WriteNested) => {
+				add: (data: WriteNestedCreate) => {
 					return colRefWrite
 						.add({
 							...createdAt,

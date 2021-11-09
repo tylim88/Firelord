@@ -1,5 +1,4 @@
 import {
-	OmitKeys,
 	PartialNoImplicitUndefinedAndNoExtraMember,
 	Firelord,
 } from './firelord'

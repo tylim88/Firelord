@@ -36,7 +36,7 @@ Variants:
 ### 0.11.0 important change
 
 - `set` operation no longer auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update.
-- However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data, so you can decide on yourself how to use it.
+- However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
 
 ### 0.10.0 breaking changes
 
@@ -84,8 +84,8 @@ Overview:
   - auto generate sub collection path type.
 - auto generate `updatedAt` and`createdAt` timestamp.
   - auto update `updatedAt` server timestamp to **update** operation.
-  - auto add `createdAt` and `updatedAt` server timestamp to **create** operation.
-  - `set` operation does not auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update. However `set` accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data, so you can decide on yourself how to use it.
+  - auto add `createdAt` and `updatedAt` server timestamp to **create** and **add** operation.
+  - `set` operation does not auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update. However `set` accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info. NOTE: There is no path for `d.e.g.h.a` because it is inside an array, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![flatten object](img/flattenObject.png)
