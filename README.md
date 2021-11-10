@@ -186,6 +186,12 @@ npm i -D ts-essentials
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
+in your tsconfig.json compiler options, set declaration to false
+
+```json
+"declaration": false,
+```
+
 ### Collection
 
 ```ts
