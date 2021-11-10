@@ -1,26 +1,34 @@
 <!-- markdownlint-disable MD010 -->
+<!-- markdownlint-disable MD033 -->
 
-# firelord(BETA, Nodejs)
+<center>
+ <a href="https://github.com/tylim88/Firelord/blob/main/img/firelord.png" rel="nofollow"><img src="img/ozai.png" width="200px" align="center" /></a>
+  <h1 align="center">Firelord (BETA, Nodejs)</h1>
+</center>
 
-[![npm](https://img.shields.io/npm/v/firelord)](https://www.npmjs.com/package/firelord) [![GitHub](https://img.shields.io/github/license/tylim88/firelord)](https://github.com/tylim88/firelord/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/tylim88/firelord/pulls)
+<center>
+<a href="https://www.npmjs.com/package/firelord" rel="nofollow"><img src="https://img.shields.io/npm/v/firelord" alt="Created by tylim88">
+<a href="https://github.com/tylim88/firelord/blob/main/LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/tylim88/firelord" alt="License"></a>
+<a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
+</center>
 
-🐤 Write truly scalable firestore code with complete deep typing firestore wrapper, no more typing hell in your firestore code.
+🐤 Write truly scalable Firestore code with complete deep typing Firestore wrapper.
 
-💪🏻 handle object, array, any combination of array and object, regardless of the nesting level!
+💪🏻 Type object, array, any combination of array and object, regardless of the nesting level.
 
 🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path, type everything!
 
-🔥 Automatically convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
+🔥 Convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
-💥 Even the seemly un-type-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) is taken care of, EVERYTHING is typed, NO TYPE IS LEFT BEHIND!!
+💥 Typed the seemly un-type-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment).
 
-✨ API closely resembles firestore API, low learning curve.
+✨ API closely resembles Firestore API, low learning curve.
 
 🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
 
-🍡 Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, no longer need to check for empty array!
+🍡 Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, peace in mind.
 
-🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array! (`not-in` has a caveat)
+🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
 🥙 All `Snapshot` are typed, chain your operations without type casting anymore!
 
@@ -28,7 +36,7 @@
 
 🍁 `write` operations reject unknown member and enforce partial but no undefined.
 
-🐉 Zero dependencies.
+🦊 Zero dependencies.
 
 ⛲️ Out of box typescript support.
 
@@ -39,83 +47,91 @@ Variants:
 
 The package is only 22 KB before zipping and uglify, it looks big due to the images in the documentation.
 
-## 🎃 Notice
-
-### 0.13.0
-
-- solved Query limitations, see [Circumvented Firestore Limitations](#-circumvented-firestore-limitations)
-
-### 0.12.0 important change
-
-- now you can compare more than 10 elements for `not-in` comparator, details: [`not-in` caveat](#not-in).
-- no API changes.
-
-### 0.11.0 important change
-
-- `set` operation no longer auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update.
-- However `set` now accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
-
-### 0.10.0 breaking changes
-
-- Automatic handle empty array error for `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
-- now you can use `in` and `array-contains-any` with more than 10 elements array.
-
-Other APIs stay the same.
-
-## 🦊 Project Status
-
-Current Status: Beta
-
-Starting from 0.6.0, the library implemented all core functionalities, it will slowly exit beta and become production-ready.
-
-This is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
-
-It is also **virtually impossible** to run into runtime errors as stated in firestore query and order limitations.
-
-Long thing short: this is the best firestore wrapper, and I welcome you to prove me wrong.
-
-Anyway, star⭐ the project if you like what I am doing, thank you.
-
 Note: any version that is not mentioned in the changelog is document update.
 
-## 🦙 Purpose
+# Table of Contents
 
-You may not notice this but you need to prepare 3 sets of data types to use firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
+- [Project Status](#-project-status)
+- [What Is Firelord](#-what-is-firelord)
+- [Getting Started](#-getting-started)
+  - [Collection](#-collection)
+  - [Sub-Collection](#sub-collection)
+- [Conversion Table](#-conversion-table)
+- [Document Operations: Write, Read and Listen](#-document-operations-write-read-and-listen)
+- [Document operations: Batch](#-document-operations-batch)
+- [Document Operations: Transaction](#-document-operations-transaction)
+- [Collection Operations: Query](#-collection-operations-query)
+- [Collection Operations: Order And Limit](#-collection-operations-order-and-limit)
+- [Collection Operations: Paginate And Cursor](#-collection-operations-paginate-and-cursor)
+- [Collection Group](#-collection-group)
+- [Complex Data Typing](#-complex-data-typing)
+- [Set, Create and Add](#-set-create-and-add)
+  - [Update](#update)
+  - [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking)
+- [Circumvented Firestore Limitations](#-circumvented-firestore-limitations)
+- [Advices](#-advices)
+  - [You can ≠ You should](#you-can--you-should)
+  - [Nested Object](#nested-object)
+  - [Do Not Bother Cost Focus Data Modelling](#do-not-bother-cost-focus-data-modelling)
+  - [One Collection One Document Type](#one-collection-one-document-type)
+  - [Speed](#speed)
+- [Caveats](#-caveats)
+  - [Error Hint](#error-hint)
+  - [not-in](#not-in)
+- [Opinionated Elements](#-opinionated-elements)
+- [Limitation](#-limitation)
+- [Utilities](#-utilities)
+- [Road Map](#-road-map)
 
-Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, firestore.Timestamp, number and array where different types are needed in read, write and compare(query). This library is a wrapper that introduces deep typing solutions to handle each case.
+## 🐉 What Is Firelord
 
-Not only does the wrapper deal with data types, but it also provides type safety for collection path, document path, firestore limitations(whenever is possible).
+You may not notice this but you need to prepare 3 sets of data types to use Firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
 
-The best thing of all: it handles complex data types and types all their operations.
+Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, Firestore.Timestamp, number and array where different types are needed in read, write and compare(query).
 
-Other than type issue, firestore also suffer from runtime errors:
+Firelord introduces deep typing solutions to handle every case, other than that it also provides type safety for collection path, document path, Firestore limitations(whenever is possible).
 
-- when you hit `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove` with empty array, BAMM ERROR!!
-- when you hit `in`, `not-in` and `array-contains-any` with 10+ elements array, BAMM ERROR!!
-- In a compound query, range (`<, <=, >, >=`) and not equals (`!=, not-in`) comparisons do not filter on the same field, BAMM ERROR!!
-- Use more than one `array-contains` clause per query, BAMM ERROR!!
-- If you include a filter with a range comparison (`<, <=, >, >=`), your first ordering is not on the same field, BAMM ERROR!!
-- Order your query by a field included in an equality (`==`) or in clause, BAMM ERROR!!
+The typing solution is powerful enough for any combination of array and object regardless of nesting level.
 
-Fear no more, the wrapper is also capable of handling such errors, ending your firestore nightmare.
+Other than type issues, Firestore also suffers from runtime errors:
+
+- when you hit `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove` with empty array.
+- when you hit `in`, `not-in` and `array-contains-any` with 10+ elements array.
+- In a compound query, range (`<`, `<=`, `>`, `>=`) and not equals (`!=`, `not-in`) comparisons do not filter on the same field.
+- Use over one `array-contains` clause per query.
+- If you include a filter with a range comparison (`<`, `<=`, `>`, `>=`), your first ordering is not on the same field.
+- Order your query by a field included in an equality `==` or `in` clause.
+
+Firelord aims to eradicate any preventable errors when developing with Firestore.
+
+It is designed to be as friendly as possible while offering a complete Firestore typing solution.
+
+Long thing short:  
+-It is **virtually impossible** for you to make any typing mistake with this library.  
+-It is **virtually impossible** to run into any runtime errors as stated in Firestore query and order limitations.
 
 require typescript 4.1 and above
 
 Overview:
 
 - generate read(get operation), write type(set/update operation) and compare type(for query) for field value, example:
+
   - server timestamp: `{write: Firestore.FieldValue, read: Firestore.Timestamp, compare: Date | Firestore.Timestamp}`
   - number: `{write: FieldValue | number, read: number, compare:number}`
   - xArray: `{write: x[] | FieldValue, read: x[], compare: x[]}`
-  - see [conversion table](#-conversion-table) for more
-- `Firestore.FieldValue`, `Firestore.TimeStamp`,`Firestore.GeoPoint`,`Date` are treated as primitive types.
+  - see [conversion table](#-conversion-table) for more.
+
 - One time setting per document type: define a data type, a collection path and a document path, and you are ready to go.
+
   - type collection path, collection group path and document path.
   - auto generate sub collection path type.
+
 - auto generate `updatedAt` and`createdAt` timestamp.
+
   - auto update `updatedAt` server timestamp to **update** operation.
   - auto add `createdAt` and `updatedAt` server timestamp to **create** and **add** operation.
   - `set` operation does not auto-add or auto-update `createdAt` and `updatedAt` because it is impossible to know whether you are using this to create or to update. However `set` accepts `createdAt`(Firelord.ServerTimestamp) and `updatedAt`(Firelord.ServerTimestamp | null) as data optionally, so you can decide on yourself how to use it.
+
 - type complex data type like nested object, nested array, object array, array object and all their operations regardless of their nesting level. Read [Complex Data Typing](#-complex-data-typing) for more info. NOTE: There is no path for `d.e.g.h.a` because it is inside an array, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![flatten object](img/flattenObject.png)
@@ -124,7 +140,7 @@ Overview:
 
   ![type check](img/checkType.png)
 
-- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note that you cannot skip any member of an object in an array due to how firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
+- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note that you cannot skip any member of an object in an array due to how Firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![partial but no undefined](img/updateAndUndefined.png)
 
@@ -174,7 +190,7 @@ The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
 ```ts
 import { firelord, Firelord } from 'firelord'
-import { firestore } from 'firebase-admin'
+import { Firestore } from 'firebase-admin'
 
 // create wrapper
 const wrapper = firelord(firestore)
@@ -208,13 +224,13 @@ if you need the types, here is how you get it.
 // import User
 
 // read type
-type UserRead = User['read'] // {name: string, age:number, birthday:firestore.Timestamp, joinDate: firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: firestore.Timestamp, updatedAt: firestore.Timestamp}
+type UserRead = User['read'] // {name: string, age:number, birthday: Firestore.Timestamp, joinDate: Firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Firestore.Timestamp, updatedAt: Firestore.Timestamp}
 
 // write type
-type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+type UserWrite = User['write'] // {name: string, age:number|FirebaseFirestore.FieldValue, birthday:Firestore.Timestamp | Date, joinDate:FirebaseFirestore.FieldValue, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[] | FirebaseFirestore.FieldValue, createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
 
 // compare type
-type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | firestore.Timestamp, joinDate: Date | firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+type UserCompare = User['compare'] // {name: string, age:number, birthday:Date | Firestore.Timestamp, joinDate: Date | Firestore.Timestamp, beenTo:('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[], createdAt: Date | Firestore.Timestamp, updatedAt: Date | Firestore.Timestamp}
 
 // collection name
 type UserColName = User['colName'] //"Users"
@@ -287,19 +303,19 @@ You SHOULD NOT try to memorize how the typing work, keep in mind the purpose is 
 | string                           | string                | string                                                                                                             | string                                       |
 | null                             | null                  | null                                                                                                               | null                                         |
 | undefined                        | undefined             | undefined                                                                                                          | undefined                                    |
-| Date                             | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
-| firestore.Timestamp              | firestore.Timestamp   | firestore.Timestamp \|Date                                                                                         | firestore.Timestamp \|Date                   |
-| Firelord.ServerTimestamp\*\*\*   | firestore.Timestamp   | FirebaseFirestore.FieldValue(ServerTimestamp\*)                                                                    | firestore.Timestamp \|Date                   |
-| firestore.GeoPoint               | firestore.GeoPoint    | firestore.GeoPoint                                                                                                 | firestore.GeoPoint                           |
+| Date                             | Firestore.Timestamp   | Firestore.Timestamp \|Date                                                                                         | Firestore.Timestamp \|Date                   |
+| Firestore.Timestamp              | Firestore.Timestamp   | Firestore.Timestamp \|Date                                                                                         | Firestore.Timestamp \|Date                   |
+| Firelord.ServerTimestamp\*\*\*   | Firestore.Timestamp   | FirebaseFirestore.FieldValue(ServerTimestamp\*)                                                                    | Firestore.Timestamp \|Date                   |
+| Firestore.GeoPoint               | Firestore.GeoPoint    | Firestore.GeoPoint                                                                                                 | Firestore.GeoPoint                           |
 | object\*\*                       | object                | object                                                                                                             | object                                       |
 | number[]                         | number[]              | number[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | number[]                                     |
 | string[]                         | string[]              | string[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                  | string[]                                     |
 | null[]                           | null[]                | null[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                                    | null[]                                       |
 | undefined[]                      | undefined[]           | undefined[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                                               | undefined[]                                  |
-| Date[]                           | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
-| firestore.Timestamp[]            | firestore.Timestamp[] | (firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| firestore.Timestamp)[]              |
+| Date[]                           | Firestore.Timestamp[] | (Firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| Firestore.Timestamp)[]              |
+| Firestore.Timestamp[]            | Firestore.Timestamp[] | (Firestore.Timestamp \|Date )[] \|FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*)                           | (Date \| Firestore.Timestamp)[]              |
 | Firelord.ServerTimestamp[]\*\*\* | never[]               | never[]                                                                                                            | never[]                                      |
-| firestore.GeoPoint[]             | firestore.GeoPoint[]  | firestore.GeoPoint[]                                                                                               | firestore.GeoPoint[]                         |
+| Firestore.GeoPoint[]             | Firestore.GeoPoint[]  | Firestore.GeoPoint[]                                                                                               | Firestore.GeoPoint[]                         |
 | object[]\*\*                     | object[]              | object[]                                                                                                           | object[]                                     |
 | n-dimension array                | n-dimension array     | n-dimension array \| FirebaseFirestore.FieldValue(arrayRemove/arrayUnion\*) only supported for 1st dimension array | compare only elements in 1st dimension array |
 
@@ -313,22 +329,22 @@ compare type: `string | number | number[] | (string | number)[] | (string | numb
 
 In practice, any union is not recommended, data should has only one type, except `undefined` or `null` union that bear certain meaning(value missing or never initialized).
 
-NOTE: `Date | firestore.Timestamp`, `(Date | firestore.Timestamp)[]`, and `Date[] | firestore.Timestamp[]` unions are redundant, because `Date` and `firestore.Timestamp` generate same `read`, `write` and `compare` types.
+NOTE: `Date | Firestore.Timestamp`, `(Date | Firestore.Timestamp)[]`, and `Date[] | Firestore.Timestamp[]` unions are redundant, because `Date` and `Firestore.Timestamp` generate same `read`, `write` and `compare` types.
 
 \* Any FirebaseFirestore.FieldValue type will be replaced by masked type, see [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking) for more info.
 
-\*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object, however, there are not many things to do with object[] type due to how firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
+\*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object, however, there are not many things to do with object[] type due to how Firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
-\*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any firestore field value in an array, see [Complex Data Typing](#-complex-data-typing) for more info.
+\*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any Firestore field value in an array, see [Complex Data Typing](#-complex-data-typing) for more info.
 
-## 🐘 Document operations: Write, Read and Listen
+## 🐘 Document Operations: Write, Read and Listen
 
-All the document operations API is like firestore [write](https://firebase.google.com/docs/firestore/manage-data/add-data), [read](https://firebase.google.com/docs/firestore/query-data/get-data) and [listen](https://firebase.google.com/docs/firestore/query-data/listen).
+All the document operations API is like Firestore [write](https://firebase.google.com/docs/firestore/manage-data/add-data), [read](https://firebase.google.com/docs/firestore/query-data/get-data) and [listen](https://firebase.google.com/docs/firestore/query-data/listen).
 
 ```ts
 // import user
 
-import { firestore } from 'firebase-admin'
+import { Firestore } from 'firebase-admin'
 
 // get data(type is `read type`)
 user.get().then(snapshot => {
@@ -340,7 +356,7 @@ user.onSnapshot(snapshot => {
 	const data = snapshot.data()
 })
 
-const ServerTimestamp = firestore.FieldValue.ServerTimestamp()
+const ServerTimestamp = Firestore.FieldValue.ServerTimestamp()
 
 // create if only exist, else fail
 // require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
@@ -387,13 +403,13 @@ user.update({ name: 'Michael' })
 user.delete()
 ```
 
-## 🦩 Document operations: Batch
+## 🦩 Document Operations: Batch
 
 all API are similar to [firestore batch](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes), the only difference is, the batch is member of doc, hence you don't need to define document reference.
 
 ```ts
 // import user
-import { firestore } from 'firebase-admin'
+import { Firestore } from 'firebase-admin'
 
 // implement the wrapper
 const user = wrapper<User>().col('Users').doc('1234567890')
@@ -538,7 +554,7 @@ users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
 
 all the API are like [firestore order and limit](https://firebase.google.com/docs/firestore/query-data/queries) with slight differences, but work the same, clauses are chain-able.
 
-The type rule obey firestore [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
+The type rule obey Firestore [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
 
 Read this before proceeding: [Firestore OrderBy and Where conflict](https://stackoverflow.com/a/56620325/5338829) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain `orderBy` limitation, this is also considered into typing.
 
@@ -669,7 +685,7 @@ users
 
 ## 🌺 Collection Operations: Paginate And Cursor
 
-API differ slightly from [firestore paginate and cursor](https://firebase.google.com/docs/firestore/query-data/query-cursors), the cursors became orderBy parameter, it still works the same as firestore original API, clauses are chain-able.
+API differ slightly from [firestore paginate and cursor](https://firebase.google.com/docs/firestore/query-data/query-cursors), the cursors became orderBy parameter, it still works the same as Firestore original API, clauses are chain-able.
 
 ```ts
 // import users
@@ -700,7 +716,7 @@ simply use collection group reference instead of collection reference, refer bac
 
 ## 🌻 Complex Data Typing
 
-As for (nested or not)object[] type, its document/collection operations work the same as other arrays: it will not flatten down due to how firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) specific object member or array member in the array, nested or not, similar rule applies to a nested array.
+As for (nested or not)object[] type, its document/collection operations work the same as other arrays: it will not flatten down due to how Firestore work, read [Firestore how to query nested object in array](https://stackoverflow.com/a/52906042/5338829). You cannot query(or set, update, etc) specific object member or array member in the array, nested or not, similar rule applies to a nested array.
 
 Long thing short, any data type that is in an array, be it another array or another object with array member:
 
@@ -731,18 +747,18 @@ type Nested = Firelord.ReadWriteCreator<
 const nested = wrapper<Nested>().col('Nested')
 
 // read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: firestore.Timestamp}[] }[] } } }	}
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: Firestore.Timestamp}[] }[] } } }	}
 // write type
-type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+type NestedWrite = Nested['write'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: Firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
 // compare type
-type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: Firestore.Timestamp | Date}[] }[], createdAt: Date | Firestore.Timestamp, updatedAt: Date | Firestore.Timestamp}
 ```
 
 As you can see, the object flattens down and the wrapper converted all the value types
 
 so the next question is, how are you going to shape your object so you can use it in `set`, `create` and `update` operation?
 
-## Set, Create and Add
+## 🍣 Set, Create and Add
 
 Please read [set and dot syntax](https://stackoverflow.com/a/60879213/5338829) before you proceed.
 
@@ -825,13 +841,13 @@ As for query, since the type is flattened, just query like you would normally qu
 
 That is all. Call `flatten` to flatten the complex data and the rest work just like simple data, clean and simple.
 
-## Handling Firestore Field Value: Masking
+## 🍱 Handling Firestore Field Value: Masking
 
 Firestore field value, aka serverTimestamp, arrayRemove, arrayUnion and increment, they all return `FieldValue`, this is problematic, as you may use increment on an array or serverTimeStamp on a number. Kudo to whoever design this for making our life harder.
 
-The wrapper forbids you to use any firestore field value(serverTimestamp, arrayRemove, arrayUnion and increment) instance. We prepare another field value generator for you with the return type masked.
+The wrapper forbids you to use any Firestore field value(serverTimestamp, arrayRemove, arrayUnion and increment) instance. We prepare another field value generator for you with the return type masked.
 
-It still returns the same firestore field value but with a masked return type, conversion table below shows what mask the types.
+It still returns the same Firestore field value but with a masked return type, conversion table below shows what mask the types.
 
 | Field Value     | Masked Type                                                                                 | Note                              |
 | --------------- | ------------------------------------------------------------------------------------------- | --------------------------------- |
@@ -840,7 +856,7 @@ It still returns the same firestore field value but with a masked return type, c
 | arrayUnion      | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T }            | where T is the type of the member |
 | arrayRemove     | { 'please import `arrayUnion` or `arrayRemove` from `firelord` and call it': T }            | where T is the type of the member |
 
-the mask types purposely looks weird, so nobody accidentally uses it for something else(as it could be dangerous, because the underneath value is firestore field value, not what typescript really think it is).
+the mask types purposely looks weird, so nobody accidentally uses it for something else(as it could be dangerous, because the underneath value is Firestore field value, not what typescript really think it is).
 
 this is how you use it
 
@@ -874,11 +890,11 @@ handleFieldValue.doc('1234567').set({
 })
 ```
 
-The API is like firestore API, except `arrayUnion` and `arrayRemove`, the API is designed in such a way to deal with empty array errors while keeping your type safe.
+The API is like Firestore API, except `arrayUnion` and `arrayRemove`, the API is designed in such a way to deal with empty array errors while keeping your type safe.
 
 same working logic apply to complex data type.
 
-if you try to use the original firestore field value, the wrapper will stop you.
+if you try to use the original Firestore field value, the wrapper will stop you.
 
 ## 🍝 Circumvented Firestore Limitations
 
@@ -896,7 +912,7 @@ not only data types are hard to query and hard to massage, but they also pose gr
 
 Use array on primitive data types, or timestamp and geo point(objects that have consistent structure).
 
-Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in firestore because your data model affects the pricing, firestore incentives you to put more data in the same document, hence you see all kind of array of objects types.
+Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in Firestore because your data model affects the pricing, Firestore incentives you to put more data in the same document, hence you see all kind of array of objects types.
 
 Anyway, do not resort to array of objects types easily, create a new collection instead. Always keep your data type straightforward if possible.
 
@@ -928,15 +944,15 @@ Avoid multi document types per collection, I strongly recommend enforcing 1 coll
 
 ### Speed
 
-Don't use firestore if speed matter. The query time of firestore is [depend on result set, not total data set](https://stackoverflow.com/a/58859764/5338829), which means the more data set you have the better firestore performs against other database.
+Don't use Firestore if speed matter. The query time of Firestore is [depend on result set, not total data set](https://stackoverflow.com/a/58859764/5338829), which means the more data set you have the better Firestore performs against other database.
 
-Though it is unsure at what point firestore performance start to exceed other databases, my guess is most people are not likely to hit that point.
+Though it is unsure at what point Firestore performance start to exceed other databases, my guess is most people are not likely to hit that point.
 
-Thus don't expect much from the speed, use firestore for task that is not time critical.
+Thus don't expect much from the speed, use Firestore for task that is not time critical.
 
 ## 🦎 Caveats
 
-### Error hint
+### Error Hint
 
 Because of the heavy use of generic types and utility types, typescript hints may look chaotic. The wrapper priority is to make sure you cannot go wrong. There will be no false positive, only misplaced negative like:
 
@@ -994,12 +1010,12 @@ Code wise, there is one opinionated element in the wrapper, that is `createdAt` 
 
 when a document is created via `add`, `create` without option, two things will happen:
 
-1. createdAt field path is created, and the value is firestore server timestamp(current server timestamp).
+1. createdAt field path is created, and the value is Firestore server timestamp(current server timestamp).
 2. updatedAt field path is created, and the value is `null`.
 
 when a document is updated via `update` with option:
 
-1. updatedAt field path is updated and the value is firestore server timestamp.
+1. updatedAt field path is updated and the value is Firestore server timestamp.
 
 This behaviour may be undesirable for some people. I will improve this in future by giving the developer choice.
 
@@ -1022,7 +1038,7 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 1. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
 2. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
 
-## 💍 Utility
+## 💍 Utilities
 
 Since write operations reject unknown members (member that are not defined in base type), you can use [object-exact](https://www.npmjs.com/package/object-exact) to remove the unknown members, the library returns the exact type, so it should work well with the wrapper.
 
