@@ -2,7 +2,7 @@
 <!-- markdownlint-disable MD033 -->
 
 <center>
- <a href="https://github.com/tylim88/Firelord/blob/main/img/firelord.png" rel="nofollow"><img src="img/ozai.png" width="200px" align="center" /></a>
+ <a href="https://github.com/tylim88/Firelord/blob/main/img/ozai.png" rel="nofollow"><img src="img/ozai.png" width="200px" align="center" /></a>
   <h1 align="center">Firelord (BETA, Nodejs)</h1>
 </center>
 
