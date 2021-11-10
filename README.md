@@ -186,20 +186,17 @@ npm i -D ts-essentials
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
-in your tsconfig.json compiler options, set declaration to false
-
-```json
-"declaration": false,
-```
-
 ### Collection
 
 ```ts
-import { firelord, Firelord } from 'firelord'
+import { firelord, Firelord, Wrapper } from 'firelord'
 import { Firestore } from 'firebase-admin'
 
 // create wrapper
-const wrapper = firelord(firestore)
+const {
+	fieldValue: { increment, arrayUnion, serverTimestamp, arrayRemove },
+	wrapper,
+} = firelord(firestore)
 
 // use base type to generate read and write type
 type User = Firelord.ReadWriteCreator<
@@ -215,7 +212,8 @@ type User = Firelord.ReadWriteCreator<
 >
 
 // implement wrapper
-const userCreator = wrapper<User>()
+// You need to explicit type it or else typescript will complains about "exceeds the maximum length the compiler will serialize"
+const userCreator: Wrapper<User> = wrapper<User>()
 // collection reference
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
@@ -261,6 +259,7 @@ The wrapper will constructs all the collection, document and collection group pa
 // import User
 // import Firelord
 // import wrapper
+// import Wrapper
 
 // subCollection of User
 type Transaction = Firelord.ReadWriteCreator<
@@ -270,14 +269,15 @@ type Transaction = Firelord.ReadWriteCreator<
 		status: 'Fail' | 'Success'
 	}, // base type
 	'Transactions', // collection path type
-	string, // document ID type
-	User // insert parent collection, it will auto construct the sub collection path for you
+	string, // document path type
+	User // insert parent collection, it will auto construct the collection path for you
 >
 
 // implement the wrapper
-const transactions = wrapper<Transaction>().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
-const transactionGroup = wrapper<Transaction>().colGroup('Transactions') // the type for collection group is `Transactions`
-const transaction = users.doc('1234567890') // document ID is string
+const transactionCreator: Wrapper<Transaction> = wrapper<Transaction>()
+const transactionsCol = transactionCreator.col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
+const transactionGroup = transactionCreator.colGroup('Transactions') // the type for collection group is `Transactions`
+const transaction = transactionsCol.doc('1234567890') // document path is string
 ```
 
 I strongly against defining over one document type per collection, read [one collection one document type](#one-collection-one-document-type).
@@ -740,6 +740,7 @@ consider this example
 ```ts
 // import Firelord
 // import wrapper
+// import Wrapper
 
 type Nested = Firelord.ReadWriteCreator<
 	{
@@ -750,7 +751,9 @@ type Nested = Firelord.ReadWriteCreator<
 	'Nested',
 	string
 >
-const nested = wrapper<Nested>().col('Nested')
+const nestedCreator: Wrapper<Nested> = wrapper<Nested>()
+
+const nestedCol = nestedCreator.col('Nested')
 
 // read type, does not flatten because no need to
 type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: Firestore.Timestamp}[] }[] } } }	}
@@ -773,7 +776,7 @@ In short, you cannot use dot syntax with `set` (`create` should have the same be
 consider this example:
 
 ```ts
-// import nested
+// import nestedCol
 const completeData = {
 	a: 1,
 	b: { c: 'abc' },
@@ -784,10 +787,10 @@ const data = {
 	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
 }
 
-nested.doc('123456').set(completeData) // set needs complete data if no merge option
-nested.doc('123456').create(completeData) // create also requires complete data
-nested.add(completeData) // add also requires complete data
-nested.doc('123456').set(data, { merge: true })
+nestedCol.doc('123456').set(completeData) // set needs complete data if no merge option
+nestedCol.doc('123456').create(completeData) // create also requires complete data
+nestedCol.add(completeData) // add also requires complete data
+nestedCol.doc('123456').set(data, { merge: true })
 ```
 
 ### Update
@@ -806,7 +809,7 @@ const data = {
 	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
 }
 
-nested.doc('123456').update(data) // ERROR, type mismatch, if your data is nested object, please flatten your data first
+nestedCol.doc('123456').update(data) // ERROR, type mismatch, if your data is nested object, please flatten your data first
 ```
 
 If you want to update fields in nested objects, there are 2 ways:
@@ -822,7 +825,7 @@ Reminder:
 solution:
 
 ```ts
-// import nested
+// import nestedCol
 
 import { flatten } from 'firelord'
 
@@ -833,14 +836,14 @@ const flattenedData = {
 	'd.e.g.h': [{ i: [{ j: new Date(0) }] }],
 }
 
-nested.doc('123456').update(flattenedData) // ok
+nestedCol.doc('123456').update(flattenedData) // ok
 
 // use helper function
 const data = {
 	a: 1,
 	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
 }
-nested.doc('123456').update(flatten(data)) // ok, recommended, because it is easier
+nestedCol.doc('123456').update(flatten(data)) // ok, recommended, because it is easier
 ```
 
 As for query, since the type is flattened, just query like you would normally query in firelord.
@@ -867,29 +870,35 @@ the mask types purposely looks weird, so nobody accidentally uses it for somethi
 this is how you use it
 
 ```ts
-// import Firelord
-// import wrapper
-const { increment, arrayUnion, serverTimestamp } = wrapper().fieldValue
+// import firestore
+// import Wrapper
 
-type HandleFieldValue = Firelord.ReadWriteCreator<
+const {
+	fieldValue: { increment, arrayUnion, serverTimestamp, arrayRemove },
+	wrapper,
+} = firelord(firestore)
+
+type Example = Firelord.ReadWriteCreator<
 	{
-		aaa: number
+		aaa: number | undefined
 		bbb: Firelord.ServerTimestamp
 		ddd: string[]
 	},
-	'HandleFieldValue',
+	'Example',
 	string
 >
 
-const handleFieldValue = wrapper<HandleFieldValue>().col('HandleFieldValue')
+const exampleCreator: Wrapper<Example> = wrapper<Example>()
 
-handleFieldValue.doc('1234567').set({
+const exampleCol = exampleCreator.col('Example')
+
+exampleCol.doc('1234567').set({
 	aaa: arrayUnion('123', '456'), // ERROR
 	bbb: increment(11), // ERROR
 	ddd: arrayUnion('ddd', 123, 456), // ERROR <- at first typescript will not highlight this error unless you solve other error first, which mean in the end it still able to catch all error, so don't panic
 })
 
-handleFieldValue.doc('1234567').set({
+exampleCol.doc('1234567').set({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
 	...arrayUnion('ddd', '123', '456'), // ok, you can also write this as `...arrayUnion('ddd', ...['123', '456'])`

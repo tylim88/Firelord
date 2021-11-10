@@ -8,11 +8,14 @@ import {
 } from './firelord'
 import { firestore } from 'firebase-admin'
 import { flatten } from './utils'
+import { Wrapper } from './index_'
 
 // create wrapper
-const wrapper = firelord(firestore)
 
-const { increment, arrayUnion, serverTimestamp } = wrapper().fieldValue
+const {
+	fieldValue: { increment, arrayUnion, serverTimestamp, arrayRemove },
+	wrapper,
+} = firelord(firestore)
 
 // use base type to generate read and write type
 type User = Firelord.ReadWriteCreator<
@@ -62,7 +65,7 @@ type UserDocId = User['docID'] // string
 type UserDocPath = User['docPath']
 
 // implement wrapper
-const userCreator = wrapper<User>()
+const userCreator: Wrapper<User> = wrapper<User>()
 // collection reference
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
@@ -83,20 +86,10 @@ type Transaction = Firelord.ReadWriteCreator<
 >
 
 // implement the wrapper
-const transactions = wrapper<
-	Firelord.ReadWriteCreator<
-		{
-			amount: number
-			date: Firelord.ServerTimestamp
-			status: 'Fail' | 'Success'
-		}, // base type
-		'Transactions', // collection path type
-		string, // document path type
-		User // insert parent collection, it will auto construct the collection path for you
-	>
->().col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
-const transactionGroup = wrapper<Transaction>().colGroup('Transactions') // the type for collection group is `Transactions`
-const transaction = users.doc('1234567890') // document path is string
+const transactionCreator: Wrapper<Transaction> = wrapper<Transaction>()
+const transactionsCol = transactionCreator.col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
+const transactionGroup = transactionCreator.colGroup('Transactions') // the type for collection group is `Transactions`
+const transaction = transactionsCol.doc('1234567890') // document path is string
 
 user.get().then(snapshot => {
 	const data = snapshot.data()
@@ -301,7 +294,7 @@ users
 // field path only include members that is NOT array type in `base type`
 // field value type is the corresponding field path value type in `compare type`
 // value of cursor clause is 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5) // equivalent to orderBy("age").startAt(20).offset(5)
+users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).limit(5) // equivalent to orderBy("age").startAt(20).limit(5)
 // usage with where
 users
 	.where('name', '!=', 'John')
@@ -438,15 +431,9 @@ type Nested = Firelord.ReadWriteCreator<
 	'Nested',
 	string
 >
-const nested = wrapper<Nested>().col('Nested')
+const nestedCreator: Wrapper<Nested> = wrapper<Nested>()
 
-// read type, does not flatten because no need to
-type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: firestore.Timestamp}[] }[] } } }	}
-// write type
-type NestedWrite = Nested['write']['d.e.g.h'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
-
-// compare type
-type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
+const nestedCol = nestedCreator.col('Nested')
 
 const data = {
 	a: 1,
@@ -469,15 +456,23 @@ const incorrectCompleteData = {
 	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: true }] }] } } },
 }
 
-nested.doc('123456').set(completeData)
-nested.doc('123456').create(completeData)
-nested.doc('123456').set(data, { merge: true })
-nested.doc('123456').update(flatten(data))
+nestedCol.doc('123456').set(completeData)
+nestedCol.doc('123456').create(completeData)
+nestedCol.doc('123456').set(data, { merge: true })
+nestedCol.doc('123456').update(flatten(data))
 
-nested.doc('123456').set(data) // not ok, need complete data if no merge option
-nested.doc('123456').set(incorrectCompleteData)
-nested.doc('123456').set(incorrectData, { merge: true })
-nested.doc('123456').update(flatten(incorrectData))
+nestedCol.doc('123456').set(data) // not ok, need complete data if no merge option
+nestedCol.doc('123456').set(incorrectCompleteData)
+nestedCol.doc('123456').set(incorrectData, { merge: true })
+nestedCol.doc('123456').update(flatten(incorrectData))
+
+// read type, does not flatten because no need to
+type NestedRead = Nested['read'] // {a: number, b: { c: string }, d: { e: { f: FirebaseFirestore.Timestamp[], g: { h: { i: {j: firestore.Timestamp}[] }[] } } }	}
+// write type
+type NestedWrite = Nested['write']['d.e.g.h'] // {a: number | FirebaseFirestore.FieldValue, "b.c": string, "d.e.f": FirebaseFirestore.FieldValue | (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: FirebaseFirestore.FieldValue, updatedAt: FirebaseFirestore.FieldValue}
+
+// compare type
+type NestedCompare = Nested['compare'] // {a: number, "b.c": string, "d.e.f": (FirebaseFirestore.Timestamp | Date)[], "d.e.g.h": FirebaseFirestore.FieldValue | { i: {j: firestore.Timestamp | Date}[] }[], createdAt: Date | firestore.Timestamp, updatedAt: Date | firestore.Timestamp}
 
 type Example = Firelord.ReadWriteCreator<
 	{
@@ -496,18 +491,20 @@ type Example = Firelord.ReadWriteCreator<
 	string
 >
 
-const example = wrapper<Example>().col('Example')
+const exampleCreator: Wrapper<Example> = wrapper<Example>()
 
-example.doc('1234567').update({
+const exampleCol = exampleCreator.col('Example')
+
+exampleCol.doc('1234567').update({
 	aaa: 1,
 }) // ok
 
-example.doc('1234567').update({
+exampleCol.doc('1234567').update({
 	aaa: 1,
 	zzz: 'stranger member',
 }) // reject stranger member
 
-example.doc('1234567').update(
+exampleCol.doc('1234567').update(
 	flatten({
 		aaa: 1,
 		eee: {
@@ -516,7 +513,7 @@ example.doc('1234567').update(
 	})
 ) // ok, complex data
 
-example.doc('1234567').update(
+exampleCol.doc('1234567').update(
 	flatten({
 		aaa: 1,
 		bbb: serverTimestamp(),
@@ -533,7 +530,7 @@ example.doc('1234567').update(
 ) // reject stranger member in complex data regardless of depth
 
 // set ok
-example.doc('1234567').set({
+exampleCol.doc('1234567').set({
 	aaa: 1,
 	bbb: serverTimestamp(),
 	ddd: [],
@@ -548,7 +545,7 @@ example.doc('1234567').set({
 	},
 })
 // set merge ok
-example.doc('1234567').set(
+exampleCol.doc('1234567').set(
 	{
 		aaa: 1,
 		bbb: serverTimestamp(),
@@ -566,7 +563,7 @@ example.doc('1234567').set(
 )
 
 // set not ok
-example.doc('1234567').set({
+exampleCol.doc('1234567').set({
 	aaa: 1,
 	bbb: serverTimestamp(),
 	ddd: [],
@@ -581,7 +578,7 @@ example.doc('1234567').set({
 	},
 })
 // set merge not ok
-example.doc('1234567').set(
+exampleCol.doc('1234567').set(
 	{
 		aaa: 1,
 		bbb: serverTimestamp(),
@@ -598,12 +595,12 @@ example.doc('1234567').set(
 	{ merge: true }
 )
 
-example.doc('1234567').update({
+exampleCol.doc('1234567').update({
 	aaa: undefined, // ok, a: number | undefined
 	ddd: undefined, // Error, d: string[]
 }) // reject undefined
 
-example.doc('1234567').update(
+exampleCol.doc('1234567').update(
 	flatten({
 		aaa: 1,
 		eee: {
@@ -612,7 +609,7 @@ example.doc('1234567').update(
 	})
 )
 
-example.doc('1234567').update(
+exampleCol.doc('1234567').update(
 	flatten({
 		aaa: 1,
 		eee: {
@@ -621,13 +618,13 @@ example.doc('1234567').update(
 	})
 ) // complex data reject undefined regardless of depth
 
-example.doc('1234567').update({
+exampleCol.doc('1234567').update({
 	aaa: serverTimestamp(), // ERROR
 	bbb: increment(11), // ERROR\
 	...arrayUnion('ddd', 123, 456), // ERROR <-- will show error after you fix all other errors first
 })
 
-example.doc('1234567').update({
+exampleCol.doc('1234567').update({
 	aaa: increment(11), // ok
 	// due to heavy use of generic type, some error is not shown on proper member
 	bbb: serverTimestamp(), // ok <-- fix the error in array union and this error will goes away
@@ -636,7 +633,7 @@ example.doc('1234567').update({
 
 // after all error is fixed
 // There will be no false positive, only misplaced negative(the error appears on another member).
-example.doc('1234567').update({
+exampleCol.doc('1234567').update({
 	aaa: increment(1), // ok
 	bbb: serverTimestamp(), // ok
 	...arrayUnion('ddd', 'abc', 'efg'), // ok

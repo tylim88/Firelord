@@ -3,9 +3,30 @@ import { FirelordFirestore } from './firelordFirestore'
 import { QueryCreator } from './queryCreator'
 import { DocCreator } from './doc'
 
-export type firelord = (firestore: FirelordFirestore.Firestore) => <
-	T extends Firelord.MetaType = never
->() => {
+export type FirelordWrapper = (firestore: FirelordFirestore.Firestore) => {
+	fieldValue: {
+		increment: (value: number) => Firelord.NumberMasked
+		serverTimestamp: () => Firelord.ServerTimestampMasked
+		arrayUnion: <T extends string, Y>(
+			key: T,
+			...values: Y[]
+		) => { [key in T]: Firelord.ArrayMasked<Y> }
+		arrayRemove: <T extends string, Y>(
+			key: T,
+			...values: Y[]
+		) => { [key in T]: Firelord.ArrayMasked<Y> }
+	}
+	batch: () => FirelordFirestore.WriteBatch
+	runTransaction: <Y>(
+		updateFunction: (transaction: FirelordFirestore.Transaction) => Promise<Y>,
+		transactionOptions?:
+			| FirelordFirestore.ReadWriteTransactionOptions
+			| FirelordFirestore.ReadOnlyTransactionOptions
+	) => Promise<Y>
+	wrapper: <T extends Firelord.MetaType = never>() => Wrapper<T>
+}
+
+export type Wrapper<T extends Firelord.MetaType = never> = {
 	col: (collectionPath: T['colPath']) => {
 		parent: FirelordFirestore.DocumentReference<FirelordFirestore.DocumentData> | null
 		path: string
@@ -21,22 +42,4 @@ export type firelord = (firestore: FirelordFirestore.Firestore) => <
 	colGroup: (
 		collectionPath: T['colName']
 	) => ReturnType<QueryCreator<T, never, 'colGroup'>>
-	fieldValue: {
-		increment: (value: number) => Firelord.NumberMasked
-		serverTimestamp: () => Firelord.ServerTimestampMasked
-		arrayUnion: <T extends string, Y>(
-			key: T,
-			...values: Y[]
-		) => { [key in T]: Firelord.ArrayMasked<Y> }
-		arrayRemove: <T extends string, Y>(
-			key: T,
-			...values: Y[]
-		) => { [key in T]: Firelord.ArrayMasked<Y> }
-	}
-	runTransaction: <Y>(
-		updateFunction: (transaction: FirelordFirestore.Transaction) => Promise<Y>,
-		transactionOptions?:
-			| FirelordFirestore.ReadWriteTransactionOptions
-			| FirelordFirestore.ReadOnlyTransactionOptions
-	) => Promise<Y>
 }

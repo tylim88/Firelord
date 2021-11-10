@@ -36,22 +36,6 @@ export type QueryCreator<
 		: never,
 	query: FirelordFirestore.Query<T['read']>
 ) => {
-	firestore: typeof query.firestore
-	stream: typeof query.stream
-	offset: (
-		offset: number
-	) => OmitKeys<
-		ReturnType<
-			QueryCreator<
-				T,
-				'offset' | PermanentlyOmittedKeys,
-				M,
-				PermanentlyOmittedComparators,
-				CompoundSameField
-			>
-		>,
-		'offset' | PermanentlyOmittedKeys
-	>
 	where: <
 		P extends string & keyof T['read'],
 		J extends FirelordFirestore.WhereFilterOp,
@@ -150,6 +134,22 @@ export type QueryCreator<
 					? 'orderBy' | PermanentlyOmittedKeys
 					: PermanentlyOmittedKeys
 		  >
+	firestore: typeof query.firestore
+	stream: typeof query.stream
+	offset: (
+		offset: number
+	) => OmitKeys<
+		ReturnType<
+			QueryCreator<
+				T,
+				'offset' | PermanentlyOmittedKeys,
+				M,
+				PermanentlyOmittedComparators,
+				CompoundSameField
+			>
+		>,
+		'offset' | PermanentlyOmittedKeys
+	>
 	limit: (
 		limit: number
 	) => OmitKeys<
@@ -204,10 +204,38 @@ export type QueryCreator<
 	get: () => Promise<ReturnType<QuerySnapshotCreator<T, M>>>
 }
 
-// need to make generic mandatory https://stackoverflow.com/questions/55610260/how-to-make-generics-mandatory
-// however due to this is a recursive function, it is not possible
-// luckily this is only used in 2 places and is explicitly typed, so everything is good
-export const queryCreator = <
+// https://github.com/microsoft/TypeScript/issues/43817#issuecomment-827746462
+export const queryCreator: <
+	T extends Firelord.MetaType,
+	PermanentlyOmittedKeys extends keyof ReturnType<
+		QueryCreator<
+			T,
+			PermanentlyOmittedKeys,
+			M,
+			PermanentlyOmittedComparators,
+			CompoundSameField
+		>
+	> = never,
+	M extends 'col' | 'colGroup' = 'col',
+	PermanentlyOmittedComparators extends FirelordFirestore.WhereFilterOp = never,
+	CompoundSameField extends string | false = false
+>(
+	firestore: FirelordFirestore.Firestore,
+	colRef: M extends 'col'
+		? FirelordFirestore.CollectionReference<T['read']>
+		: M extends 'colGroup'
+		? undefined
+		: never,
+	query: FirelordFirestore.Query<T['read']>
+) => ReturnType<
+	QueryCreator<
+		T,
+		PermanentlyOmittedKeys,
+		M,
+		PermanentlyOmittedComparators,
+		CompoundSameField
+	>
+> = <
 	T extends Firelord.MetaType,
 	PermanentlyOmittedKeys extends keyof ReturnType<
 		QueryCreator<
@@ -258,10 +286,12 @@ export const queryCreator = <
 				)
 			}
 
-		const getAndOnSnapshotCreator = (not_In_Extra?: {
-			key: string
-			elements: unknown[]
-		}) => {
+		const getAndOnSnapshotCreator = (
+			not_In_Extra: {
+				key: string
+				elements: unknown[]
+			} = { key: '', elements: [] }
+		) => {
 			return {
 				onSnapshot: (
 					onNext: (
@@ -294,83 +324,7 @@ export const queryCreator = <
 		}
 
 		return {
-			firestore: query.firestore,
-			stream: () => {
-				return query.stream()
-			},
-			offset: (offset: number) => {
-				return queryCreator<
-					T,
-					'offset' | PermanentlyOmittedKeys,
-					M,
-					PermanentlyOmittedComparators,
-					CompoundSameField
-				>(firestore, colRef, query.offset(offset))
-			},
-			where: <
-				P extends string & keyof T['read'],
-				J extends FirelordFirestore.WhereFilterOp,
-				Q extends ExcludePropertyKeys<T['compare'], unknown[]>
-			>(
-				fieldPath: P extends never
-					? P
-					: J extends '<' | '<=' | '>=' | '>'
-					? CompoundSameField extends string
-						? CompoundSameField
-						: P
-					: J extends 'not-in' | '!='
-					? CompoundSameField extends string
-						? CompoundSameField
-						: P
-					: P,
-				opStr: J extends never
-					? J
-					: Exclude<
-							T['compare'][P] extends unknown[]
-								? 'array-contains' | 'in' | 'array-contains-any'
-								: '<' | '<=' | '>=' | '>' | '==' | '!=' | 'not-in' | 'in',
-							PermanentlyOmittedComparators
-					  >,
-				value: J extends 'not-in' | 'in'
-					? T['compare'][P][]
-					: J extends 'array-contains'
-					? RemoveArray<T['compare'][P]>
-					: T['compare'][P],
-				orderBy?: J extends
-					| '<'
-					| '<='
-					| '>='
-					| '>'
-					| '=='
-					| 'in'
-					| '!='
-					| 'not-in'
-					? P extends ExcludePropertyKeys<T['compare'], unknown[]>
-						? {
-								fieldPath: Q extends never
-									? Q
-									: J extends '<' | '<=' | '>=' | '>'
-									? Q extends P
-										? ExcludePropertyKeys<T['compare'], unknown[]>
-										: never
-									: J extends '==' | 'in'
-									? Q extends P
-										? never
-										: ExcludePropertyKeys<T['compare'], unknown[]>
-									: J extends 'not-in' | '!='
-									? ExcludePropertyKeys<T['compare'], unknown[]>
-									: never
-								directionStr?: FirelordFirestore.OrderByDirection
-								cursor?: {
-									clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-									fieldValue:
-										| T['compare'][J extends 'not-in' | '!=' ? Q : P]
-										| FirelordFirestore.DocumentSnapshot
-								}
-						  }
-						: never
-					: never
-			) => {
+			where: (fieldPath, opStr, value, orderBy) => {
 				const whereInnerCreator = (innerValue: typeof value) => {
 					let adjustedValue: typeof innerValue = innerValue
 					let not_In_Extra_Elements = [] as typeof innerValue
@@ -417,31 +371,53 @@ export const queryCreator = <
 									elements: not_In_Extra_Elements as unknown[],
 							  })
 							: {}),
-					} as OmitKeys<
-						typeof finalRef,
-						J extends '<' | '<=' | '>' | '>' | '==' | 'in'
-							? 'orderBy' | PermanentlyOmittedKeys
-							: PermanentlyOmittedKeys
-					>
-				}
-				if (opStr === 'in' || opStr === 'array-contains-any') {
-					let adjustedValue: typeof value = value
-					if (value.length === 0) {
-						adjustedValue = [
-							'This is a very long string to prevent collision: %$GE&^G^*(N Y(&*T^VR&%R&^TN&*^RMN$BEDF^R%TFG%I%TFDH%(UI<)(UKJ^HGFEC#DR^T*&#$%(<RGFESAXSCVBGNHM(&%T^BTNRV%ITB^TJNTN^T^*T',
-						] as typeof value
 					}
-					const valueChunks = arrayChunk(
-						adjustedValue as unknown[],
-						10
-					) as typeof value[]
-					return valueChunks.map(arr => {
-						return whereInnerCreator(arr)
-					})
-				} else {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					return whereInnerCreator(value) as any // TODO remove any, is it possible
 				}
+				const fun = () => {
+					if (opStr === 'in' || opStr === 'array-contains-any') {
+						let adjustedValue: typeof value = value
+						if (value.length === 0) {
+							adjustedValue = [
+								'This is a very long string to prevent collision: %$GE&^G^*(N Y(&*T^VR&%R&^TN&*^RMN$BEDF^R%TFG%I%TFDH%(UI<)(UKJ^HGFEC#DR^T*&#$%(<RGFESAXSCVBGNHM(&%T^BTNRV%ITB^TJNTN^T^*T',
+							] as typeof value
+						}
+						const valueChunks = arrayChunk(
+							adjustedValue as unknown[],
+							10
+						) as typeof value[]
+						return valueChunks.map(arr => {
+							return whereInnerCreator(arr)
+						})
+					} else {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						return whereInnerCreator(value) as any // ! why this need `any`
+					}
+				}
+				return fun()
+			},
+			firestore: query.firestore,
+			stream: () => {
+				return query.stream()
+			},
+			offset: (offset: number) => {
+				return queryCreator<
+					T,
+					'offset' | PermanentlyOmittedKeys,
+					M,
+					PermanentlyOmittedComparators,
+					CompoundSameField
+				>(firestore, colRef, query.offset(offset)) as OmitKeys<
+					ReturnType<
+						QueryCreator<
+							T,
+							'offset' | PermanentlyOmittedKeys,
+							M,
+							PermanentlyOmittedComparators,
+							CompoundSameField
+						>
+					>,
+					'offset' | PermanentlyOmittedKeys
+				> // only the 1st one(now offset is the 1st one of offset, limit and limitToLast) need to type case, but limit and limitToLast dont need, why?
 			},
 			limit: (limit: number) => {
 				return queryCreator<
