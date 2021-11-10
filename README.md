@@ -52,7 +52,6 @@ Note: any version that is not mentioned in the changelog is document update.
 
 # Table of Contents
 
-- [Project Status](#-project-status)
 - [What Is Firelord](#-what-is-firelord)
 - [Getting Started](#-getting-started)
   - [Collection](#-collection)
