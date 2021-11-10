@@ -17,7 +17,7 @@
 
 💪🏻 Type object, array, any combination of array and object, regardless of the nesting level.
 
-🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path, type everything!
+🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path.
 
 🔥 Convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
