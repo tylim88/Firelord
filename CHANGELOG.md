@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.13.8 10-Nov-2021
+
+- fix logic bug in where clause
+
 ## 0.13.0 10-Nov-2021
 
 - solved Query limitation

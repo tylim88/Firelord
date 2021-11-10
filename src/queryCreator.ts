@@ -375,17 +375,18 @@ export const queryCreator = <
 					let adjustedValue: typeof innerValue = innerValue
 					let not_In_Extra_Elements = [] as typeof innerValue
 
-					if (
-						opStr === 'in' ||
-						opStr === 'array-contains-any' ||
-						opStr === 'any'
-					) {
+					if (opStr === 'in' || opStr === 'array-contains-any') {
 						if (value.length === 0) {
 							adjustedValue = [
 								'This is a very long string to prevent collision: %$GE&^G^*(N Y(&*T^VR&%R&^TN&*^RMN$BEDF^R%TFG%I%TFDH%(UI<)(UKJ^HGFEC#DR^T*&#$%(<RGFESAXSCVBGNHM(&%T^BTNRV%ITB^TJNTN^T^*T',
 							] as typeof value
 						}
 					} else if (opStr === 'not-in') {
+						if (value.length === 0) {
+							adjustedValue = [
+								'This is a very long string to prevent collision: %$GE&^G^*(N Y(&*T^VR&%R&^TN&*^RMN$BEDF^R%TFG%I%TFDH%(UI<)(UKJ^HGFEC#DR^T*&#$%(<RGFESAXSCVBGNHM(&%T^BTNRV%ITB^TJNTN^T^*T',
+							] as typeof value
+						}
 						adjustedValue = innerValue.slice(0, 10)
 						not_In_Extra_Elements = innerValue.slice(10)
 					}
