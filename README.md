@@ -1,16 +1,17 @@
 <!-- markdownlint-disable MD010 -->
 <!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
 
-<center>
+<p align="center">
  <a href="https://github.com/tylim88/Firelord/blob/main/img/ozai.png" rel="nofollow"><img src="img/ozai.png" width="200px" align="center" /></a>
-  <h1 align="center">Firelord (BETA, Nodejs)</h1>
-</center>
+ <h1 align="center">Firelord (BETA, Nodejs)</h1>
+</p>
 
-<center>
-<a href="https://www.npmjs.com/package/firelord" rel="nofollow"><img src="https://img.shields.io/npm/v/firelord" alt="Created by tylim88">
-<a href="https://github.com/tylim88/firelord/blob/main/LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/tylim88/firelord" alt="License"></a>
-<a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
-</center>
+<p align="center">
+ <a href="https://www.npmjs.com/package/firelord" rel="nofollow"><img src="https://img.shields.io/npm/v/firelord" alt="Created by tylim88"></a>
+ <a href="https://github.com/tylim88/firelord/blob/main/LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/tylim88/firelord" alt="License"></a>
+ <a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
+</p>
 
 🐤 Write truly scalable Firestore code with complete deep typing Firestore wrapper.
 
