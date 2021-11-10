@@ -70,6 +70,8 @@ Starting from 0.6.0, the library implemented all core functionalities, it will s
 
 This is the only firestore wrapper that offer complete typing solutions, it is **virtually impossible** for you to make any typing mistake with this library; and it is also the easiest to setup.
 
+It is also **virtually impossible** to run into runtime errors as stated in firestore query and order limitations.
+
 Long thing short: this is the best firestore wrapper, and I welcome you to prove me wrong.
 
 Anyway, star⭐ the project if you like what I am doing, thank you.
@@ -85,6 +87,17 @@ Unfortunately `withConverter` is not enough to solve the type problems, there is
 Not only does the wrapper deal with data types, but it also provides type safety for collection path, document path, firestore limitations(whenever is possible).
 
 The best thing of all: it handles complex data types and types all their operations.
+
+Other than type issue, firestore also suffer from runtime errors:
+
+- when you hit `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove` with empty array, BAMM ERROR!!
+- when you hit `in`, `not-in` and `array-contains-any` with 10+ elements array, BAMM ERROR!!
+- In a compound query, range (`<, <=, >, >=`) and not equals (`!=, not-in`) comparisons do not filter on the same field, BAMM ERROR!!
+- Use more than one `array-contains` clause per query, BAMM ERROR!!
+- If you include a filter with a range comparison (`<, <=, >, >=`), your first ordering is not on the same field, BAMM ERROR!!
+- Order your query by a field included in an equality (`==`) or in clause, BAMM ERROR!!
+
+Fear no more, the wrapper is also capable of handling such errors, ending your firestore nightmare.
 
 require typescript 4.1 and above
 
@@ -342,7 +355,6 @@ user.create({
 
 // create if not exist, else overwrite
 // require all `write type` members(including partial member in the `base type`) except `updatedAt` and `createdAt`
-// auto add `createdAt` and `updatedAt`
 user.set({
 	name: 'John',
 	age: 24,
@@ -492,10 +504,7 @@ firestore().runTransaction(async transaction => {
 	// delete document
 	user.transaction(transaction).delete()
 
-	// keep in mind you need to return a promise in transaction
-	// example code here is just an example to show API, this is not the correct way to do it
-	// refer firestore guide https://firebase.google.com/docs/firestore/manage-data/transactions
-	return Promise.resolve('')
+	return
 })
 ```
 
