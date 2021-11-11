@@ -385,43 +385,6 @@ users
 	.limit(1)
 	.where('beenTo', 'in', [['USA']])
 
-type a = FirelordUtils.ReadWriteCreator<
-	{
-		a:
-			| string
-			| Date
-			| number[]
-			| (string | number)[]
-			| (string | Date)[][]
-			| (string | number)[][][]
-	},
-	string,
-	string
->
-
-type b = a['write']
-type c = a['read']
-type f = a['compare']
-
-type a1 = FirelordUtils.ReadWriteCreator<
-	{
-		a: string | Date
-		b: { c: 1; d: 2 }
-	},
-	string,
-	string
->
-
-type b1 = a1['write']
-type c1 = a1['read']
-type f1 = a1['compare']
-
-type e1 = b1['b.c']
-
-type x = Nested['read']
-type y = Nested['write']
-type z = Nested['compare']
-
 type Nested = FirelordUtils.ReadWriteCreator<
 	{
 		a: number
@@ -434,6 +397,8 @@ type Nested = FirelordUtils.ReadWriteCreator<
 const nestedCreator: Wrapper<Nested> = wrapper<Nested>()
 
 const nestedCol = nestedCreator.col('Nested')
+
+// const nested =nestedCol.doc('12345678').update({""})
 
 const data = {
 	a: 1,
@@ -501,8 +466,8 @@ exampleCol.doc('1234567').update({
 
 exampleCol.doc('1234567').update({
 	aaa: 1,
-	zzz: 'stranger member',
-}) // reject stranger member
+	zzz: 'unknown member',
+}) // reject unknown member
 
 exampleCol.doc('1234567').update(
 	flatten({
@@ -511,7 +476,7 @@ exampleCol.doc('1234567').update(
 			fff: [{ ggg: true, jjj: 1, kkk: [{ lll: new Date(0), mmm: true }] }],
 		},
 	})
-) // ok, complex data
+) // ok
 
 exampleCol.doc('1234567').update(
 	flatten({
@@ -522,12 +487,12 @@ exampleCol.doc('1234567').update(
 				{
 					ggg: true,
 					jjj: 1,
-					kkk: [{ lll: new Date(0), mmm: true, zzz: 'stranger member' }],
+					kkk: [{ lll: new Date(0), mmm: true, zzz: 'unknown member' }],
 				},
 			],
 		},
 	})
-) // reject stranger member in complex data regardless of depth
+) // reject unknown member in complex data regardless of depth
 
 // set ok
 exampleCol.doc('1234567').set({
