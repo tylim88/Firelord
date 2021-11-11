@@ -17,13 +17,13 @@
 
 💪🏻 Type object, array, any combination of array and object, regardless of the nesting level.
 
-🚀 The wrapper type all read and write operations; query field path, field value, collection path, document path.
+🚀 The wrapper type all read and write operations, query field path, field value, collection path, document path.
+
+🥙 All `Snapshot`(response) are recursively typed, no more type casting.
 
 🔥 Convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
-💥 Typed the seemly un-type-able Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment).
-
-✨ API closely resembles Firestore API, low learning curve.
+💥 Safe typing with masked Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) types.
 
 🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
 
@@ -31,11 +31,11 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
-🥙 All `Snapshot` are typed, chain your operations without type casting anymore!
-
-🍹 Avoid `orderBy` and `query` limitations for you.
-
 🍁 `write` operations reject unknown member and enforce partial but no undefined.
+
+🍹 Avoid `order` and `query` limitations for you, stopping potential run-time errors before they happen.
+
+✨ API closely resembles Firestore API, low learning curve.
 
 🦊 Zero dependencies.
 
@@ -48,7 +48,7 @@ Variants:
 
 The package is only 22 KB before zipping and uglify, it looks big due to the images in the documentation.
 
-Note: any version that is not mentioned in the changelog is document update.
+require typescript 4.1 and above
 
 # Table of Contents
 
@@ -58,7 +58,7 @@ Note: any version that is not mentioned in the changelog is document update.
   - [Sub-Collection](#sub-collection)
 - [Conversion Table](#-conversion-table)
 - [Document Operations: Write, Read and Listen](#-document-operations-write-read-and-listen)
-- [Document operations: Batch](#-document-operations-batch)
+- [Document Operations: Batch](#-document-operations-batch)
 - [Document Operations: Transaction](#-document-operations-transaction)
 - [Collection Operations: Query](#-collection-operations-query)
 - [Collection Operations: Order And Limit](#-collection-operations-order-and-limit)
@@ -82,6 +82,7 @@ Note: any version that is not mentioned in the changelog is document update.
 - [Limitation](#-limitation)
 - [Utilities](#-utilities)
 - [Road Map](#-road-map)
+- [Change Log](https://github.com/tylim88/Firelord/blob/main/CHANGELOG.md) (any version that is not mentioned in the changelog is document update)
 
 ## 🐉 What Is Firelord
 
@@ -102,15 +103,13 @@ Other than type issues, Firestore also suffers from runtime errors:
 - If you include a filter with a range comparison (`<`, `<=`, `>`, `>=`), your first ordering is not on the same field.
 - Order your query by a field included in an equality `==` or `in` clause.
 
-Firelord aims to eradicate any preventable errors when developing with Firestore.
+Firelord aims to eradicate preventable errors when developing with Firestore by implementing strategies that make the most sense.
 
 It is designed to be as friendly as possible while offering a complete Firestore typing solution.
 
-Long thing short:  
--It is **virtually impossible** for you to make any typing mistake with this library.  
+Long thing short, Firelord make sure that:  
+-It is **virtually impossible** to make any typing mistake.  
 -It is **virtually impossible** to run into any runtime errors as stated in Firestore query and order limitations.
-
-require typescript 4.1 and above
 
 Overview:
 
@@ -156,7 +155,7 @@ Overview:
 
   - field values are typed accordingly to field path
   - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
-  - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
+  - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [Order Limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
   ![orderBy limitation](img/orderBy.png)
 
@@ -560,9 +559,9 @@ users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
 
 all the API are like [firestore order and limit](https://firebase.google.com/docs/firestore/query-data/queries) with slight differences, but work the same, clauses are chain-able.
 
-The type rule obey Firestore [orderBy limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
+The type rule obey Firestore [Order Limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
 
-Read this before proceeding: [Firestore OrderBy and Where conflict](https://stackoverflow.com/a/56620325/5338829) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain `orderBy` limitation, this is also considered into typing.
+Read this before proceeding: [Firestore OrderBy and Where conflict](https://stackoverflow.com/a/56620325/5338829) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain order limitation, this is also considered into typing.
 
 Any `orderBy` that does not follow `where` clause does not abide by the rule and limitation mentioned above.
 

@@ -2,7 +2,11 @@
 
 Change log
 
-## 0.14.0 10-Nov-2021
+## 0.14.1 11-Nov-2021
+
+- refactor some code
+
+## 0.14.0 11-Nov-2021
 
 - greatly reduce d.ts file size by explicitly typing the recursion function (before this only the return is type)
 - reshape wrapper api so it makes more sense
