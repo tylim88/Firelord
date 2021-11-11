@@ -188,7 +188,7 @@ The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 ### Collection
 
 ```ts
-import { firelord, Firelord, Wrapper } from 'firelord'
+import { firelord, Firelord } from 'firelord'
 import { Firestore } from 'firebase-admin'
 
 // create wrapper
@@ -211,8 +211,7 @@ type User = FirelordUtils.ReadWriteCreator<
 >
 
 // implement wrapper
-// You need to explicit type it or else typescript will complains about "exceeds the maximum length the compiler will serialize"
-const userCreator: Wrapper<User> = wrapper<User>()
+const userCreator = wrapper<User>()
 // collection reference
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
@@ -258,7 +257,6 @@ The wrapper will constructs all the collection, document and collection group pa
 // import User
 // import FirelordUtils
 // import wrapper
-// import Wrapper
 
 // subCollection of User
 type Transaction = FirelordUtils.ReadWriteCreator<
@@ -273,7 +271,7 @@ type Transaction = FirelordUtils.ReadWriteCreator<
 >
 
 // implement the wrapper
-const transactionCreator: Wrapper<Transaction> = wrapper<Transaction>()
+const transactionCreator = wrapper<Transaction>()
 const transactionsCol = transactionCreator.col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
 const transactionGroup = transactionCreator.colGroup('Transactions') // the type for collection group is `Transactions`
 const transaction = transactionsCol.doc('1234567890') // document path is string
@@ -739,7 +737,6 @@ consider this example
 ```ts
 // import FirelordUtils
 // import wrapper
-// import Wrapper
 
 type Nested = FirelordUtils.ReadWriteCreator<
 	{
@@ -750,7 +747,7 @@ type Nested = FirelordUtils.ReadWriteCreator<
 	'Nested',
 	string
 >
-const nestedCreator: Wrapper<Nested> = wrapper<Nested>()
+const nestedCreator = wrapper<Nested>()
 
 const nestedCol = nestedCreator.col('Nested')
 
@@ -870,7 +867,6 @@ this is how you use it
 
 ```ts
 // import firestore
-// import Wrapper
 
 const {
 	fieldValue: { increment, arrayUnion, serverTimestamp, arrayRemove },
@@ -887,7 +883,7 @@ type Example = FirelordUtils.ReadWriteCreator<
 	string
 >
 
-const exampleCreator: Wrapper<Example> = wrapper<Example>()
+const exampleCreator = wrapper<Example>()
 
 const exampleCol = exampleCreator.col('Example')
 

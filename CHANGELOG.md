@@ -2,7 +2,11 @@
 
 Change log
 
-## 0.15.0 11-Nov-2021
+## 0.15.3 12-Nov-2021
+
+- no longer need to explicitly type with Wrapper
+
+## 0.15.0 12-Nov-2021
 
 - change most explicit type to non function
 - the firestore that query return in now wrapped by firelord

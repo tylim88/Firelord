@@ -8,7 +8,6 @@ import {
 } from './firelordUtils'
 import { firestore } from 'firebase-admin'
 import { flatten } from './utils'
-import { Wrapper } from './index_'
 
 // create wrapper
 
@@ -65,7 +64,7 @@ type UserDocId = User['docID'] // string
 type UserDocPath = User['docPath']
 
 // implement wrapper
-const userCreator: Wrapper<User> = wrapper<User>()
+const userCreator = wrapper<User>()
 // collection reference
 const users = userCreator.col('Users') // collection path type is "Users"
 // collection group reference
@@ -86,7 +85,7 @@ type Transaction = FirelordUtils.ReadWriteCreator<
 >
 
 // implement the wrapper
-const transactionCreator: Wrapper<Transaction> = wrapper<Transaction>()
+const transactionCreator = wrapper<Transaction>()
 const transactionsCol = transactionCreator.col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`
 const transactionGroup = transactionCreator.colGroup('Transactions') // the type for collection group is `Transactions`
 const transaction = transactionsCol.doc('1234567890') // document path is string
@@ -394,7 +393,7 @@ type Nested = FirelordUtils.ReadWriteCreator<
 	'Nested',
 	string
 >
-const nestedCreator: Wrapper<Nested> = wrapper<Nested>()
+const nestedCreator = wrapper<Nested>()
 
 const nestedCol = nestedCreator.col('Nested')
 
@@ -456,7 +455,7 @@ type Example = FirelordUtils.ReadWriteCreator<
 	string
 >
 
-const exampleCreator: Wrapper<Example> = wrapper<Example>()
+const exampleCreator = wrapper<Example>()
 
 const exampleCol = exampleCreator.col('Example')
 
