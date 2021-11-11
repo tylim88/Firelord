@@ -964,6 +964,23 @@ Though it is unsure at what point Firestore performance start to exceed other da
 
 Thus don't expect much from the speed, use Firestore for task that is not time critical.
 
+### Do Not Use Firestore Rules For Write Operation
+
+Firestore rule sucks big time:
+
+1. You need to learn a language that is somehow similar to Javascript but is useless anywhere else
+2. No type safety, full YOLO mode.
+3. Code is not scalable and maintainable, it is nightmare to debug.
+4. No open source and tooling support like Javascript, you going to miss a lot of powerful validation libraries like `joi`, `yup` and `zod`.
+
+Run write operations in cloud function. Yes, cloud function cost you money per invoke, but write operation is much less frequent compare to read operation, the cost is definitely lower than the cost to maintain Firestore rules.
+
+If the cost is your concern, you can always set up a custom backend.
+
+Read operation requires only simple authentication, but some applications may require complicated authentication, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend or cloud function.
+
+One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
+
 ## 🦎 Caveats
 
 ### Error Hint
