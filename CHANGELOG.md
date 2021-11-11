@@ -2,6 +2,14 @@
 
 Change log
 
+## 0.15.0 11-Nov-2021
+
+- change most explicit type to non function
+- the firestore that query return in now wrapped by firelord
+- rename Firelord to FirelordUtils
+- rename FirelordWrapper to Firelord
+- fix query's onSnapshot `QuerySnapshotCreator<T,'col'>` to `QuerySnapshotCreator<T, M>`
+
 ## 0.14.1 11-Nov-2021
 
 - refactor some code

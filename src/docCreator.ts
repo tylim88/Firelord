@@ -1,13 +1,13 @@
 import {
 	PartialNoImplicitUndefinedAndNoExtraMember,
-	Firelord,
-} from './firelord'
+	FirelordUtils,
+} from './firelordUtils'
 import { FirelordFirestore } from './firelordFirestore'
 import { createTime } from './utils'
 import { docSnapshotCreator, DocSnapshotCreator } from './docSnapshotCreator'
 
 export const docCreator: <
-	T extends Firelord.MetaType,
+	T extends FirelordUtils.MetaType,
 	M extends 'col' | 'colGroup' = 'col'
 >(
 	firestore: FirelordFirestore.Firestore,
@@ -19,8 +19,8 @@ export const docCreator: <
 	docRef:
 		| FirelordFirestore.DocumentReference
 		| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
-) => ReturnType<DocCreator<T, M>> =
-	<T extends Firelord.MetaType, M extends 'col' | 'colGroup' = 'col'>(
+) => DocCreator<T, M> =
+	<T extends FirelordUtils.MetaType, M extends 'col' | 'colGroup' = 'col'>(
 		firestore: FirelordFirestore.Firestore,
 		colRef: M extends 'col'
 			? FirelordFirestore.CollectionReference
@@ -31,12 +31,13 @@ export const docCreator: <
 			| FirelordFirestore.DocumentReference
 			| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
 	) =>
-	(documentID?: T['docID']): ReturnType<ReturnType<DocCreator<T, M>>> => {
-		type Write = Firelord.InternalReadWriteConverter<T>['write']
-		type WriteNested = Firelord.InternalReadWriteConverter<T>['writeNested']
+	(documentID?: T['docID']): ReturnType<DocCreator<T, M>> => {
+		type Write = FirelordUtils.InternalReadWriteConverter<T>['write']
+		type WriteNested =
+			FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 		type WriteNestedCreate =
-			Firelord.InternalReadWriteConverter<T>['writeNestedCreate']
-		type Read = Firelord.InternalReadWriteConverter<T>['read']
+			FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
+		type Read = FirelordUtils.InternalReadWriteConverter<T>['read']
 
 		const { createdAt, updatedAt } = createTime(firestore)
 
@@ -67,7 +68,7 @@ export const docCreator: <
 				)
 			},
 			onSnapshot: (
-				next?: (snapshot: ReturnType<DocSnapshotCreator<T, M>>) => void,
+				next?: (snapshot: DocSnapshotCreator<T, M>) => void,
 				error?: (error: Error) => void
 			) => {
 				return docRead.onSnapshot(
@@ -226,19 +227,9 @@ export const docCreator: <
 	}
 
 export type DocCreator<
-	T extends Firelord.MetaType,
+	T extends FirelordUtils.MetaType,
 	M extends 'col' | 'colGroup' = 'col'
-> = (
-	firestore: FirelordFirestore.Firestore,
-	colRef: M extends 'col'
-		? FirelordFirestore.CollectionReference
-		: M extends 'colGroup'
-		? undefined
-		: never,
-	docRef:
-		| FirelordFirestore.DocumentReference
-		| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
-) => (documentID?: T['docID']) => {
+> = (documentID?: T['docID']) => {
 	firestore: FirelordFirestore.FirebaseFirestore
 	id: string
 	parent: FirelordFirestore.CollectionReference<T['read']>
@@ -248,16 +239,16 @@ export type DocCreator<
 	>
 	isEqual: (other: FirelordFirestore.DocumentReference) => boolean
 	onSnapshot: (
-		next?:
-			| ((documentSnapshot: ReturnType<DocSnapshotCreator<T, M>>) => void)
-			| undefined,
+		next?: ((documentSnapshot: DocSnapshotCreator<T, M>) => void) | undefined,
 		error?: ((error: Error) => void) | undefined
 	) => () => void
 	create: (
-		data: Firelord.InternalReadWriteConverter<T>['writeNestedCreate']
+		data: FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
 	) => Promise<FirelordFirestore.WriteResult>
 	set: <
-		J_1 extends Partial<Firelord.InternalReadWriteConverter<T>['writeNested']>,
+		J_1 extends Partial<
+			FirelordUtils.InternalReadWriteConverter<T>['writeNested']
+		>,
 		Z extends {
 			merge?: true | undefined
 			mergeField?:
@@ -268,10 +259,10 @@ export type DocCreator<
 		data: J_1 extends never
 			? J_1
 			: Z extends undefined
-			? Firelord.InternalReadWriteConverter<T>['writeNested']
+			? FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 			: Z['merge'] extends true
 			? PartialNoImplicitUndefinedAndNoExtraMember<
-					Firelord.InternalReadWriteConverter<T>['writeNested'],
+					FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 					J_1
 			  >
 			: Z['mergeField'] extends Exclude<
@@ -279,40 +270,40 @@ export type DocCreator<
 					'createdAt' | 'updatedAt'
 			  >[]
 			? PartialNoImplicitUndefinedAndNoExtraMember<
-					Firelord.InternalReadWriteConverter<T>['writeNested'],
+					FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 					J_1
 			  >
-			: Firelord.InternalReadWriteConverter<T>['writeNested'],
+			: FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 		options?: Z | undefined
 	) => Promise<FirelordFirestore.WriteResult>
 	update: <
-		J_2 extends Partial<Firelord.InternalReadWriteConverter<T>['write']>
+		J_2 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
 	>(
 		data: J_2 extends never
 			? J_2
 			: PartialNoImplicitUndefinedAndNoExtraMember<
-					Firelord.InternalReadWriteConverter<T>['write'],
+					FirelordUtils.InternalReadWriteConverter<T>['write'],
 					J_2
 			  >
 	) => Promise<FirelordFirestore.WriteResult>
-	get: () => Promise<ReturnType<DocSnapshotCreator<T, M>>>
+	get: () => Promise<DocSnapshotCreator<T, M>>
 	delete: () => Promise<FirelordFirestore.WriteResult>
 	batch: (batch: FirelordFirestore.WriteBatch) => {
 		commit: () => Promise<FirelordFirestore.WriteResult[]>
 		delete: () => FirelordFirestore.WriteBatch
 		update: <
-			J_3 extends Partial<Firelord.InternalReadWriteConverter<T>['write']>
+			J_3 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
 		>(
 			data: J_3 extends never
 				? J_3
 				: PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['write'],
+						FirelordUtils.InternalReadWriteConverter<T>['write'],
 						J_3
 				  >
 		) => FirelordFirestore.WriteBatch
 		set: <
 			J_7 extends Partial<
-				Firelord.InternalReadWriteConverter<T>['writeNested']
+				FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 			>,
 			Z_2 extends {
 				merge?: true | undefined
@@ -324,10 +315,10 @@ export type DocCreator<
 			data: J_7 extends never
 				? J_7
 				: Z_2 extends undefined
-				? Firelord.InternalReadWriteConverter<T>['writeNested']
+				? FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 				: Z_2['merge'] extends true
 				? PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['writeNested'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 						J_7
 				  >
 				: Z_2['mergeField'] extends Exclude<
@@ -335,23 +326,23 @@ export type DocCreator<
 						'createdAt' | 'updatedAt'
 				  >[]
 				? PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['writeNested'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 						J_7
 				  >
-				: Firelord.InternalReadWriteConverter<T>['writeNested'],
+				: FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 			options?: Z_2 | undefined
 		) => FirelordFirestore.WriteBatch
 		create: (
-			data: Firelord.InternalReadWriteConverter<T>['writeNestedCreate']
+			data: FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
 		) => FirelordFirestore.WriteBatch
 	}
 	transaction: (transaction: FirelordFirestore.Transaction) => {
 		create: (
-			data: Firelord.InternalReadWriteConverter<T>['writeNestedCreate']
+			data: FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
 		) => FirelordFirestore.Transaction
 		set: <
 			J_4 extends Partial<
-				Firelord.InternalReadWriteConverter<T>['writeNested']
+				FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 			>,
 			Z_1 extends {
 				merge?: true | undefined
@@ -363,10 +354,10 @@ export type DocCreator<
 			data: J_4 extends never
 				? J_4
 				: Z_1 extends undefined
-				? Firelord.InternalReadWriteConverter<T>['writeNested']
+				? FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 				: Z_1['merge'] extends true
 				? PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['writeNested'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 						J_4
 				  >
 				: Z_1['mergeField'] extends Exclude<
@@ -374,24 +365,24 @@ export type DocCreator<
 						'createdAt' | 'updatedAt'
 				  >[]
 				? PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['writeNested'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 						J_4
 				  >
-				: Firelord.InternalReadWriteConverter<T>['writeNested'],
+				: FirelordUtils.InternalReadWriteConverter<T>['writeNested'],
 			options?: Z_1 | undefined
 		) => FirelordFirestore.Transaction
 		update: <
-			J_5 extends Partial<Firelord.InternalReadWriteConverter<T>['write']>
+			J_5 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
 		>(
 			data: J_5 extends never
 				? J_5
 				: PartialNoImplicitUndefinedAndNoExtraMember<
-						Firelord.InternalReadWriteConverter<T>['write'],
+						FirelordUtils.InternalReadWriteConverter<T>['write'],
 						J_5
 				  >
 		) => FirelordFirestore.Transaction
 		delete: () => FirelordFirestore.Transaction
-		get: () => Promise<ReturnType<DocSnapshotCreator<T, M>>>
+		get: () => Promise<DocSnapshotCreator<T, M>>
 		getAll: <J_6 extends [...FirelordFirestore.DocumentData[]]>(
 			documentReferences: [...J_6],
 			options: FirelordFirestore.ReadOptions

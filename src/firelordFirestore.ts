@@ -48,7 +48,7 @@ export namespace FirelordFirestore {
 
 	export type Timestamp = FirebaseFirestore.Timestamp
 
-	export type Stream = NodeJS.ReadableStream
+	export type Stream<T = DocumentData> = Query<T>['stream']
 
 	export type ReadWriteTransactionOptions =
 		FirebaseFirestore.ReadWriteTransactionOptions

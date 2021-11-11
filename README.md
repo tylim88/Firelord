@@ -198,7 +198,7 @@ const {
 } = firelord(firestore)
 
 // use base type to generate read and write type
-type User = Firelord.ReadWriteCreator<
+type User = FirelordUtils.ReadWriteCreator<
 	{
 		name: string
 		age: number
@@ -256,12 +256,12 @@ The wrapper will constructs all the collection, document and collection group pa
 
 ```ts
 // import User
-// import Firelord
+// import FirelordUtils
 // import wrapper
 // import Wrapper
 
 // subCollection of User
-type Transaction = Firelord.ReadWriteCreator<
+type Transaction = FirelordUtils.ReadWriteCreator<
 	{
 		amount: number
 		date: Firelord.ServerTimestamp
@@ -737,11 +737,11 @@ Last, all the object, object[], array, array object, nested or not, no matter ho
 consider this example
 
 ```ts
-// import Firelord
+// import FirelordUtils
 // import wrapper
 // import Wrapper
 
-type Nested = Firelord.ReadWriteCreator<
+type Nested = FirelordUtils.ReadWriteCreator<
 	{
 		a: number
 		b: { c: string }
@@ -877,7 +877,7 @@ const {
 	wrapper,
 } = firelord(firestore)
 
-type Example = Firelord.ReadWriteCreator<
+type Example = FirelordUtils.ReadWriteCreator<
 	{
 		aaa: number | undefined
 		bbb: Firelord.ServerTimestamp
