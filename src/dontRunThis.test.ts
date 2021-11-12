@@ -397,8 +397,6 @@ const nestedCreator = wrapper<Nested>()
 
 const nestedCol = nestedCreator.col('Nested')
 
-// const nested =nestedCol.doc('12345678').update({""})
-
 const data = {
 	a: 1,
 	d: { e: { f: [new Date(0)], g: { h: [{ i: [{ j: new Date(0) }] }] } } },
@@ -584,13 +582,13 @@ exampleCol.doc('1234567').update(
 
 exampleCol.doc('1234567').update({
 	aaa: serverTimestamp(), // ERROR
-	bbb: increment(11), // ERROR\
-	...arrayUnion('ddd', 123, 456), // ERROR <-- will show error after you fix all other errors first
+	bbb: increment(11), // ERROR
+	...arrayUnion('ddd', 123, 456), // ERROR <-- caveat, will show error after you fix all other errors first
 })
 
 exampleCol.doc('1234567').update({
 	aaa: increment(11), // ok
-	// due to heavy use of generic type, some error is not shown on proper member
+	// caveat, some error is not shown on proper member
 	bbb: serverTimestamp(), // ok <-- fix the error in array union and this error will goes away
 	...arrayUnion('ddd', 123, 456), // ERROR
 })

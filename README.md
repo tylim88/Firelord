@@ -27,6 +27,8 @@
 
 🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
 
+🦚 No annoying typescript decorator needed, type in plain simple typescript, only once and you can start your game.
+
 🍡 Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, peace in mind.
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
@@ -43,8 +45,8 @@
 
 Variants:
 
-1. [react native](https://www.npmjs.com/package/firelordrn)
-2. [js](https://www.npmjs.com/package/firelordjs)
+1. [React Native](https://www.npmjs.com/package/firelordrn)
+2. [JS](https://www.npmjs.com/package/firelordjs)
 
 The package is only 22 KB before zipping and uglify, it looks big due to the images in the documentation.
 
@@ -531,33 +533,92 @@ firestore().runTransaction(async transaction => {
 
 All the API are like [firestore query](https://firebase.google.com/docs/firestore/query-data/queries), clauses are chain-able.
 
+The types obey Firestore [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries#query_limitations).
+
+NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation.
+
 ```ts
 // import users
 
 // non array data type
 // the field path is the keys of the `base type`
 // type of opStr is '<' | '<=' | '==' | '!=' | '>=' | '>' | 'not-in' | 'in'
-// if type of opStr is '<' | '<=' | '==' | '!=' | '>=' | '>', the value type is same as the member's type in `compare type`
+// if opStr is '<' | '<=' | '==' | '!=' | '>=' | '>', the value type is same as the member's type in `compare type`
 users.where('name', '==', 'John').get()
-// if type of opStr is 'not-in' | 'in', the value type is array of member's type in `compare type`
-users.where('name', 'in', ['John', 'Michael']).get()
+// if type of opStr is 'not-in' | 'in', the value type is ARRAY of member's type in `compare type`
+Promise.all(
+	users.where('name', 'in', ['John', 'Michael']).map(query => query.get())
+)
 
 // array data type
 // the field path is the keys of the `base type`
 // type of `opStr` is  'in' | 'array-contains-any'
-// if type of opStr is 'array-contains', the value type is the non-array version of member's type in `compare type`
+// if opStr is 'array-contains', the value type is the NON_ARRAY version of member's type in `compare type`
 users.where('beenTo', 'array-contains', 'USA').get()
-// if type of opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
-users.where('beenTo', 'array-contains-any', ['USA']).get()
-// if type of opStr is 'in', the value type is the array of member's type in `compare type`
-users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).get()
+// if opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
+Promise.allSettled(
+	users.where('beenTo', 'array-contains-any', ['USA']).map(query => query.get())
+)
+Promise.allSettled(
+	// if opStr is 'in', the value type is the ARRAY of member's type in `compare type`
+	users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).map(query => query.get())
+)
+
+// Query Limitation: https://firebase.google.com/docs/firestore/query-data/queries#query_limitations
+// ok examples
+users.where('age', '==', 20).limit(2).where('name', '!=', 'Sam')
+users.where('age', 'not-in', [20]).limit(2).where('name', '==', 'Taylor')
+users.where('age', '>', 20).limit(2).where('name', 'in', ['Brown'])
+users.where('age', '!=', 20).limit(2).where('age', 'not-in', [30])
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['CHINA']).map(query => {
+		return query.limit(2).where('age', '>', 20)
+	})
+)
+users
+	.where('age', 'not-in', [20])
+	.limit(2)
+	.where('beenTo', 'array-contains', 'USA')
+
+// In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field.
+// error examples
+users.where('age', '!=', 20).limit(2).where('name', 'not-in', ['John'])
+users.where('age', '>', 20).limit(2).where('name', '<', 'Michael')
+users.where('age', 'not-in', [20]).limit(2).where('name', '<', 'Ozai')
+
+// You can use at most one array-contains clause per query. You can't combine array-contains with array-contains-any
+// error examples
+users
+	.where('beenTo', 'array-contains', 'USA')
+	.limit(1)
+	.where('beenTo', 'array-contains', 'CHINA') // ERROR
+users
+	.where('beenTo', 'array-contains', 'CHINA')
+	.limit(1)
+	.where('beenTo', 'array-contains-any', ['USA']) // ERROR
+
+// You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query.
+// error examples
+Promise.all(
+	users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+		return query.limit(1).where('age', 'in', [20])
+	})
+) // ERROR
+users
+	.where('name', 'not-in', ['ozai'])
+	.limit(1)
+	.where('beenTo', 'array-contains-any', ['USA']) // ERROR
+users
+	.where('name', 'not-in', ['ozai'])
+	.limit(1)
+	.where('beenTo', 'in', [['USA']]) // ERROR
 ```
 
 ## 🐳 Collection Operations: Order And Limit
 
 all the API are like [firestore order and limit](https://firebase.google.com/docs/firestore/query-data/queries) with slight differences, but work the same, clauses are chain-able.
 
-The type rule obey Firestore [Order Limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
+The types obey Firestore [Order Limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations).
 
 Read this before proceeding: [Firestore OrderBy and Where conflict](https://stackoverflow.com/a/56620325/5338829) and [firestore index](https://www.fullstackfirebase.com/cloud-firestore/indexes) on how to overcome certain order limitation, this is also considered into typing.
 
@@ -565,7 +626,7 @@ Any `orderBy` that does not follow `where` clause does not abide by the rule and
 
 Note: The wrapper will not stop you from using multiple `orderBy` clause because multiple `orderBy` clause is possible, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
 
-NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation
+NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation.
 
 Tips: to make things easier, whenever you want to use `where` + `orderBy`, use the shorthand form (see example code below).
 
@@ -1005,7 +1066,7 @@ The first query will return all documents that do not contain `1,2,3,4,5,6,7,8,9
 
 The 2nd query, however, will return all documents that do not contain `11`, this includes documents that were filtered by query 1.
 
-As you can see, chunking makes thing worse than what it is now.
+Basically chunking makes thing worse.
 
 - _using typescript to circumvent it._
 
@@ -1023,13 +1084,15 @@ Seriously doubt this is doable, `not-in` query is like one of the most useful qu
 
 ====
 
-There is only one solution to this problem: first, filter with 10 elements, then filter the rest of the query result with the rest of the elements.
+There is only one solution to this problem: first, run the query with 10 elements, then filter the rest of the query result with the rest of the elements.
 
-We implemented the solution in the wrapper; you don't need to do anything. The `querySnapshot`'s `forEach`, `docChanges`, `docs`, `empty` and `size` values are all recomputed base on the extra elements to filter.
+We implemented the solution in the wrapper; you don't need to do anything to utilize it.
+
+The `querySnapshot`'s `forEach`, `docChanges`, `docs`, `empty` and `size` values are all recomputed base on the extra elements.
 
 Not the ideal solution, but this is the only option we have, the wrapper simply help you filter the rest so you don't have to.
 
-There is nothing can be done on our side. It is up to Google to improve this.
+There is nothing can be done on our side. It is up to Google to improves this.
 
 ## 🐕 Opinionated Elements
 
