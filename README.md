@@ -4,7 +4,7 @@
 
 <p align="center">
  <a href="https://github.com/tylim88/Firelord/blob/main/img/ozai.png" rel="nofollow"><img src="img/ozai.png" width="200px" align="center" /></a>
- <h1 align="center">Firelord (BETA, Nodejs)</h1>
+ <h1 align="center">Firelord 烈焰君(BETA, Nodejs)</h1>
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
-🍁 `write` operations reject unknown member and enforce partial but no undefined.
+🍁 `write` operations reject unknown member; `update` enforce partial but no undefined.
 
 🍹 Avoid `order` and `query` limitations for you, stopping potential run-time errors before they happen.
 
