@@ -122,7 +122,7 @@ export const docCreator: <
 						: undefined
 				) as J extends Record<string, never>
 					? undefined
-					: FirebaseFirestore.WriteResult
+					: FirelordFirestore.WriteResult
 			},
 			get: () => {
 				return docRead.get().then(documentSnapshot => {
@@ -149,7 +149,7 @@ export const docCreator: <
 								: undefined
 						) as J extends Record<string, never>
 							? undefined
-							: FirebaseFirestore.WriteBatch
+							: FirelordFirestore.WriteBatch
 					},
 					set: <
 						J extends Partial<WriteNested>,
@@ -219,7 +219,7 @@ export const docCreator: <
 								: undefined
 						) as J extends Record<string, never>
 							? undefined
-							: FirebaseFirestore.Transaction
+							: FirelordFirestore.Transaction
 					},
 					delete: () => {
 						return transaction.delete(docWrite)

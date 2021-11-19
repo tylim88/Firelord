@@ -33,7 +33,7 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
-🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skip operation if empty object.
+🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skips operation if empty object.
 
 🍹 Avoid `order` and `query` limitations for you, stopping potential run-time errors before they happen.
 
