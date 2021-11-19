@@ -25,6 +25,7 @@ type DistributeNoUndefined<T, K> = T extends undefined
 	? 'value cannot be undefined, if this is intentional, please union undefined in base type'
 	: K
 
+// update utils type for array
 type PartialNoImplicitUndefinedAndNoExtraMemberForArray<
 	A,
 	B extends A
@@ -47,6 +48,7 @@ type PartialNoImplicitUndefinedAndNoExtraMemberForArray<
 		: never[]
 	: DistributeNoUndefined<A, B>
 
+// update utils type
 export type PartialNoImplicitUndefinedAndNoExtraMember<
 	L extends { [index: string]: unknown },
 	T extends Partial<L>

@@ -108,15 +108,21 @@ export const docCreator: <
 			) => {
 				return docWrite.set(data, options || {})
 			},
-			update: <J extends Partial<Write>>(
+			update: async <J extends Partial<Write>>(
 				data: J extends never
 					? J
 					: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
 			) => {
-				return docWrite.update({
-					...updatedAt,
-					...data,
-				})
+				return (
+					Object.keys(data).length === 0
+						? docWrite.update({
+								...updatedAt,
+								...data,
+						  })
+						: undefined
+				) as J extends Record<string, never>
+					? undefined
+					: FirebaseFirestore.WriteResult
 			},
 			get: () => {
 				return docRead.get().then(documentSnapshot => {
@@ -137,7 +143,13 @@ export const docCreator: <
 							? J
 							: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
 					) => {
-						return batch.update(docWrite, { ...updatedAt, ...data })
+						return (
+							Object.keys(data).length === 0
+								? batch.update(docWrite, { ...updatedAt, ...data })
+								: undefined
+						) as J extends Record<string, never>
+							? undefined
+							: FirebaseFirestore.WriteBatch
 					},
 					set: <
 						J extends Partial<WriteNested>,
@@ -201,7 +213,13 @@ export const docCreator: <
 							? J
 							: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
 					) => {
-						return transaction.update(docWrite, { ...updatedAt, ...data })
+						return (
+							Object.keys(data).length === 0
+								? transaction.update(docWrite, { ...updatedAt, ...data })
+								: undefined
+						) as J extends Record<string, never>
+							? undefined
+							: FirebaseFirestore.Transaction
 					},
 					delete: () => {
 						return transaction.delete(docWrite)
@@ -285,7 +303,11 @@ export type DocCreator<
 					FirelordUtils.InternalReadWriteConverter<T>['write'],
 					J_2
 			  >
-	) => Promise<FirelordFirestore.WriteResult>
+	) => Promise<
+		J_2 extends Record<string, never>
+			? undefined
+			: FirelordFirestore.WriteResult
+	>
 	get: () => Promise<DocSnapshotCreator<T, M>>
 	delete: () => Promise<FirelordFirestore.WriteResult>
 	batch: (batch: FirelordFirestore.WriteBatch) => {
@@ -300,7 +322,9 @@ export type DocCreator<
 						FirelordUtils.InternalReadWriteConverter<T>['write'],
 						J_3
 				  >
-		) => FirelordFirestore.WriteBatch
+		) => J_3 extends Record<string, never>
+			? undefined
+			: FirelordFirestore.WriteBatch
 		set: <
 			J_7 extends Partial<
 				FirelordUtils.InternalReadWriteConverter<T>['writeNested']
@@ -380,7 +404,9 @@ export type DocCreator<
 						FirelordUtils.InternalReadWriteConverter<T>['write'],
 						J_5
 				  >
-		) => FirelordFirestore.Transaction
+		) => J_5 extends Record<string, never>
+			? undefined
+			: FirelordFirestore.Transaction
 		delete: () => FirelordFirestore.Transaction
 		get: () => Promise<DocSnapshotCreator<T, M>>
 		getAll: <J_6 extends [...FirelordFirestore.DocumentData[]]>(

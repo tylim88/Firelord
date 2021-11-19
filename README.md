@@ -33,7 +33,7 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
-🍁 `write` operations reject unknown member; `update` enforce partial but no undefined.
+🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skip operation if empty object.
 
 🍹 Avoid `order` and `query` limitations for you, stopping potential run-time errors before they happen.
 
@@ -105,7 +105,7 @@ Other than type issues, Firestore also suffers from runtime errors:
 - If you include a filter with a range comparison (`<`, `<=`, `>`, `>=`), your first ordering is not on the same field.
 - Order your query by a field included in an equality `==` or `in` clause.
 
-Firelord aims to eradicate preventable errors when developing with Firestore by implementing strategies that make the most sense.
+Firelord aims to eradicate preventable errors when developing with Firestore by implementing strategies that make the most senses.
 
 It is designed to be as friendly as possible while offering a complete Firestore typing solution.
 
@@ -993,7 +993,7 @@ In firestore, nested object working logic is like a flat object, as long as you 
 
 ### Do Not Bother Cost Focus Data Modelling
 
-Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, because it increases your project complexity, and it doesn't worth the time and money to aggregate the data.
+Firestore may look simple, but it is incredibly difficult to model especially if you aim to save as much as cost as possible, that is aggregating your data. My advice is, do not bother, because it increases your project complexity, and it doesn't worth the time and money to aggregate the data, unless it is a simple aggregation.
 
 However, if aggregation can save you a significant amount of money(assuming you already model your data correctly), chances are, you are probably not using the right database, use other databases (PSQL or MongoDB), it is much better and easier in terms of cost handling.
 
@@ -1037,6 +1037,14 @@ If the cost is your concern, you can always set up a custom backend.
 Read operation requires only simple authentication, but some applications may require complicated authentication, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend or cloud function.
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
+
+### You May Need To Keep Document ID in Document Field
+
+It is redundant to store the document id in the document field, especially if you want to query it.
+
+For example, in Users collection, where the document ID is the user UID, now you want to query 5 user documents and the information you have is the user UID (it is common to use user UID as some kind of foreign key).
+
+If you store the UID in the field, you only need to make 1 request to query all the documents, else you need to make 5 requests, which is ineffective..
 
 ## 🦎 Caveats
 

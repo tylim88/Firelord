@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.16.0 19-Nov-2021
+
+- update now skip operation if the data is empty object
+
 ## 0.15.3 12-Nov-2021
 
 - no longer need to explicitly type with Wrapper
