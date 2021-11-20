@@ -13,7 +13,7 @@
  <a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
 </p>
 
-🐤 Write truly scalable Firestore code with complete deep typing Firestore wrapper.
+🐤 Write truly type safe and scalable Firestore code with complete deep typing Firestore wrapper.
 
 💪🏻 Type object, array, any combination of array and object, regardless of the nesting level.
 
@@ -33,9 +33,11 @@
 
 🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
 
-🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skips operation if empty object.
+🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skips operation if data is an empty object.
 
 🍹 Avoid `order` and `query` limitations for you, stopping potential run-time errors before they happen.
+
+🎄 Stop your from order the same field twice.
 
 ✨ API closely resembles Firestore API, low learning curve.
 
@@ -104,6 +106,7 @@ Other than type issues, Firestore also suffers from runtime errors:
 - Use over one `array-contains` clause per query.
 - If you include a filter with a range comparison (`<`, `<=`, `>`, `>=`), your first ordering is not on the same field.
 - Order your query by a field included in an equality `==` or `in` clause.
+- Order the same field twice.
 
 Firelord aims to eradicate preventable errors when developing with Firestore by implementing strategies that make the most senses.
 
@@ -141,7 +144,10 @@ Overview:
 
   ![type check](img/checkType.png)
 
-- Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note that you cannot skip any member of an object in an array due to how Firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
+- Smarter `update`:
+
+  - skips operation if data is an empty object
+  - Partial but no undefined: Prevent you from explicitly assigning `undefined` to a partial member in operation like `set`(with merge options) or `update` while still allowing you to skip that member regardless of how deep it is(You can override this behaviour by explicitly union `undefined` in the `base type`). Do note that you cannot skip any member of an object in an array due to how Firestore array works, read [Complex Data Typing](#-complex-data-typing) for more info.
 
   ![partial but no undefined](img/updateAndUndefined.png)
 
@@ -153,17 +159,21 @@ Overview:
 
   ![limit offset](img/limitOffset.png)
 
-- much better `where` and `orderBy` clause
+- much safer `where` and `orderBy` clause
 
-  - field values are typed accordingly to field path
-  - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value
+  - field values are typed accordingly to field path.
+  - comparators depend on field value type, eg you cannot apply `array-contains` operator onto non-array field value.
+  - stop you from order the same field twice.
+
+  ![order twice](img/orderTwice.png)
+
   - whether you can chain orderBy clause or not is depends on the comparator's value, this is according to [Order Limitation](https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations), see image below. Go to [Order And Limit](#-collection-operations-order-and-limit) for documentation.
 
   ![orderBy limitation](img/orderBy.png)
 
 - avoid [Query Limitation](https://firebase.google.com/docs/firestore/query-data/queries#query_limitations) for you, no more runtime surprises, prevention >>> cures.
 
-  ![orderBy limitation](img/where.png)
+  ![Query limitation](img/where.png)
 
 - The 4 musketeers: serverTimestamp(FieldValue), arrayRemove(FieldValue), arrayUnion(FieldValue) and increment(FieldValue) are now typed, see [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking) for more info.
 
@@ -639,112 +649,58 @@ Tips: to make things easier, whenever you want to use `where` + `orderBy`, use t
 // if type of opStr is 'array-contains', the value type is the non-array version of member's type in `compare type`
 users.where('beenTo', 'array-contains', 'USA').get()
 // if type of opStr is 'array-contains-any', the value type is same as the member's type in `compare type`
-Promise.all(
-	users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
-		return query.get()
-	})
-)
+users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+	return query.get()
+})
 // if type of opStr is 'in', the value type is the array of member's type in `compare type`
-Promise.all(
-	users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).map(query => {
-		return query.get()
-	})
-)
+users.where('beenTo', 'in', [['CANADA', 'RUSSIA']]).map(query => {
+	return query.get()
+})
 // orderBy field path only include members that is NOT array type in `compare type`
 users.orderBy('name', 'desc').limit(3).get()
 
 // for `array-contains` and `array-contains-any` comparators, you can chain `orderBy` clause with DIFFERENT field path
 users.where('beenTo', 'array-contains', 'USA').orderBy('age', 'desc').get()
-Promise.all(
-	users.where('beenTo', 'array-contains-any', ['USA', 'CHINA']).map(query => {
-		return query.orderBy('age', 'desc').get()
-	})
-)
+users.where('beenTo', 'array-contains-any', ['USA', 'CHINA']).map(query => {
+	return query.orderBy('age', 'desc').get()
+})
 
 // for '==' | 'in' comparators:
 // no order for '==' | 'in' comparator for SAME field name, read https://stackoverflow.com/a/56620325/5338829 before proceed
 users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
-// '==' | 'in' is order-able with DIFFERENT field name but need to use SHORTHAND form to ensure type safety
-users.where('age', '==', 20).orderBy('name', 'desc').get() // ERROR
-// shorthand ensure type safety, equivalent to where('age', '>', 20).orderBy('name','desc')
-users
-	.where('age', '==', 20, { fieldPath:: 'name', directionStr: 'desc' })
-	.get() // OK
-// again, no order for '==' | 'in' comparator for SAME field name
-users
-	.where('age', '==', 20, { fieldPath:: 'age', directionStr: 'desc' })
-	.get() // ERROR
+// '==' | 'in' is order-able with DIFFERENT field name
+users.where('age', '==', 20).orderBy('name', 'desc').get() // OK
 
-// for '<' | '<=]| '>'| '>=' comparator
-// no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// for '<' | '<=' | '>'| '>=' comparator
+// no order for '<' | '<=' | '>'| '>=' comparator for DIFFERENT field name
 users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=]| '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
-users
-	.where('age', '>', 20, { fieldPath:: 'age', directionStr: 'desc' })
-	.get() // OK
-// again, no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
-users
-	.where('age', '>', 20, { fieldPath:: 'name', directionStr: 'desc' })
-	.get() // ERROR
+users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // OK
+// again, no order for '<' | '<=' | '>'| '>=' comparator for DIFFERENT field name
+users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
 // same field path
 users.where('name', 'not-in', ['John', 'Ozai']).orderBy('name', 'desc').get()
 // different field path
 users.where('name', 'not-in', ['John', 'Ozai']).orderBy('age', 'desc').get()
-// shorthand different field path:
-users
-	.where('name', 'not-in', ['John', 'Ozai'], {
-		fieldPath:: 'age',
-		directionStr: 'desc',
-	})
-	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('age','desc')
-// shorthand same field path:
-users
-	.where('name', 'not-in', ['John', 'Ozai'], {
-		fieldPath:: 'name',
-		directionStr: 'desc',
-	})
-	.get() // equivalent to where('name', 'not-in', ['John', 'Ozai']).orderBy('name','desc')
 
 // same field path
 users.where('name', '!=', 'John').orderBy('name', 'desc').get()
 // different field path
 users.where('name', '!=', 'John').orderBy('age', 'desc').get()
-// shorthand different field path:
-users
-	.where('name', '!=', 'John', {
-		fieldPath:: 'age',
-		directionStr: 'desc',
-	})
-	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc')
-// shorthand same field path:
-users
-	.where('name', '!=', 'John', {
-		fieldPath:: 'name',
-		directionStr: 'desc',
-	})
-	.get() // equivalent to where('name', '!=', 'John').orderBy('name','desc')
 
 //pagination
 // field path only include members that is NOT array type in `base type`
 // field value type is the corresponding field path value type in `compare type`
 // value of cursor clause is 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
-users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).offset(5) // equivalent to orderBy("age").startAt(20).offset(5)
+users.orderBy('age', 'asc', { clause: 'startAt', fieldValue: 20 }).limit(5) // equivalent to orderBy("age").startAt(20).limit(5)
 // usage with where
 users
 	.where('name', '!=', 'John')
 	.orderBy('age', 'desc', { clause: 'endAt', fieldValue: 50 })
-// equivalent to shorthand
-users
-	.where('name', '!=', 'John', {
-		fieldPath:: 'age',
-		directionStr: 'desc',
-		cursor: { clause: 'endAt', fieldValue: 50 },
-	})
-	.get() // equivalent to where('name', '!=', 'John').orderBy('age','desc').endAt(50)
 ```
 
 ## 🌺 Collection Operations: Paginate And Cursor

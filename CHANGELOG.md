@@ -2,6 +2,12 @@
 
 Change log
 
+## 0.17.0 20-Nov-2021
+
+- simplify where and orderBy type logic and api
+- further enhance orderBy limitation type safety(fix potential loophole)
+- now you cant order the same field twice(new)
+
 ## 0.16.0 19-Nov-2021
 
 - update now skip operation if the data is empty object

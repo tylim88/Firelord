@@ -22,16 +22,23 @@ export type QueryCreator<
 		PermanentlyOmittedKeys,
 		M,
 		PermanentlyOmittedComparators,
-		CompoundSameField
+		CompoundSameField,
+		DuplicatedOrderByField
 	> = never,
 	M extends 'col' | 'colGroup' = 'col',
 	PermanentlyOmittedComparators extends FirelordFirestore.WhereFilterOp = never,
-	CompoundSameField extends string | false = false
+	CompoundSameField extends string | false = false,
+	DuplicatedOrderByField extends string & keyof T['compare'] = never
 > = {
 	where: <
 		P extends string & keyof T['read'],
 		J extends FirelordFirestore.WhereFilterOp,
-		Q extends ExcludePropertyKeys<T['compare'], unknown[]>
+		Q extends
+			| Exclude<
+					ExcludePropertyKeys<T['compare'], unknown[]>,
+					DuplicatedOrderByField
+			  >
+			| false = false
 	>(
 		fieldPath: P extends never
 			? P
@@ -57,37 +64,33 @@ export type QueryCreator<
 			: J extends 'array-contains'
 			? RemoveArray<T['compare'][P]>
 			: T['compare'][P],
-		orderBy?: J extends '<' | '<=' | '>=' | '>' | '==' | 'in' | '!=' | 'not-in'
-			? P extends ExcludePropertyKeys<T['compare'], unknown[]>
+		orderBy?: J extends '<' | '<=' | '>=' | '>'
+			? P extends Exclude<
+					ExcludePropertyKeys<T['compare'], unknown[]>,
+					DuplicatedOrderByField
+			  >
 				? {
-						fieldPath: Q extends never
-							? Q
-							: J extends '<' | '<=' | '>=' | '>'
-							? Q extends P
-								? ExcludePropertyKeys<T['compare'], unknown[]>
-								: never
-							: J extends '==' | 'in'
-							? Q extends P
-								? never
-								: ExcludePropertyKeys<T['compare'], unknown[]>
-							: J extends 'not-in' | '!='
-							? ExcludePropertyKeys<T['compare'], unknown[]>
-							: never
+						fieldPath: Q extends P ? Q : never
 						directionStr?: FirelordFirestore.OrderByDirection
 						cursor?: {
 							clause: 'startAt' | 'startAfter' | 'endAt' | 'endBefore'
 							fieldValue:
-								| T['compare'][J extends 'not-in' | '!=' ? Q : P]
+								| (Q extends P ? T['compare'][Q] : never)
 								| FirelordFirestore.DocumentSnapshot
 						}
 				  }
-				: never
-			: never
+				: undefined
+			: undefined
 	) => J extends 'in' | 'array-contains-any'
 		? OmitKeys<
 				QueryCreator<
 					T,
-					PermanentlyOmittedKeys,
+					| PermanentlyOmittedKeys
+					| (J extends '<' | '<=' | '>=' | '>'
+							? Q extends false
+								? 'orderBy'
+								: never
+							: never),
 					M,
 					| PermanentlyOmittedComparators
 					| (J extends 'array-contains'
@@ -97,16 +100,26 @@ export type QueryCreator<
 							: never),
 					J extends '<' | '<=' | '>=' | '>' | 'not-in' | '!='
 						? P
-						: CompoundSameField
+						: CompoundSameField,
+					| DuplicatedOrderByField
+					| (J extends '<' | '<=' | '>=' | '>' | '==' | 'in' ? P : never)
 				>,
-				J extends '<' | '<=' | '>' | '>' | '==' | 'in'
-					? 'orderBy' | PermanentlyOmittedKeys
-					: PermanentlyOmittedKeys
+				| PermanentlyOmittedKeys
+				| (J extends '<' | '<=' | '>=' | '>'
+						? Q extends false
+							? 'orderBy'
+							: never
+						: never)
 		  >[]
 		: OmitKeys<
 				QueryCreator<
 					T,
-					PermanentlyOmittedKeys,
+					| PermanentlyOmittedKeys
+					| (J extends '<' | '<=' | '>=' | '>'
+							? Q extends false
+								? 'orderBy'
+								: never
+							: never),
 					M,
 					| PermanentlyOmittedComparators
 					| (J extends 'array-contains'
@@ -116,11 +129,16 @@ export type QueryCreator<
 							: never),
 					J extends '<' | '<=' | '>=' | '>' | 'not-in' | '!='
 						? P
-						: CompoundSameField
+						: CompoundSameField,
+					| DuplicatedOrderByField
+					| (J extends '<' | '<=' | '>=' | '>' | '==' | 'in' ? P : never)
 				>,
-				J extends '<' | '<=' | '>' | '>' | '==' | 'in'
-					? 'orderBy' | PermanentlyOmittedKeys
-					: PermanentlyOmittedKeys
+				| PermanentlyOmittedKeys
+				| (J extends '<' | '<=' | '>=' | '>'
+						? Q extends false
+							? 'orderBy'
+							: never
+						: never)
 		  >
 	firestore: ReturnType<Firelord>
 	stream: FirelordFirestore.Stream<T['read']>
@@ -132,7 +150,8 @@ export type QueryCreator<
 			'offset' | PermanentlyOmittedKeys,
 			M,
 			PermanentlyOmittedComparators,
-			CompoundSameField
+			CompoundSameField,
+			DuplicatedOrderByField
 		>,
 		'offset' | PermanentlyOmittedKeys
 	>
@@ -144,7 +163,8 @@ export type QueryCreator<
 			'limit' | 'limitToLast' | PermanentlyOmittedKeys,
 			M,
 			PermanentlyOmittedComparators,
-			CompoundSameField
+			CompoundSameField,
+			DuplicatedOrderByField
 		>,
 		'limit' | 'limitToLast' | PermanentlyOmittedKeys
 	>
@@ -156,11 +176,17 @@ export type QueryCreator<
 			'limit' | 'limitToLast' | PermanentlyOmittedKeys,
 			M,
 			PermanentlyOmittedComparators,
-			CompoundSameField
+			CompoundSameField,
+			DuplicatedOrderByField
 		>,
 		'limit' | 'limitToLast' | PermanentlyOmittedKeys
 	>
-	orderBy: <P extends ExcludePropertyKeys<T['compare'], unknown[]>>(
+	orderBy: <
+		P extends Exclude<
+			ExcludePropertyKeys<T['compare'], unknown[]>,
+			DuplicatedOrderByField
+		>
+	>(
 		fieldPath: P,
 		directionStr: FirelordFirestore.OrderByDirection,
 		cursor?: {
@@ -170,12 +196,13 @@ export type QueryCreator<
 	) => OmitKeys<
 		QueryCreator<
 			T,
-			PermanentlyOmittedKeys,
+			PermanentlyOmittedKeys | 'where',
 			M,
 			PermanentlyOmittedComparators,
-			CompoundSameField
+			CompoundSameField,
+			DuplicatedOrderByField | P
 		>,
-		PermanentlyOmittedKeys
+		PermanentlyOmittedKeys | 'where'
 	>
 	onSnapshot: (
 		onNext: (snapshot: QuerySnapshotCreator<T, M>) => void,
@@ -196,7 +223,8 @@ export const queryCreator: <
 	> = never,
 	M extends 'col' | 'colGroup' = 'col',
 	PermanentlyOmittedComparators extends FirelordFirestore.WhereFilterOp = never,
-	CompoundSameField extends string | false = false
+	CompoundSameField extends string | false = false,
+	DuplicatedOrderByField extends string & keyof T['compare'] = never
 >(
 	firestore: FirelordFirestore.Firestore,
 	colRef: M extends 'col'
@@ -210,7 +238,8 @@ export const queryCreator: <
 	PermanentlyOmittedKeys,
 	M,
 	PermanentlyOmittedComparators,
-	CompoundSameField
+	CompoundSameField,
+	DuplicatedOrderByField
 > = <
 	T extends FirelordUtils.MetaType,
 	PermanentlyOmittedKeys extends keyof QueryCreator<
@@ -218,11 +247,13 @@ export const queryCreator: <
 		PermanentlyOmittedKeys,
 		M,
 		PermanentlyOmittedComparators,
-		CompoundSameField
+		CompoundSameField,
+		DuplicatedOrderByField
 	> = never,
 	M extends 'col' | 'colGroup' = 'col',
 	PermanentlyOmittedComparators extends FirelordFirestore.WhereFilterOp = never,
-	CompoundSameField extends string | false = false
+	CompoundSameField extends string | false = false,
+	DuplicatedOrderByField extends string & keyof T['compare'] = never
 >(
 	firestore: FirelordFirestore.Firestore,
 	colRef: M extends 'col'
@@ -249,7 +280,8 @@ export const queryCreator: <
 				PermanentlyOmittedKeys,
 				M,
 				PermanentlyOmittedComparators,
-				CompoundSameField
+				CompoundSameField,
+				DuplicatedOrderByField
 			>(firestore, colRef, cursor ? ref[cursor.clause](cursor.fieldValue) : ref)
 		}
 
@@ -317,7 +349,8 @@ export const queryCreator: <
 					PermanentlyOmittedKeys,
 					M,
 					PermanentlyOmittedComparators,
-					CompoundSameField
+					CompoundSameField,
+					DuplicatedOrderByField
 				>(firestore, colRef, ref)
 
 				const finalRef = orderBy
@@ -364,24 +397,6 @@ export const queryCreator: <
 		stream: () => {
 			return query.stream()
 		},
-		offset: (offset: number) => {
-			return queryCreator<
-				T,
-				'offset' | PermanentlyOmittedKeys,
-				M,
-				PermanentlyOmittedComparators,
-				CompoundSameField
-			>(firestore, colRef, query.offset(offset)) as OmitKeys<
-				QueryCreator<
-					T,
-					'offset' | PermanentlyOmittedKeys,
-					M,
-					PermanentlyOmittedComparators,
-					CompoundSameField
-				>,
-				'offset' | PermanentlyOmittedKeys
-			> // only the 1st one(now offset is the 1st one of offset, limit and limitToLast) need to type case, but limit and limitToLast dont need, why?
-		},
 		limit: (limit: number) => {
 			return queryCreator<
 				T,
@@ -389,7 +404,26 @@ export const queryCreator: <
 				M,
 				PermanentlyOmittedComparators,
 				CompoundSameField
-			>(firestore, colRef, query.limit(limit))
+			>(firestore, colRef, query.limit(limit)) as OmitKeys<
+				QueryCreator<
+					T,
+					'limit' | 'limitToLast' | PermanentlyOmittedKeys,
+					M,
+					PermanentlyOmittedComparators,
+					CompoundSameField,
+					DuplicatedOrderByField
+				>,
+				'limit' | 'limitToLast' | PermanentlyOmittedKeys
+			> // only the 1st one(now limit is the 1st one of offset, limit and limitToLast) need to type cast, why?
+		},
+		offset: (offset: number) => {
+			return queryCreator<
+				T,
+				'offset' | PermanentlyOmittedKeys,
+				M,
+				PermanentlyOmittedComparators,
+				CompoundSameField
+			>(firestore, colRef, query.offset(offset))
 		},
 		limitToLast: (limit: number) => {
 			return queryCreator<
@@ -400,7 +434,8 @@ export const queryCreator: <
 				CompoundSameField
 			>(firestore, colRef, query.limitToLast(limit))
 		},
-		orderBy: orderByCreator(query),
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		orderBy: orderByCreator(query) as any, // ! too lazy
 		...getAndOnSnapshotCreator(),
 	}
 }
