@@ -638,7 +638,7 @@ Note: The wrapper will not stop you from using multiple `orderBy` clause because
 
 NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation.
 
-Tips: to make things easier, whenever you want to use `where` + `orderBy`, use the shorthand form (see example code below).
+NOTE: for `<`, `<=`, `>`, `>=` comparators, use the shorthand form to order (see example code below).
 
 ```ts
 // import users
