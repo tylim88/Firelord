@@ -73,6 +73,7 @@ require typescript 4.1 and above
   - [Update](#update)
   - [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking)
 - [Circumvented Firestore Limitations](#-circumvented-firestore-limitations-runtime-errors)
+- [Troubleshooting](#-troubleshooting)
 - [Advices](#-advices)
   - [You can ≠ You should](#you-can--you-should)
   - [Nested Object](#nested-object)
@@ -932,6 +933,10 @@ Other runtime errors circumvented:
 - Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
 
 - prevent ordering the same field twice.
+
+## 🌷 Troubleshooting
+
+If you run into runtime error like `query snapshot is null`, most likely it is due to a permission issue, check your Firestore rule.
 
 ## 🐬 Advices
 
