@@ -72,7 +72,7 @@ require typescript 4.1 and above
 - [Set, Create and Add](#-set-create-and-add)
   - [Update](#update)
   - [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking)
-- [Circumvented Firestore Limitations](#-circumvented-firestore-limitations)
+- [Circumvented Firestore Limitations](#-circumvented-firestore-limitations-runtime-errors)
 - [Advices](#-advices)
   - [You can ≠ You should](#you-can--you-should)
   - [Nested Object](#nested-object)
@@ -923,9 +923,15 @@ same working logic apply to complex data type.
 
 if you try to use the original Firestore field value, the wrapper will stop you.
 
-## 🍝 Circumvented Firestore Limitations
+## 🍝 Circumvented Firestore Limitations (Runtime Errors)
 
 ![limitation](img/limitation.png)
+
+Other runtime errors circumvented:
+
+- Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`.
+
+- prevent ordering the same field twice.
 
 ## 🐬 Advices
 
