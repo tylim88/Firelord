@@ -2,6 +2,11 @@
 
 Change log
 
+## 0.17.3 21-Nov-2021
+
+- fix wrong onSnapshot and get interface on React Native and Web version
+- fix update not working
+
 ## 0.17.0 20-Nov-2021
 
 - simplify where and orderBy type logic and api
