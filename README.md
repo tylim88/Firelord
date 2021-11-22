@@ -1119,3 +1119,4 @@ Disclaimer: I am the author of all the packages.
 - jsDoc
 - validation with `zod`
 - jest
+- initial data type for all write operation except `update`
