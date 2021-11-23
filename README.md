@@ -1030,10 +1030,6 @@ Here are a few things you still need to consider:
 
 if you follow [One Collection One Document Type](#one-collection-one-document-type) advice, and if you have only one document in one collection and this will not change in the future: The existence of such document is unique, for example, a user will have only one `setting` document, then it is better to turn it into a top collection.
 
-### Sub Collection versus Top Collection
-
-With `Group Collection Query`, it is possible to query sub collection like how you query a top collection.
-
 ## 🦎 Caveats
 
 ### Error Hint
