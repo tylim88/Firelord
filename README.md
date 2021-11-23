@@ -75,11 +75,15 @@ require typescript 4.1 and above
 - [Circumvented Firestore Limitations](#-circumvented-firestore-limitations-runtime-errors)
 - [Troubleshooting](#-troubleshooting)
 - [Advices](#-advices)
-  - [You can ≠ You should](#you-can--you-should)
+  - [You Can ≠ You Should](#you-can--you-should)
   - [Nested Object](#nested-object)
-  - [Do Not Bother Cost Focus Data Modelling](#do-not-bother-cost-focus-data-modelling)
   - [One Collection One Document Type](#one-collection-one-document-type)
+  - [Do Not Bother Cost Focus Data Modelling](#do-not-bother-cost-focus-data-modelling)
   - [Speed](#speed)
+  - [Do Not Use Offset](#do-not-use-offset)
+- [Tips](#-tips)
+- [You May Need To Keep Document ID In Document Field](#you-may-need-to-keep-document-id-in-document-field)
+- [Top Collection VS Sub Collection](#Top-Collection-VS-Sub-Collection)
 - [Caveats](#-caveats)
   - [Error Hint](#error-hint)
   - [not-in](#not-in)
@@ -940,7 +944,7 @@ If you run into runtime error like `query snapshot is null`, most likely it is d
 
 ## 🐬 Advices
 
-### You can ≠ You should
+### You Can ≠ You Should
 
 Although the wrapper can handle virtually any complex data type, it doesn't mean you should model the data in such a way, especially when dealing with the array.
 
@@ -972,13 +976,9 @@ I would recommend instead of creating `profile` and `setting`, you create two to
 
 Logically, there should be one type of document in on collection(hence the name `collections`).
 
-If this is not enough to convince you, then this will: type safety.
+If this is not enough to convince you: Query.
 
-If you have over one type of document, how do you ensure the document you query matches the type you want?
-
-Answer: it is possible, by union the two types but maintenance difficulty escalate quickly, imagine union bunch of types.
-
-Avoid multi document types per collection, I strongly recommend enforcing 1 collection 1 document type coding policy.
+With `Group Collection Query`, it is possible to query sub collection like how you query a top collection. I highly recommend that you enforce one collection one document type. This avoids you from accidentally querying another collection with the same name but has a different document type.
 
 ### Speed
 
@@ -1005,13 +1005,34 @@ Read operation requires only simple authentication, but some applications may re
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
 
+### Do Not Use `Offset`
+
+The server library comes with `offset` cursor that is not available in the client library. However, it still charges you for all the documents that you are offsetting: [source](https://youtu.be/poqTHxtDXwU?t=552)
+
+## ❄️ Tips
+
 ### You May Need To Keep Document ID in Document Field
 
 It is redundant to store the document id in the document field, especially if you want to query it.
 
 For example, in Users collection, where the document ID is the user UID, now you want to query 5 user documents and the information you have is the user UID (it is common to use user UID as some kind of foreign key).
 
-If you store the UID in the field, you only need to make 1 request to query all the documents, else you need to make 5 requests, which is ineffective..
+If you store the UID in the field, you only need to make 1 request to query all the documents, else you need to make 5 requests, which is ineffective.
+
+### Top Collection VS Sub Collection
+
+With `Group Collection Query`, it is possible to query sub collection like how you query a top collection. So there is not much differences between what they can do and their performance(Firestore speed are based on the result set, not the data set).
+
+Here are a few things you still need to consider:
+
+- sub-collection path name is longer.
+- top collection requires more information(the path name in sub-collection) for you to query it properly. However, as explained in [You May Need To Keep Document ID In Document Field](#you-may-need-to-keep-document-id-in-document-field), so this is not really a minus point.
+
+if you follow [One Collection One Document Type](#one-collection-one-document-type) advice, and if you have only one document in one collection and this will not change in the future: The existence of such document is unique, for example, a user will have only one `setting` document, then it is better to turn it into a top collection.
+
+### Sub Collection versus Top Collection
+
+With `Group Collection Query`, it is possible to query sub collection like how you query a top collection.
 
 ## 🦎 Caveats
 
