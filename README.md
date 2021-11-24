@@ -260,8 +260,8 @@ type UserColPath = User['colPath'] // "Users"
 // document ID
 type UserDocId = User['docID'] // string
 
-// documentPath
-type UserDocPath = User['docPath']
+// document Path
+type UserDocPath = User['docPath'] // `Users/${string}`
 ```
 
 ### Sub-Collection
