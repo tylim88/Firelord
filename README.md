@@ -639,7 +639,7 @@ Read this before proceeding: [Firestore OrderBy and Where conflict](https://stac
 
 Any `orderBy` that does not follow `where` clause does not abide by the rule and limitation mentioned above.
 
-Note: The wrapper will not stop you from using multiple `orderBy` clause because multiple `orderBy` clause is possible, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
+Note: The wrapper will not stop you from using multiple `orderBy` clause for different field, read [Multiple orderBy in firestore](https://stackoverflow.com/a/66071503/5338829) and [Ordering a Firestore query on multiple fields](https://cloud.google.com/firestore/docs/samples/firestore-query-order-multi).
 
 NOTE: `in` and `array-contains-any` return array of query which in the end return array of `Promise`, please use `Promise.all` or `Promise.allSettled` to resolve the promises, this is to overcome the 10 elements limitation.
 

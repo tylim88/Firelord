@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.17.15 25-Nov-2021
+
+- expose FirelordFirestore namespace
+
 ## 0.17.3 21-Nov-2021
 
 - fix wrong onSnapshot and get interface on React Native and Web version
