@@ -25,9 +25,7 @@
 
 💥 Safe typing with masked Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) types.
 
-🌈 Strictly one-time setup per document. Once configured, you are ready. No more confusing setup in the future, simplicity at its finest.
-
-🦚 No annoying typescript decorator needed, type in plain simple typescript, only once and you can start your game.
+🦚 No annoying typescript decorator needed, type in plain simple typescript. Strictly one-time setup per document. Once configured, you are ready.
 
 🍡 Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, peace in mind.
 
@@ -386,7 +384,7 @@ user.create({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA'],
+	beenTo: ['RUSSIA' as const],
 })
 
 // create if not exist, else overwrite
@@ -396,14 +394,14 @@ user.set({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA'],
+	beenTo: ['RUSSIA' as const],
 })
 
 // create if not exist, else update
 // all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
-user.set({ name: 'Michael' }, { merge: true })
+user.set({ name: 'Michael', beenTo: ['RUSSIA' as const] }, { merge: true })
 
 // create if not exist, else update
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
@@ -453,7 +451,7 @@ userBatch.set({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA'],
+	beenTo: ['RUSSIA' as const],
 })
 
 // create if not exist, else update
@@ -505,7 +503,7 @@ firestore().runTransaction(async transaction => {
 		age: 24,
 		birthday: new Date(1995, 11, 17),
 		joinDate: ServerTimestamp,
-		beenTo: ['RUSSIA'],
+		beenTo: ['RUSSIA' as const],
 	})
 
 	// create if not exist, else overwrite
@@ -515,7 +513,7 @@ firestore().runTransaction(async transaction => {
 		age: 24,
 		birthday: new Date(1995, 11, 17),
 		joinDate: ServerTimestamp,
-		beenTo: ['RUSSIA'],
+		beenTo: ['RUSSIA' as const],
 	})
 
 	// create if not exist, else update
@@ -1005,6 +1003,8 @@ Read operation requires only simple authentication, but some applications may re
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
 
+Only use Firestore rule for simple read and write.
+
 ### Do Not Use `Offset`
 
 The server library comes with `offset` cursor that is not available in the client library. However, it still charges you for all the documents that you are offsetting: [source](https://youtu.be/poqTHxtDXwU?t=552)
@@ -1119,6 +1119,16 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 
 1. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
 2. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
+3. Unable to works with Record<number, any> or Record<`` `${number}` ``, any>:
+
+```ts
+type P = `${number}` extends `${infer P}` ? P : never // P is still ${number}
+type P = `${1 | 2}` extends `${infer P}` ? P : never // P is still "1" | "2", expect 1 | 2
+```
+
+Long thing short, do not use numeric as index.
+
+If you really need a numeric solution, you can use string numeric `Record<'1'|'2'|'3'|'4', any>`, not a perfect solution but will works for some cases.
 
 ## 💍 Utilities
 
@@ -1132,8 +1142,9 @@ Disclaimer: I am the author of all the packages.
 
 ## 🐎 Road Map
 
-- allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult)
-- jsDoc
-- validation with `zod`
-- jest
-- initial data type for all write operation except `update`
+- jsDoc (important)
+- tests (important)
+- allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult, minor improvement)
+- data validation with `zod`.(conflict with existing architecture, moderate improvement, possibly out of scope of this library)
+- initial data type for all write operation except `update`.(minor improvement, impractical)
+- support numeric index **Record<number, any>** or **Record<`` `${number}` ``, any>**(seem impossible, typescript limitation?, minor improvement)
