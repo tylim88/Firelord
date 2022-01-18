@@ -384,7 +384,7 @@ user.create({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA' as const],
+	beenTo: ['RUSSIA'],
 })
 
 // create if not exist, else overwrite
@@ -394,14 +394,14 @@ user.set({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA' as const],
+	beenTo: ['RUSSIA'],
 })
 
 // create if not exist, else update
 // all member are partial members, you can leave any of the member out, however typescript will stop you from explicitly assign `undefined` value to any of the member unless you union the type with `undefined` in the `base type`
 // the only value for `merge` is `true`
 // NOTE: there will be a missing property error from typescript if all the members are not present. To fix this, just fill in `{ merge: true }` in the option, as shown below.
-user.set({ name: 'Michael', beenTo: ['RUSSIA' as const] }, { merge: true })
+user.set({ name: 'Michael', beenTo: ['RUSSIA'] }, { merge: true })
 
 // create if not exist, else update
 // all members are partial members, you can leave any of the members out, however, typescript will stop you from explicitly assigning `undefined` value to any of the members unless you union the type with `undefined` in the `base type`
@@ -451,7 +451,7 @@ userBatch.set({
 	age: 24,
 	birthday: new Date(1995, 11, 17),
 	joinDate: ServerTimestamp,
-	beenTo: ['RUSSIA' as const],
+	beenTo: ['RUSSIA'],
 })
 
 // create if not exist, else update
@@ -503,7 +503,7 @@ firestore().runTransaction(async transaction => {
 		age: 24,
 		birthday: new Date(1995, 11, 17),
 		joinDate: ServerTimestamp,
-		beenTo: ['RUSSIA' as const],
+		beenTo: ['RUSSIA'],
 	})
 
 	// create if not exist, else overwrite
@@ -513,7 +513,7 @@ firestore().runTransaction(async transaction => {
 		age: 24,
 		birthday: new Date(1995, 11, 17),
 		joinDate: ServerTimestamp,
-		beenTo: ['RUSSIA' as const],
+		beenTo: ['RUSSIA'],
 	})
 
 	// create if not exist, else update
