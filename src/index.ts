@@ -106,7 +106,7 @@ export const firelord: Firelord = (firestore: FirelordFirestore.Firestore) => {
 	}
 }
 
-export const ozai: typeof firelord = firelord
+export const ozai = firelord
 
 export { flatten } from './utils'
 
