@@ -6,7 +6,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"reinstall": "rm -rf node_modules/ && rm -rf package-lock.json && npm i",
-		"tsc": "tsc -p tsconfigBuild.json",
+		"tsc": "tsc -p tsconfig.json",
 		"lint": "eslint . --ext .ts",
 		"prettier": "npx pretty-quick --staged",
 		"build": "rm -rf dist && rm -rf types && babel src --out-dir dist --extensions \".ts\" && npm run tsc",

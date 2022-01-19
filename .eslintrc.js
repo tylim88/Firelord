@@ -24,5 +24,6 @@ module.exports = {
 		'@typescript-eslint/no-namespace': 'off',
 		'import/namespace': 'off',
 		camelcase: 'off',
+		'@typescript-eslint/ban-ts-comment': 'off',
 	},
 }

@@ -238,18 +238,22 @@ users.where('beenTo', 'array-contains-any', ['USA', 'CHINA']).map(query => {
 
 // for '==' | 'in' comparators:
 // no order for '==' | 'in' comparator for SAME field name, read https://stackoverflow.com/a/56620325/5338829 before proceed
+// @ts-expect-error
 users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name
 users.where('age', '==', 20).orderBy('name', 'desc').get() // OK
 
 // for '<' | '<=' | '>'| '>=' comparator
 // no order for '<' | '<=]| '>'| '>=' comparator for DIFFERENT field name
+// @ts-expect-error
 users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=' | '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
+// @ts-expect-error
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // OK
 // again, no order for '<' | '<=' | '>'| '>=' comparator for DIFFERENT field name
+// @ts-expect-error
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // for `not-in` and `!=` comparator, you can use normal and  shorthand form for both same and different name path
@@ -276,29 +280,39 @@ users
 // quick doc
 users.where('age', '!=', 20).orderBy('age', 'desc').get() // ok
 users.where('age', 'not-in', [20]).orderBy('age', 'desc').get() // ok
+// @ts-expect-error
 users.where('age', '!=', 20).orderBy('beenTo', 'desc').get() // ERROR: you cant order array
 
 // no order for '==' | 'in' comparator for SAME field name
+// @ts-expect-error
 users.where('age', '==', 20).orderBy('age', 'desc').get() // ERROR
 // '==' | 'in' is order-able with DIFFERENT field name
 users.where('age', '==', 20).orderBy('name', 'desc').get() // OK
 
 // no order for '<' | '<=' | '>'| '>=' comparator for DIFFERENT field name
+// @ts-expect-error
 users.where('age', '>', 20).orderBy('name', 'desc').get() // ERROR
 // '<' | '<=' | '>'| '>=' is oder-able with SAME field name but need to use SHORTHAND form to ensure type safety
+// @ts-expect-error
 users.where('age', '>', 20).orderBy('age', 'desc').get() // ERROR
 // equivalent to where('age', '>', 20).orderBy('age','desc')
 users.where('age', '>', 20, { fieldPath: 'age', directionStr: 'desc' }).get() // OK
 // again, no order for '<' | '<=' | '>'| '>=' comparator for DIFFERENT field name
+// @ts-expect-error
 users.where('age', '>', 20, { fieldPath: 'name', directionStr: 'desc' }).get() // ERROR
 
 // only 1 limit or limitToLast and 1 offset, all should error
+// @ts-expect-error
 users.limit(1).where('age', '!=', 20).limitToLast(2)
+// @ts-expect-error
 users.limit(1).where('age', '!=', 20).limit(2)
+// @ts-expect-error
 users.offset(1).where('age', '!=', 20).offset(2)
+// @ts-expect-error
 users.where('age', '!=', 20).limitToLast(2).offset(3).limit(1)
 
 // avoid order same field twice
+// @ts-expect-error
 users.orderBy('age', 'desc').limit(2).orderBy('age', 'desc') // Error
 
 // all should be ok
@@ -318,35 +332,39 @@ users
 
 // In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field.
 // all should error
+// @ts-expect-error
 users.where('age', '!=', 20).limit(2).where('name', 'not-in', ['John'])
+// @ts-expect-error
 users.where('age', '>', 20).limit(2).where('name', '<', 'Michael')
+// @ts-expect-error
 users.where('age', 'not-in', [20]).limit(2).where('name', '<', 'Ozai')
 
 // You can use at most one array-contains clause per query. You can't combine array-contains with array-contains-any
 // all should error
 users
 	.where('beenTo', 'array-contains', 'USA')
-	.limit(1)
+	.limit(1) // @ts-expect-error
 	.where('beenTo', 'array-contains', 'CHINA')
 users
 	.where('beenTo', 'array-contains', 'CHINA')
-	.limit(1)
+	.limit(1) // @ts-expect-error
 	.where('beenTo', 'array-contains-any', ['USA'])
 
 // You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query.
 // all should error
 Promise.all(
 	users.where('beenTo', 'array-contains-any', ['USA']).map(query => {
+		// @ts-expect-error
 		return query.limit(1).where('age', 'in', [20])
 	})
 )
 users
 	.where('name', 'not-in', ['ozai'])
-	.limit(1)
+	.limit(1) // @ts-expect-error
 	.where('beenTo', 'array-contains-any', ['USA'])
 users
 	.where('name', 'not-in', ['ozai'])
-	.limit(1)
+	.limit(1) // @ts-expect-error
 	.where('beenTo', 'in', [['USA']])
 
 type Nested = FirelordUtils.ReadWriteCreator<
@@ -387,10 +405,13 @@ nestedCol.doc('123456').set(completeData)
 nestedCol.doc('123456').create(completeData)
 nestedCol.doc('123456').set(data, { merge: true })
 nestedCol.doc('123456').update(flatten(data))
-
+// @ts-expect-error
 nestedCol.doc('123456').set(data) // not ok, need complete data if no merge option
+// @ts-expect-error
 nestedCol.doc('123456').set(incorrectCompleteData)
+// @ts-expect-error
 nestedCol.doc('123456').set(incorrectData, { merge: true })
+// @ts-expect-error
 nestedCol.doc('123456').update(flatten(incorrectData))
 
 // read type, does not flatten because no need to
@@ -427,7 +448,8 @@ exampleCol.doc('1234567').update({
 }) // ok
 
 exampleCol.doc('1234567').update({
-	aaa: 1,
+	// @ts-expect-error
+	aaa: 1, // @ts-expect-error
 	zzz: 'unknown member',
 }) // reject unknown member
 
@@ -441,6 +463,7 @@ exampleCol.doc('1234567').update(
 ) // ok
 
 exampleCol.doc('1234567').update(
+	// @ts-expect-error
 	flatten({
 		aaa: 1,
 		bbb: serverTimestamp(),
@@ -497,7 +520,7 @@ exampleCol.doc('1234567').set({
 	eee: {
 		fff: [
 			{
-				ggg: true,
+				ggg: true, // @ts-expect-error
 				jjj: !1,
 				kkk: [{ lll: new Date(0), mmm: true }],
 			},
@@ -507,13 +530,14 @@ exampleCol.doc('1234567').set({
 // set merge not ok
 exampleCol.doc('1234567').set(
 	{
-		aaa: 1,
+		aaa: 1, // @ts-expect-error
 		bbb: serverTimestamp(),
 		eee: {
 			fff: [
 				{
-					ggg: true,
-					jjj: !1,
+					// @ts-expect-error
+					ggg: true, // @ts-expect-error
+					jjj: !1, // @ts-expect-error
 					kkk: [{ lll: new Date(0), mmm: true }],
 				},
 			],
@@ -524,6 +548,7 @@ exampleCol.doc('1234567').set(
 
 exampleCol.doc('1234567').update({
 	aaa: undefined, // ok, a: number | undefined
+	// @ts-expect-error
 	ddd: undefined, // Error, d: string[]
 }) // reject undefined
 
@@ -537,6 +562,7 @@ exampleCol.doc('1234567').update(
 )
 
 exampleCol.doc('1234567').update(
+	// @ts-expect-error
 	flatten({
 		aaa: 1,
 		eee: {
@@ -546,7 +572,9 @@ exampleCol.doc('1234567').update(
 ) // complex data reject undefined regardless of depth
 
 exampleCol.doc('1234567').update({
+	// @ts-expect-error
 	aaa: serverTimestamp(), // ERROR
+	// @ts-expect-error
 	bbb: increment(11), // ERROR
 	...arrayUnion('ddd', 123, 456), // ERROR <-- caveat, will show error after you fix all other errors first
 })
@@ -554,6 +582,7 @@ exampleCol.doc('1234567').update({
 exampleCol.doc('1234567').update({
 	aaa: increment(11), // ok
 	// caveat, some error is not shown on proper member
+	// @ts-expect-error
 	bbb: serverTimestamp(), // ok <-- fix the error in array union and this error will goes away
 	...arrayUnion('ddd', 123, 456), // ERROR
 })
