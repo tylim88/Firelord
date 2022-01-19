@@ -30,13 +30,13 @@ jobs:
 
       - run: npm i
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm run pre-commit
 
       - run: npm test
 
       - run: npm run build
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
