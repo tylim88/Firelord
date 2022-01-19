@@ -30,9 +30,7 @@ jobs:
 
       - run: npm i
 
-      - run: npm i -D prettier
-
-      - run: npm run pre-commit
+      - run: npm run lint
 
       - run: npm test
 
