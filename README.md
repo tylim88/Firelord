@@ -1002,7 +1002,7 @@ Run write operations in cloud function. Yes, cloud function cost you money per i
 
 If the cost is your concern, you can always set up a custom backend.
 
-Read operation requires only simple authentication, but some applications may require complicated authentication, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend or cloud function.
+Read operation requires only simple authentication, but some applications may require complicated authentication, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend.
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
 
