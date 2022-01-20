@@ -1125,7 +1125,7 @@ While the wrapper try to safeguard as much type as possible, some problem cannot
 3. Unable to works with Record<number, any> or Record<`` `${number}` ``, any>:
 
 ```ts
-type P = `${number}` extends `${infer P}` ? P : never // P is still ${number}
+type P = `${number}` extends `${infer P}` ? P : never // P is still `${number}`
 type P = `${1 | 2}` extends `${infer P}` ? P : never // P is still "1" | "2", expect 1 | 2
 ```
 
