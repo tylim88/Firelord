@@ -78,6 +78,7 @@ require typescript 4.1 and above
   - [One Collection One Document Type](#one-collection-one-document-type)
   - [Do Not Bother Cost Focus Data Modelling](#do-not-bother-cost-focus-data-modelling)
   - [Speed](#speed)
+  - [Do Not Use Firestore Rules For Complex Authorization](#Do-Not-Use-Firestore-Rules-For-Complex-Authorization)
   - [Do Not Use Offset](#do-not-use-offset)
 - [Tips](#%EF%B8%8F-tips)
   - [You May Need To Keep Document ID In Document Field](#you-may-need-to-keep-document-id-in-document-field)
@@ -948,11 +949,13 @@ Although the wrapper can handle virtually any complex data type, it doesn't mean
 
 When dealing with an array, avoid array of objects
 
-not only data types are hard to query and hard to massage, but they also pose great difficulty to security rule, especially if the permission is relying on the data.
+not only these data types are hard to query and hard to massage, but they also pose great difficulty to security rule, especially if the permission is relying on the data.
 
-Use array on primitive data types, or timestamp and geo point(objects that have consistent structure).
+Use array on primitive data types, if you really need to store object type, make sure it is not something that you need to query in future.
 
-Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in Firestore because your data model affects the pricing, Firestore incentives you to put more data in the same document, hence you see all kind of array of objects types.
+Theoretically speaking, it is possible to create a flat structure for all kinds of data types, but this is harder to be done in Firestore because your data model affects the pricing.
+
+The pricing model incentives you to put more data in the same document, hence you see people doing all kind of array of objects.
 
 Anyway, do not resort to array of objects types easily, create a new collection instead. Always keep your data type straightforward if possible.
 
@@ -986,7 +989,7 @@ Though it is unsure at what point Firestore performance start to exceed other da
 
 Thus don't expect much from the speed, use Firestore for task that is not time critical.
 
-### Do Not Use Firestore Rules For Write Operation
+### Do Not Use Firestore Rules For Complex Authorization
 
 Firestore rule sucks big time:
 
@@ -1003,7 +1006,7 @@ Read operation requires only simple authentication, but some applications may re
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
 
-Only use Firestore rule for simple read and write.
+Only use Firestore rule for simple authorization.
 
 ### Do Not Use `Offset`
 
