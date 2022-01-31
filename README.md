@@ -23,13 +23,13 @@
 
 🔥 Convert all value types to corresponding `read` types, `write` types and `compare` types (good at handling timestamp and field values).
 
-💥 Safe typing with masked Firestore Field Value(serverTimestamp, arrayRemove, arrayUnion and increment) types.
+💥 Safe typing with masked Firestore Field Value(`serverTimestamp`, `arrayRemove`, `arrayUnion` and `increment`) types.
 
 🦚 No annoying typescript decorator needed, type in plain simple typescript. Strictly one-time setup per document. Once configured, you are ready.
 
 🍡 Prevent empty array from hitting `in`, `not-in`, `array-contains-any`, `arrayUnion` and `arrayRemove`, peace in mind.
 
-🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array. (`not-in` has a caveat)
+🍧 Use `in`, `not-in` and `array-contains-any` with more than 10 elements array.
 
 🍁 `write` operations reject unknown member; `update` enforce partial but no undefined and skips operation if data is an empty object.
 
@@ -94,7 +94,7 @@ require typescript 4.1 and above
 
 ## 🐉 What Is Firelord
 
-You may not notice this but you need to prepare 3 sets of data types to use Firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
+We need to prepare 3 sets of data types to use Firestore properly, best example is sever timestamp, when read, it is `Firestore.Timestamp`; when write, it is `Firestore.FieldValue`; and finally when compare, it is `Date|Firestore.Timestamp`.
 
 Unfortunately `withConverter` is not enough to solve the type problems, there is still no feasible solutions to deal with type like date, Firestore.Timestamp, number and array where different types are needed in read, write and compare(query).
 
@@ -222,8 +222,8 @@ type User = FirelordUtils.ReadWriteCreator<
 		joinDate: Firelord.ServerTimestamp
 		beenTo: ('USA' | 'CANADA' | 'RUSSIA' | 'CHINA')[]
 	}, // base type
-	'Users', // collection path type
-	string // document ID type
+	'Users', // collection name
+	string // document name (tips: if you need specific document name, you can do something like union string literal "abc" | "efg" and template string literal `DX-${number}`)
 >
 
 // implement wrapper
@@ -281,9 +281,9 @@ type Transaction = FirelordUtils.ReadWriteCreator<
 		date: Firelord.ServerTimestamp
 		status: 'Fail' | 'Success'
 	}, // base type
-	'Transactions', // collection path type
-	string, // document path type
-	User // insert parent collection, it will auto construct the collection path for you
+	'Transactions', // collection name
+	string, // document name
+	User // insert parent type here, it will auto construct the full path type for you
 >
 
 // implement the wrapper
@@ -352,7 +352,7 @@ NOTE: `Date | Firestore.Timestamp`, `(Date | Firestore.Timestamp)[]`, and `Date[
 
 \* Any FirebaseFirestore.FieldValue type will be replaced by masked type, see [Handling Firestore Field Value: Masking](#-handling-firestore-field-value-masking) for more info.
 
-\*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object, however, there are not many things to do with object[] type due to how Firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
+\*\* object type refer to object literal type(typescript) or map type(firestore). The wrapper flatten nested object literal, however, there are not many things to do with object[] type due to how Firestore work, read [Complex Data Typing](#-complex-data-typing) for more info.
 
 \*\*\* `Firelord.ServerTimestamp` is a reserved type. You cannot use it as a string literal type, use this type if you want your type to be `Firestore.ServerTimestamp`. Also do note that you cannot use serverTimestamp or any Firestore field value in an array, see [Complex Data Typing](#-complex-data-typing) for more info.
 
@@ -1002,7 +1002,7 @@ Run write operations in cloud function. Yes, cloud function cost you money per i
 
 If the cost is your concern, you can always set up a custom backend.
 
-Read operation requires only simple authentication, but some applications may require complicated authentication, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend.
+Read operation requires only simple authorization, but some applications may require complicated authorization, in that case, it is also better to drop all the Firestore rules and validate it via a custom backend.
 
 One thing you will miss is the optimistic update, well until Firestore allows us to write rules in mainstream languages, we need to create our own optimistic update solutions.
 
@@ -1118,9 +1118,9 @@ I believe this decision is practical for cases and not planning to change it in 
 
 ## 🐇 Limitation
 
-While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up not can be solved.
+While the wrapper try to safeguard as much type as possible, some problem cannot be solved due to typing difficulty, or require huge effort to implement, or straight up cannot be solved.
 
-1. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type. Use it when only you need the serverTimestamp type.
+1. `Firelord.ServerTimestamp` is a reserved type, underneath it is a string and you cannot use it as a string literal type, the collision chance is very small so there is nothing to worry about.
 2. All mask types are passive reserved types, you cannot use them as object type nor use them for any purpose(the wrapper will turn mask types into `never` if you use them).
 3. Unable to works with Record<number, any> or Record<`` `${number}` ``, any>:
 
@@ -1148,6 +1148,6 @@ Disclaimer: I am the author of all the packages.
 - jsDoc (important)
 - tests (important)
 - allow `update` to accept both flatten and nested object thus able to automate flatten internally (difficult, minor improvement)
-- data validation with `zod`.(conflict with existing architecture, moderate improvement, possibly out of scope of this library)
+- data validation with `zod`.(moderate improvement, possibly out of scope of this library)
 - initial data type for all write operation except `update`.(minor improvement, impractical)
-- support numeric index **Record<number, any>** or **Record<`` `${number}` ``, any>**(seem impossible, typescript limitation?, minor improvement)
+- support numeric index **Record<number, any>** or **Record<`` `${number}` ``, any>**(seemly impossible, typescript limitation(?), minor improvement)

@@ -188,9 +188,14 @@ export namespace FirelordUtils {
 		B extends { [index: string]: unknown },
 		C extends string,
 		D extends string,
-		E extends { colPath: string; docID: string } = {
+		E extends {
+			colPath: string
+			docID: string
+			ancestors: { docID: string; colName: string }[]
+		} = {
 			colPath: never
 			docID: never
+			ancestors: never
 		}
 	> = {
 		base: B
@@ -234,6 +239,13 @@ export namespace FirelordUtils {
 		}
 			? `${C}/${D}`
 			: `${E['colPath']}/${E['docID']}/${C}/${D}`
+		ancestors: E extends {
+			colPath: never
+			docID: never
+			ancestors: never
+		}
+			? [{ docID: D; colName: C }]
+			: [...E['ancestors'], { docID: D; colName: C }]
 	}
 
 	export type MetaType = {
@@ -246,6 +258,7 @@ export namespace FirelordUtils {
 		writeNested: FirelordFirestore.DocumentData & CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData & CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData
+		ancestors: { docID: string; colName: string }[]
 	}
 
 	export type InternalReadWriteConverter<T extends MetaType = never> = {

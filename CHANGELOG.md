@@ -2,6 +2,10 @@
 
 Change log
 
+## 0.18.0 1-2-2021
+
+- add ancestor key in ReadWriteCreator and MetaTypes, this key keep all ancestors in order
+
 ## 0.17.15 25-Nov-2021
 
 - expose FirelordFirestore namespace

@@ -83,7 +83,17 @@ type Transaction = FirelordUtils.ReadWriteCreator<
 	string, // document path type
 	User // insert parent collection, it will auto construct the collection path for you
 >
-
+type Transaction1 = FirelordUtils.ReadWriteCreator<
+	{
+		amount: number
+		date: FirelordUtils.ServerTimestamp
+		status: 'Fail' | 'Success'
+	}, // base type
+	'Transactions1', // collection path type
+	string, // document path type
+	Transaction // insert parent collection, it will auto construct the collection path for you
+>
+type o = Transaction1['ancestors']
 // implement the wrapper
 const transactionCreator = wrapper<Transaction>()
 const transactionsCol = transactionCreator.col('Users/283277782/Transactions') // the type for col is `User/${string}/Transactions`

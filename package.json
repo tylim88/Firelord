@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "0.17.8",
+	"version": "0.18.0-beta.1",
 	"description": "🔥 Write truly type safe and scalable firestore code with complete deep typing firestore wrapper, no more typing hell in your firestore code.",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -28,7 +28,6 @@
 	"keywords": [
 		"firebase",
 		"firestore",
-		"function",
 		"wrapper",
 		"typescript",
 		"field",
