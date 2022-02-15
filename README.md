@@ -205,13 +205,13 @@ The wrapper requires `ts-essentials` to work, install it as dev-dependency.
 
 ```ts
 import { firelord, Firelord } from 'firelord'
-import { Firestore } from 'firebase-admin'
+import { firestore } from 'firebase-admin' // or import { getFirestore } from 'firebase-admin/firestore'
 
 // create wrapper
 const {
 	fieldValue: { increment, arrayUnion, serverTimestamp, arrayRemove },
 	wrapper,
-} = firelord(firestore)
+} = firelord(firestore) // firelord(getFirestore())
 
 // use base type to generate read and write type
 type User = FirelordUtils.ReadWriteCreator<
