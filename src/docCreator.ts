@@ -32,7 +32,8 @@ export const docCreator: <
 			| (M extends 'col' ? undefined : M extends 'colGroup' ? never : never)
 	) =>
 	(documentID?: T['docID']): ReturnType<DocCreator<T, M>> => {
-		type Write = FirelordUtils.InternalReadWriteConverter<T>['write']
+		type WriteFlatten =
+			FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
 		type WriteNested =
 			FirelordUtils.InternalReadWriteConverter<T>['writeNested']
 		type WriteNestedCreate =
@@ -50,7 +51,8 @@ export const docCreator: <
 					? colRef.doc(documentID)
 					: colRef.doc())) as FirelordFirestore.DocumentReference)
 
-		const docWrite = docRef_ as FirelordFirestore.DocumentReference<Write>
+		const docWrite =
+			docRef_ as FirelordFirestore.DocumentReference<WriteFlatten>
 
 		const docRead = docRef_ as FirelordFirestore.DocumentReference<Read>
 
@@ -93,7 +95,7 @@ export const docCreator: <
 			},
 			set: <
 				J extends Partial<WriteNested>,
-				Z extends { merge?: true; mergeField?: (keyof Write)[] }
+				Z extends { merge?: true; mergeField?: (keyof WriteFlatten)[] }
 			>(
 				data: J extends never
 					? J
@@ -101,17 +103,17 @@ export const docCreator: <
 					? WriteNested
 					: Z['merge'] extends true
 					? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
-					: Z['mergeField'] extends (keyof Write)[]
+					: Z['mergeField'] extends (keyof WriteFlatten)[]
 					? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
 					: WriteNested,
 				options?: Z
 			) => {
 				return docWrite.set(data, options || {})
 			},
-			update: async <J extends Partial<Write>>(
+			update: async <J extends Partial<WriteFlatten>>(
 				data: J extends never
 					? J
-					: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
+					: PartialNoImplicitUndefinedAndNoExtraMember<WriteFlatten, J>
 			) => {
 				return (
 					Object.keys(data).length > 0
@@ -138,10 +140,10 @@ export const docCreator: <
 					delete: () => {
 						return batch.delete(docWrite)
 					},
-					update: <J extends Partial<Write>>(
+					update: <J extends Partial<WriteFlatten>>(
 						data: J extends never
 							? J
-							: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
+							: PartialNoImplicitUndefinedAndNoExtraMember<WriteFlatten, J>
 					) => {
 						return (
 							Object.keys(data).length > 0
@@ -153,7 +155,7 @@ export const docCreator: <
 					},
 					set: <
 						J extends Partial<WriteNested>,
-						Z extends { merge?: true; mergeField?: (keyof Write)[] }
+						Z extends { merge?: true; mergeField?: (keyof WriteFlatten)[] }
 					>(
 						data: J extends never
 							? J
@@ -161,7 +163,7 @@ export const docCreator: <
 							? WriteNested
 							: Z['merge'] extends true
 							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
-							: Z['mergeField'] extends (keyof Write)[]
+							: Z['mergeField'] extends (keyof WriteFlatten)[]
 							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
 							: WriteNested,
 						options?: Z
@@ -186,7 +188,7 @@ export const docCreator: <
 					},
 					set: <
 						J extends Partial<WriteNested>,
-						Z extends { merge?: true; mergeField?: (keyof Write)[] }
+						Z extends { merge?: true; mergeField?: (keyof WriteFlatten)[] }
 					>(
 						data: J extends never
 							? J
@@ -194,7 +196,7 @@ export const docCreator: <
 							? WriteNested
 							: Z['merge'] extends true
 							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
-							: Z['mergeField'] extends (keyof Write)[]
+							: Z['mergeField'] extends (keyof WriteFlatten)[]
 							? PartialNoImplicitUndefinedAndNoExtraMember<WriteNested, J>
 							: WriteNested,
 						options?: Z
@@ -208,10 +210,10 @@ export const docCreator: <
 							options || {}
 						)
 					},
-					update: <J extends Partial<Write>>(
+					update: <J extends Partial<WriteFlatten>>(
 						data: J extends never
 							? J
-							: PartialNoImplicitUndefinedAndNoExtraMember<Write, J>
+							: PartialNoImplicitUndefinedAndNoExtraMember<WriteFlatten, J>
 					) => {
 						return (
 							Object.keys(data).length > 0
@@ -270,7 +272,7 @@ export type DocCreator<
 		Z extends {
 			merge?: true | undefined
 			mergeField?:
-				| Exclude<keyof T['write'], 'createdAt' | 'updatedAt'>[]
+				| Exclude<keyof T['writeFlatten'], 'createdAt' | 'updatedAt'>[]
 				| undefined
 		}
 	>(
@@ -284,7 +286,7 @@ export type DocCreator<
 					J_1
 			  >
 			: Z['mergeField'] extends Exclude<
-					keyof T['write'],
+					keyof T['writeFlatten'],
 					'createdAt' | 'updatedAt'
 			  >[]
 			? PartialNoImplicitUndefinedAndNoExtraMember<
@@ -295,12 +297,14 @@ export type DocCreator<
 		options?: Z | undefined
 	) => Promise<FirelordFirestore.WriteResult>
 	update: <
-		J_2 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
+		J_2 extends Partial<
+			FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
+		>
 	>(
 		data: J_2 extends never
 			? J_2
 			: PartialNoImplicitUndefinedAndNoExtraMember<
-					FirelordUtils.InternalReadWriteConverter<T>['write'],
+					FirelordUtils.InternalReadWriteConverter<T>['writeFlatten'],
 					J_2
 			  >
 	) => Promise<
@@ -314,12 +318,14 @@ export type DocCreator<
 		commit: () => Promise<FirelordFirestore.WriteResult[]>
 		delete: () => FirelordFirestore.WriteBatch
 		update: <
-			J_3 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
+			J_3 extends Partial<
+				FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
+			>
 		>(
 			data: J_3 extends never
 				? J_3
 				: PartialNoImplicitUndefinedAndNoExtraMember<
-						FirelordUtils.InternalReadWriteConverter<T>['write'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeFlatten'],
 						J_3
 				  >
 		) => J_3 extends Record<string, never>
@@ -332,7 +338,7 @@ export type DocCreator<
 			Z_2 extends {
 				merge?: true | undefined
 				mergeField?:
-					| Exclude<keyof T['write'], 'createdAt' | 'updatedAt'>[]
+					| Exclude<keyof T['writeFlatten'], 'createdAt' | 'updatedAt'>[]
 					| undefined
 			}
 		>(
@@ -346,7 +352,7 @@ export type DocCreator<
 						J_7
 				  >
 				: Z_2['mergeField'] extends Exclude<
-						keyof T['write'],
+						keyof T['writeFlatten'],
 						'createdAt' | 'updatedAt'
 				  >[]
 				? PartialNoImplicitUndefinedAndNoExtraMember<
@@ -371,7 +377,7 @@ export type DocCreator<
 			Z_1 extends {
 				merge?: true | undefined
 				mergeField?:
-					| Exclude<keyof T['write'], 'createdAt' | 'updatedAt'>[]
+					| Exclude<keyof T['writeFlatten'], 'createdAt' | 'updatedAt'>[]
 					| undefined
 			}
 		>(
@@ -385,7 +391,7 @@ export type DocCreator<
 						J_4
 				  >
 				: Z_1['mergeField'] extends Exclude<
-						keyof T['write'],
+						keyof T['writeFlatten'],
 						'createdAt' | 'updatedAt'
 				  >[]
 				? PartialNoImplicitUndefinedAndNoExtraMember<
@@ -396,12 +402,14 @@ export type DocCreator<
 			options?: Z_1 | undefined
 		) => FirelordFirestore.Transaction
 		update: <
-			J_5 extends Partial<FirelordUtils.InternalReadWriteConverter<T>['write']>
+			J_5 extends Partial<
+				FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
+			>
 		>(
 			data: J_5 extends never
 				? J_5
 				: PartialNoImplicitUndefinedAndNoExtraMember<
-						FirelordUtils.InternalReadWriteConverter<T>['write'],
+						FirelordUtils.InternalReadWriteConverter<T>['writeFlatten'],
 						J_5
 				  >
 		) => J_5 extends Record<string, never>

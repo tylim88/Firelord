@@ -212,7 +212,7 @@ export namespace FirelordUtils {
 				[index in keyof CreatedUpdatedWrite]: CreatedUpdatedWrite[index]
 			}
 		>
-		write: {
+		writeFlatten: {
 			[J in keyof FlattenObject<B>]: WriteConverter<FlattenObject<B>[J]>
 		} & {
 			[index in keyof CreatedUpdatedWrite]: CreatedUpdatedWrite[index]
@@ -254,7 +254,7 @@ export namespace FirelordUtils {
 		docID: string
 		docPath: string
 		read: FirelordFirestore.DocumentData & CreatedUpdatedRead
-		write: FirelordFirestore.DocumentData & CreatedUpdatedWrite
+		writeFlatten: FirelordFirestore.DocumentData & CreatedUpdatedWrite
 		writeNested: FirelordFirestore.DocumentData & CreatedUpdatedWrite
 		compare: FirelordFirestore.DocumentData & CreatedUpdatedCompare
 		base: FirelordFirestore.DocumentData
@@ -262,7 +262,7 @@ export namespace FirelordUtils {
 	}
 
 	export type InternalReadWriteConverter<T extends MetaType = never> = {
-		write: OmitKeys<T['write'], 'updatedAt' | 'createdAt'>
+		writeFlatten: OmitKeys<T['writeFlatten'], 'updatedAt' | 'createdAt'>
 		writeNested: OmitKeys<T['writeNested'], 'updatedAt' | 'createdAt'> &
 			Partial<CreatedUpdatedRead>
 		writeNestedCreate: OmitKeys<T['writeNested'], 'updatedAt' | 'createdAt'>

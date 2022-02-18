@@ -41,7 +41,7 @@ export const docSnapshotCreator: <
 		data: () => {
 			return documentSnapshot.data() as T['read'] | undefined
 		},
-		get: <F extends string & keyof T['write']>(fieldPath: F) => {
+		get: <F extends string & keyof T['writeFlatten']>(fieldPath: F) => {
 			return documentSnapshot.get(fieldPath) as Read[F]
 		},
 		isEqual: (other: FirelordFirestore.DocumentSnapshot) => {
@@ -63,6 +63,8 @@ export type DocSnapshotCreator<
 	readTime: FirelordFirestore.Timestamp
 	ref: ReturnType<DocCreator<T, M>>
 	data: () => T['read'] | undefined
-	get: <F extends string & keyof T['write']>(fieldPath: F) => T['read'][F]
+	get: <F extends string & keyof T['writeFlatten']>(
+		fieldPath: F
+	) => T['read'][F]
 	isEqual: (other: FirelordFirestore.DocumentSnapshot) => boolean
 }

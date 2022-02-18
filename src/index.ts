@@ -10,14 +10,15 @@ export const firelord: Firelord = (firestore: FirelordFirestore.Firestore) => {
 
 	return {
 		wrapper: <T extends FirelordUtils.MetaType = never>() => {
-			type Write = FirelordUtils.InternalReadWriteConverter<T>['write']
+			type WriteFlatten =
+				FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
 			type WriteNestedCreate =
 				FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
 			type Read = FirelordUtils.InternalReadWriteConverter<T>['read']
 			const col = (collectionPath: T['colPath']) => {
 				const colRefWrite = firestore().collection(
 					collectionPath
-				) as FirelordFirestore.CollectionReference<Write>
+				) as FirelordFirestore.CollectionReference<WriteFlatten>
 				const colRefRead =
 					colRefWrite as FirelordFirestore.CollectionReference<Read>
 
