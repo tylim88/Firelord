@@ -12,7 +12,9 @@
  <a href="https://github.com/tylim88/firelord/blob/main/LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/tylim88/firelord" alt="License"></a>
  <a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
 </p>
-
+<h2 align="center">
+version 1.0 is coming soon next month: cohesive documentation + 0 opinionated(breaking change, no more auto date) + code reduction/housekeeping + more runtime errors prevention + ~100% code test + slightly simpler api(small breaking change).
+</h2>
 🐤 Write truly type safe and scalable Firestore code with complete deep typing Firestore wrapper.
 
 💪🏻 Type object, array, any combination of array and object, regardless of the nesting level.

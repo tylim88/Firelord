@@ -414,7 +414,7 @@ export const queryCreator: <
 					DuplicatedOrderByField
 				>,
 				'limit' | 'limitToLast' | PermanentlyOmittedKeys
-			> // only the 1st one(now limit is the 1st one of offset, limit and limitToLast) need to type cast, why?
+			>
 		},
 		offset: (offset: number) => {
 			return queryCreator<
@@ -423,7 +423,17 @@ export const queryCreator: <
 				M,
 				PermanentlyOmittedComparators,
 				CompoundSameField
-			>(firestore, colRef, query.offset(offset))
+			>(firestore, colRef, query.offset(offset)) as OmitKeys<
+				QueryCreator<
+					T,
+					'offset' | PermanentlyOmittedKeys,
+					M,
+					PermanentlyOmittedComparators,
+					CompoundSameField,
+					DuplicatedOrderByField
+				>,
+				'offset' | PermanentlyOmittedKeys
+			>
 		},
 		limitToLast: (limit: number) => {
 			return queryCreator<
@@ -432,7 +442,17 @@ export const queryCreator: <
 				M,
 				PermanentlyOmittedComparators,
 				CompoundSameField
-			>(firestore, colRef, query.limitToLast(limit))
+			>(firestore, colRef, query.limitToLast(limit)) as OmitKeys<
+				QueryCreator<
+					T,
+					'limit' | 'limitToLast' | PermanentlyOmittedKeys,
+					M,
+					PermanentlyOmittedComparators,
+					CompoundSameField,
+					DuplicatedOrderByField
+				>,
+				'limit' | 'limitToLast' | PermanentlyOmittedKeys
+			>
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		orderBy: orderByCreator(query) as any, // ! too lazy
