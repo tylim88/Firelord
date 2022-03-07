@@ -13,7 +13,7 @@
  <a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
 </p>
 <h2 align="center">
-version 1.0 is coming soon next month: cohesive documentation + 0 opinionated(breaking change, no more auto date) + code reduction/housekeeping + more runtime errors prevention + ~100% code test + slightly simpler api(small breaking change).
+I am aware that the library need more works and better dev exp, hence version 1.0 is coming soon in March/April: cohesive documentation(in web page) + 0 opinionated(breaking change, no more auto date) + code reduction/refactoring + more runtime errors prevention + even deeper typing + fix bug and misconception + ~100% code test + end to end test + api that is even more similar to (or simpler than) original api slightly simpler api(small breaking change).
 </h2>
 🐤 Write truly type safe and scalable Firestore code with complete deep typing Firestore wrapper.
 
