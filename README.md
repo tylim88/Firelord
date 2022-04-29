@@ -13,7 +13,7 @@
  <a href="https://github.com/tylim88/firelord/pulls" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
 </p>
 <h2 align="center">
-I am rewriting the damn thing, this version sucks! <a href ="https://github.com/geektechniquestudios/Firelordjs" rel="nofollow">Web Version</a> is completed, the typing is 10 times better! You can expect the new Nodejs version API looks like the Web version.
+I am rewriting the damn thing, this version sucks! <a href ="https://github.com/tylim88/firelordjs" rel="nofollow">Web Version</a> is completed, the typing is 10 times better! You can expect the new Nodejs version API looks like the Web version.
 </h2>
 🐤 Write truly type safe and scalable Firestore code with complete deep typing Firestore wrapper.
 
