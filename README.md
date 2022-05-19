@@ -197,11 +197,19 @@ Overview:
 ## 🦜 Getting Started
 
 ```bash
-npm i firelord
+npm i firelord regenerator-runtime
 npm i -D ts-essentials
 ```
 
 The wrapper requires `ts-essentials` to work, install it as dev-dependency.
+
+Add this to your very first line of code
+
+```ts
+import 'regenerator-runtime/runtime'
+```
+
+You only need to add this line once
 
 ### Collection
 
