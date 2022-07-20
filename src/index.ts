@@ -1,116 +1,116 @@
-import { FirelordUtils } from './firelordUtils'
-import { FirelordFirestore } from './firelordFirestore'
-import { queryCreator } from './queryCreator'
-import { Firelord } from './index_'
-import { docCreator } from './docCreator'
-import { createTime } from './utils'
+import { getFirestore } from 'firebase-admin/firestore'
+import {
+	MetaType,
+	IsValidID,
+	GetNumberOfSlash,
+	ErrorNumberOfForwardSlashIsNotEqual,
+	DocumentReference,
+	CollectionReference,
+	Query,
+	Firestore,
+} from './types'
+import { docCreator, collectionCreator, collectionGroupCreator } from './refs'
 
-export const firelord: Firelord = (firestore: FirelordFirestore.Firestore) => {
-	const { createdAt } = createTime(firestore)
-
-	return {
-		wrapper: <T extends FirelordUtils.MetaType = never>() => {
-			type WriteFlatten =
-				FirelordUtils.InternalReadWriteConverter<T>['writeFlatten']
-			type WriteNestedCreate =
-				FirelordUtils.InternalReadWriteConverter<T>['writeNestedCreate']
-			type Read = FirelordUtils.InternalReadWriteConverter<T>['read']
-			const col = (collectionPath: T['colPath']) => {
-				const colRefWrite = firestore().collection(
-					collectionPath
-				) as FirelordFirestore.CollectionReference<WriteFlatten>
-				const colRefRead =
-					colRefWrite as FirelordFirestore.CollectionReference<Read>
-
-				// https://github.com/microsoft/TypeScript/issues/32022
-				// https://stackoverflow.com/questions/51591335/typescript-spead-operator-on-object-with-method
-				// conclusion: do not spread
-				return {
-					parent: colRefRead.parent,
-					path: colRefRead.path,
-					id: colRefRead.id,
-					listDocuments: () => {
-						return colRefRead.listDocuments()
-					},
-					doc: docCreator<T, 'col'>(firestore, colRefWrite, undefined),
-					add: (data: WriteNestedCreate) => {
-						return colRefWrite
-							.add({
-								...createdAt,
-								...data,
-							})
-							.then(documentReference => {
-								return docCreator<T, 'col'>(
-									firestore,
-									colRefWrite,
-									documentReference
-								)(documentReference.id)
-							})
-					},
-					...queryCreator<T>(firestore, colRefRead, colRefRead),
-				}
-			}
-
-			const colGroup = (collectionPath: T['colName']) => {
-				const colRefRead = firestore().collectionGroup(
-					collectionPath
-				) as FirelordFirestore.CollectionGroup<Read>
-				return queryCreator<T, never, 'colGroup'>(
-					firestore,
-					undefined,
-					colRefRead
-				)
-			}
-			return { col, colGroup }
-		},
-		fieldValue: {
-			increment: (value: number) => {
-				return firestore.FieldValue.increment(
-					value
-				) as unknown as FirelordUtils.NumberMasked
-			},
-			serverTimestamp: () => {
-				return firestore.FieldValue.serverTimestamp() as unknown as FirelordUtils.ServerTimestampMasked
-			},
-			arrayUnion: <T extends string, Y>(key: T, ...values: Y[]) => {
-				return (values.length > 0
-					? {
-							[key]: firestore.FieldValue.arrayUnion(...values),
-					  }
-					: {}) as unknown as {
-					[key in T]: FirelordUtils.ArrayMasked<Y>
-				}
-			},
-			arrayRemove: <T extends string, Y>(key: T, ...values: Y[]) => {
-				return (values.length > 0
-					? {
-							[key]: firestore.FieldValue.arrayRemove(...values),
-					  }
-					: {}) as unknown as {
-					[key in T]: FirelordUtils.ArrayMasked<Y>
-				}
-			},
-		},
-		batch: () => {
-			return firestore().batch()
-		},
-		runTransaction: <Y>(
-			updateFunction: (
-				transaction: FirelordFirestore.Transaction
-			) => Promise<Y>,
-			transactionOptions?:
-				| FirelordFirestore.ReadWriteTransactionOptions
-				| FirelordFirestore.ReadOnlyTransactionOptions
-		) => {
-			return firestore().runTransaction<Y>(updateFunction, transactionOptions)
-		},
+/**
+ Gets a FirelordReference instance that refers to the doc, collection, and collectionGroup at the specified absolute path.
+ 
+ @param firestore 
+ Optional. A reference to the Firestore database. If no value is provided, default Firestore instance is used.
+ 
+ @param path 
+ A slash-separated full path to a collection.
+ 
+ @returns 
+ DocumentReference, CollectionReference and CollectionGroupReference instance.
+ */
+export const getFirelord =
+	<T extends MetaType>(firestore?: Firestore) =>
+	<CollectionPath extends T['collectionPath'] = T['collectionPath']>(
+		collectionPath: CollectionPath extends never
+			? CollectionPath
+			: GetNumberOfSlash<CollectionPath> extends GetNumberOfSlash<
+					T['collectionPath']
+			  >
+			? IsValidID<CollectionPath, 'Collection', 'Path'>
+			: ErrorNumberOfForwardSlashIsNotEqual<
+					GetNumberOfSlash<T['collectionPath']>,
+					GetNumberOfSlash<CollectionPath>
+			  >
+	): FirelordRef<T> => {
+		const fStore = firestore || getFirestore()
+		const doc = docCreator<T>(fStore, collectionPath)
+		const collection = collectionCreator<T>(fStore, collectionPath)
+		const collectionGroup = collectionGroupCreator<T>(
+			fStore,
+			collectionPath.split('/').pop() as string
+		)
+		return Object.freeze({
+			doc,
+			collection,
+			collectionGroup,
+		})
 	}
-}
 
-export const ozai = firelord
+export type FirelordRef<T extends MetaType> = Readonly<{
+	doc: {
+		<DocumentId extends T['docID']>(
+			documentID: DocumentId extends never
+				? DocumentId
+				: DocumentId extends IsValidID<DocumentId, 'Document', 'ID'>
+				? T['docID']
+				: IsValidID<DocumentId, 'Document', 'ID'>
+		): DocumentReference<T>
+		<DocumentId_1 extends T['docID']>(
+			firestore: Firestore,
+			documentID: DocumentId_1 extends never
+				? DocumentId_1
+				: DocumentId_1 extends IsValidID<DocumentId_1, 'Document', 'ID'>
+				? T['docID']
+				: IsValidID<DocumentId_1, 'Document', 'ID'>
+		): DocumentReference<T>
+	}
+	collection: (firestore?: Firestore) => CollectionReference<T>
+	collectionGroup: (firestore?: Firestore) => Query<T>
+}>
 
-export { flatten } from './utils'
+export {
+	Timestamp,
+	GeoPoint,
+	getFirestore,
+	// terminate,
+	// initializeFirestore,
+	// loadBundle,
+	// clearIndexedDbPersistence,
+	// connectFirestoreEmulator,
+	// disableNetwork,
+	// enableIndexedDbPersistence,
+	// enableMultiTabIndexedDbPersistence,
+	// enableNetwork,
+	// onSnapshotsInSync,
+	// namedQuery,
+	// Bytes,
+} from 'firebase-admin/firestore'
 
-export type { FirelordUtils }
-
-export type { FirelordFirestore }
+export * from './batch'
+export * from './transaction'
+export * from './fieldValue'
+export * from './fieldPath'
+export * from './onSnapshot'
+export * from './operations'
+export * from './queryClauses'
+export { query } from './refs'
+export * from './equal'
+export type {
+	MetaType,
+	MetaTypeCreator,
+	ServerTimestamp,
+	DeleteField,
+	PossiblyReadAsUndefined,
+	DocumentReference,
+	CollectionReference,
+	Query,
+	DocumentSnapshot,
+	QuerySnapshot,
+	QueryDocumentSnapshot,
+} from './types'
+export * as Types from './types'

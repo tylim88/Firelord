@@ -1,20 +1,17 @@
-import { FirelordUtils } from './firelordUtils'
-import { FirelordFirestore } from './firelordFirestore'
+import { ObjectFlattenHybrid, Firestore } from './types'
 
-export const flatten = <T extends Record<string, unknown>>(object: T) => {
+// for update
+export const flatten = <T extends Record<string, unknown>>(data: T) => {
 	let obj = {}
 
 	const flat = (object: Record<string, unknown>, key: string) => {
 		for (const prop in object) {
 			const newKey = (key ? key + '.' : key) + prop
 			if (
-				!Array.isArray(object[prop]) &&
 				typeof object[prop] === 'object' &&
 				object[prop] !== null &&
-				!Object.getOwnPropertyNames(
-					Object.getPrototypeOf(object[prop])
-				).includes('constructor')
-				// !Object.keys(exclude).includes(prop)
+				// https://stackoverflow.com/questions/1173549/how-to-determine-if-an-object-is-an-object-literal-in-javascript
+				Object.getPrototypeOf(object[prop]) === Object.prototype
 			) {
 				flat(object[prop] as Record<string, unknown>, newKey)
 			} else {
@@ -23,45 +20,12 @@ export const flatten = <T extends Record<string, unknown>>(object: T) => {
 		}
 	}
 
-	flat(object, '')
+	flat(data, '')
 
-	return obj as FirelordUtils.FlattenObject<T>
+	return obj as ObjectFlattenHybrid<T>
 }
 
-export const createTime = (firestore: FirelordFirestore.Firestore) => {
-	const time = firestore.FieldValue.serverTimestamp()
-
-	return {
-		updatedAt: { updatedAt: time },
-		createdAt: {
-			createdAt: time,
-			updatedAt: null,
-		},
-	}
-}
-
-export const arrayChunk = <T>(input: T[], maxLength: number) => {
-	if (!Array.isArray(input)) {
-		throw new TypeError('Expected an array to split')
-	}
-
-	if (typeof maxLength !== 'number') {
-		throw new TypeError('Expected a number of groups to split the array in')
-	}
-
-	const result = []
-	let part = []
-
-	for (let i = 0; i < input.length; i++) {
-		part.push(input[i])
-
-		// check if we reached the maximum amount of items in a partial
-		// or just if we reached the last item
-		if (part.length === maxLength || i === input.length - 1) {
-			result.push(part)
-			part = []
-		}
-	}
-
-	return result
+export const isFirestore = (value: unknown): value is Firestore => {
+	const v = value as Partial<Firestore>
+	return !!v?.collection
 }

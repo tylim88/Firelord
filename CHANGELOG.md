@@ -2,6 +2,10 @@
 
 Change log
 
+## 1.0.0 21-July-2022
+
+- finally, V9 API!
+
 ## 0.17.10 1-2-2021
 
 - rename write to writeFlatten

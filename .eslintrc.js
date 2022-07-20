@@ -6,24 +6,27 @@ module.exports = {
 	},
 	extends: [
 		'eslint:recommended',
-		'plugin:import/errors',
-		'plugin:import/warnings',
 		'plugin:import/typescript',
+		'plugin:import/recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:prettier/recommended',
 	],
 	parser: '@typescript-eslint/parser',
 	ignorePatterns: [
+		'codeForDoc/**/*',
 		'dist/**/*', // Ignore built files.
 	],
 	plugins: ['@typescript-eslint', 'import'],
 	rules: {
+		'import/named': 'off',
 		'import/no-unresolved': 'off',
-		'@typescript-eslint/explicit-module-boundary-types': 'off',
+		'@typescript-eslint/explicit-module-boundary-types': 'off', // explicit function return type
 		'@typescript-eslint/no-explicit-any': 'error',
-		'@typescript-eslint/no-namespace': 'off',
-		'import/namespace': 'off',
 		camelcase: 'off',
 		'@typescript-eslint/ban-ts-comment': 'off',
+		'@typescript-eslint/no-namespace': 'off',
+		'@typescript-eslint/no-empty-function': 'warn',
+		'spaced-comment': 'error',
+		'@typescript-eslint/no-empty-interface': 'off',
 	},
 }
