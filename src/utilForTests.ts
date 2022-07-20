@@ -25,7 +25,7 @@ export const initializeApp = () => {
 			type: 'service_account',
 			project_id: env.PROJECT_ID,
 			private_key_id: env.PRIVATE_KEY_ID,
-			private_key: env.PRIVATE_KEY!.replace(/\n/gm, '\n'),
+			private_key: JSON.parse(env.PRIVATE_KEY!),
 			client_email: env.CLIENT_EMAIL,
 			client_id: env.CLIENT_ID,
 			auth_uri: 'https://accounts.google.com/o/oauth2/auth',

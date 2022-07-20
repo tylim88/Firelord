@@ -117,9 +117,11 @@ This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin v
 
 It does not become modular like the web version, but this is ok because we don't care about package size in back end.
 
-The ultimate goal is to unify the knowledge, reduce the learning, so we don't need to learn both V9 and V8.
+The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8.
 
 It is not possible to unified platform specific API, good thing is these APIs are mutually exclusive.
+
+And most important: type safety.
 
 ## Related Projects
 
