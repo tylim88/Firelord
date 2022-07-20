@@ -11,11 +11,10 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"firebase-admin": "latest",
-		"firelordjs": "latest"
+		"firebase-admin": "^11.0.0",
+		"firelord": "latest"
 	},
 	"devDependencies": {
-		"@firebase/rules-unit-testing": "^2.0.2",
 		"@types/jest": "^27.0.2",
 		"@types/lodash": "^4.14.180",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
