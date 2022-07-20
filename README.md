@@ -111,6 +111,10 @@
 
 <br/>
 
+```bash
+npm i firelord firebase-admin
+```
+
 Code is ready, just need some housekeeping and documentation, basically it will look like the web version.
 
 This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface.
