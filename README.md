@@ -90,7 +90,7 @@
 </div>
 <br/>
 <div align="center">
-		<i>Extremely High Precision Typescript Wrapper for Firestore Web, Providing Unparalleled Type Safe and Dev Experience</i>
+		<i>Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience</i>
 </div>
 <br/>
 <div align="center">
