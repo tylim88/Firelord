@@ -111,7 +111,15 @@
 
 <br/>
 
-working, almost done
+Code is ready, just need some housekeeping and documentation, basically it will look like the web version.
+
+This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface.
+
+It does not become modular like the web version, but this is ok because we don't care about package size in back end.
+
+The ultimate goal is to unify the knowledge, reduce the learning, so we don't need to learn both V9 and V8.
+
+It is not possible to unified platform specific API, good thing is these APIs are mutually exclusive.
 
 ## Related Projects
 
