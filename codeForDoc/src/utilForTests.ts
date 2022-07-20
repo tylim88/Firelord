@@ -20,6 +20,9 @@ import {
 	cert,
 	ServiceAccount,
 } from 'firebase-admin/app'
+import dotenv from 'dotenv'
+import path from 'path'
+dotenv.config({ path: path.resolve(__dirname, '../../.env') }) // ! for some reason firelordjs dont need this, but firelord need, why?
 
 export const initializeApp = () => {
 	const env = process.env

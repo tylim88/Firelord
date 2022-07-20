@@ -24,11 +24,13 @@ const docId2 = 'onSnapshotWithOptionsOneDocTest'
 const docId3 = 'onSnapshotNakedQueryTest'
 const docId4 = 'onSnapshotWithOptionQueryTest'
 describe('test onSnapshot', () => {
-	afterAll(() => {
-		deleteDoc(userRef.doc(docId1))
-		deleteDoc(userRef.doc(docId2))
-		deleteDoc(userRef.doc(docId3))
-		deleteDoc(userRef.doc(docId4))
+	afterAll(async () => {
+		await Promise.all([
+			deleteDoc(userRef.doc(docId1)),
+			deleteDoc(userRef.doc(docId2)),
+			deleteDoc(userRef.doc(docId3)),
+			deleteDoc(userRef.doc(docId4)),
+		])
 	})
 	it('test one doc functionality and type', done => {
 		const docRef = userRef.doc(docId1)

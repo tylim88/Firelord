@@ -23,7 +23,6 @@ import {
 } from 'firelord'
 
 initializeApp()
-
 const userRef = getFirelord<User>()('topLevel/FirelordTest/Users')
 describe('dist files test', () => {
 	it('test updateDoc, setDoc, and delete field', async () => {
