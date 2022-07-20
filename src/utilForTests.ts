@@ -26,7 +26,7 @@ export const initializeApp = () => {
 			project_id: env.PROJECT_ID,
 			private_key_id: env.PRIVATE_KEY_ID,
 			private_key: JSON.parse(env.PRIVATE_KEY!),
-			client_email: env.CLIENT_EMAIL,
+			client_email: `firebase-adminsdk-ptef8@${env.PROJECT_ID}.iam.gserviceaccount.com`,
 			client_id: env.CLIENT_ID,
 			auth_uri: 'https://accounts.google.com/o/oauth2/auth',
 			token_uri: 'https://oauth2.googleapis.com/token',

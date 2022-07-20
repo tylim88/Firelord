@@ -95,8 +95,7 @@ describe('dist files test', () => {
 					unsub()
 					done()
 				},
-				() => {},
-				{ includeMetadataChanges: true }
+				() => {}
 			)
 		})
 	})

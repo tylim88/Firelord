@@ -13,33 +13,9 @@ type abc = MetaTypeCreator<
 >
 
 const docRef = getFirelord<abc>()('abc').doc('efg')
-
-getDoc(docRef).then(docSnapshot => {
-	const data = docSnapshot.data({ serverTimestamps: 'none' })
-	if (data) {
-		//
-		//
-		const timestamp = data.b.d // good: null | Timestamp
-	}
-})
-
-getDoc(docRef).then(docSnapshot => {
-	const data = docSnapshot.data({ serverTimestamps: 'estimate' })
-	if (data) {
-		//
-		//
-		const timestamp = data.b.d // good: Timestamp
-	}
-})
-
-//
-//
-//
-//
-//
 getDoc(docRef).then(docSnapshot => {
 	// @ts-expect-error
-	docSnapshot.get('n.j', { serverTimestamps: 'none' })
+	docSnapshot.get('n.j')
 	// good: reject unknown path!
 	//
 	//
@@ -47,6 +23,6 @@ getDoc(docRef).then(docSnapshot => {
 	//
 	//
 	//
-	const data = docSnapshot.get('b.d', { serverTimestamps: 'none' })
+	const data = docSnapshot.get('b.d')
 	// good: return correct type!
 })

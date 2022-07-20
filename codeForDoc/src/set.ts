@@ -17,13 +17,13 @@ const docRef = doc(getFirestore(), 'abc/efg') as abc
 
 // Accept unknown member from stale value
 // ! type messed up, expect error need to move to top after adding firestore of testing type, weird
-// @ts-expect-error
 setDoc(
 	docRef,
 	{
 		a: 1,
 		b: 2,
 		c: 3,
+		// @ts-expect-error
 		d: 4,
 	} // good: type error!
 )
@@ -60,12 +60,11 @@ setDoc(
 	{ mergeFields: ['j.k'] } // bad: accepts unknown path
 )
 
-// ! type messed up, expect error need to move to top after adding firestore of testing type, weird
-// @ts-expect-error
 setDoc(
 	docRef2,
 	{
 		a: 1,
+		// @ts-expect-error
 		'b.c': 1, // reject unknown member
 	},
 	{ merge: true }

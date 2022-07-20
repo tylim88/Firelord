@@ -1,9 +1,4 @@
 import {
-	initializeTestEnvironment,
-	RulesTestContext,
-	RulesTestEnvironment,
-} from '@firebase/rules-unit-testing'
-import {
 	setDoc,
 	updateDoc,
 	deleteField,
@@ -22,7 +17,6 @@ import {
 	endAt,
 	startAt,
 } from 'firelord'
-import firebasejson from '../firebase.json'
 import {
 	User,
 	readThenCompareWithWriteData,
@@ -30,29 +24,15 @@ import {
 	compareWriteDataWithDocSnapData,
 } from './utilForTests'
 
-const port = firebasejson.emulators.firestore.port
+import { getFirestore } from 'firebase-admin/firestore'
+import { initializeApp } from 'firebase-admin/app'
 
-let userRef: FirelordRef<User> = undefined!
-let firestore: ReturnType<RulesTestContext['firestore']> = undefined!
-let testEnv: RulesTestEnvironment = undefined!
+initializeApp({ projectId: 'any' })
+
+const firestore = getFirestore()
+const userRef = getFirelord<User>(firestore)('topLevel/FirelordTest/Users')
 
 describe('test whether works with rules-unit-testing', () => {
-	beforeAll(async () => {
-		testEnv = await initializeTestEnvironment({
-			projectId: 'any',
-			firestore: { host: 'localhost', port },
-		})
-		await testEnv.clearFirestore()
-		firestore = testEnv
-			.authenticatedContext('alice', {
-				email: 'alice@example.com',
-			})
-			.firestore()
-		userRef = getFirelord<User>(firestore)('topLevel/FirelordTest/Users')
-	})
-	afterAll(() => {
-		testEnv.cleanup()
-	})
 	it('test updateDoc, setDoc, and delete field', async () => {
 		const data = generateRandomData()
 		const ref = userRef.doc('updateDocSpecificFieldTestCase')
@@ -125,8 +105,7 @@ describe('test whether works with rules-unit-testing', () => {
 					unsub()
 					done()
 				},
-				() => {},
-				{ includeMetadataChanges: true }
+				() => {}
 			)
 		})
 	})

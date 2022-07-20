@@ -1,9 +1,6 @@
 import {
 	getFirelord,
 	getDoc,
-	getDocFromCache,
-	getDocFromServer,
-	snapshotEqual,
 	arrayUnion,
 	increment,
 	serverTimestamp,
@@ -14,18 +11,32 @@ import {
 	DeleteField,
 	DocumentSnapshot,
 } from 'firelord'
-import { initializeApp as initializeApp_ } from 'firebase/app'
 import pick from 'pick-random'
 import betwin from 'betwin'
 import { flatten } from '../../src/utils'
 import { cloneDeep } from 'lodash'
+import {
+	initializeApp as initializeApp_,
+	cert,
+	ServiceAccount,
+} from 'firebase-admin/app'
 
 export const initializeApp = () => {
 	const env = process.env
-	const config = {
-		projectId: env.PROJECT_ID,
-	}
-	return initializeApp_(config)
+	return initializeApp_({
+		credential: cert({
+			type: 'service_account',
+			project_id: env.PROJECT_ID,
+			private_key_id: env.PRIVATE_KEY_ID,
+			private_key: JSON.parse(env.PRIVATE_KEY!),
+			client_email: `firebase-adminsdk-ptef8@${env.PROJECT_ID}.iam.gserviceaccount.com`,
+			client_id: env.CLIENT_ID,
+			auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+			token_uri: 'https://oauth2.googleapis.com/token',
+			auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+			client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ptef8%40${env.PROJECT_ID}.iam.gserviceaccount.com`,
+		} as ServiceAccount),
+	})
 }
 
 export type Parent = MetaTypeCreator<
@@ -150,20 +161,8 @@ export const readThenCompareWithWriteData = async (
 	ref: DocumentReference<User>
 ) => {
 	const docSnap = await getDoc(ref)
-	const docSnapServer = await getDocFromServer(ref)
 
-	expect(snapshotEqual(docSnapServer, docSnap)).toBe(true)
-
-	const arr = [docSnap, docSnapServer]
-	arr.forEach(dSnap =>
-		compareWriteDataWithDocSnapData(cloneDeep(writeData), dSnap)
-	)
-	// https://stackoverflow.com/questions/70315073/firestore-web-version-9-modular-getdocsfromcache-seems-not-working
-	// persistence are disable by default for web
-	// cannot enable persistence without browser indexedDB
-	// unable to test with cache, will error for getDoc
-	// expect async throw https://stackoverflow.com/a/54585620/5338829
-	await expect(getDocFromCache(ref)).rejects.toThrow()
+	compareWriteDataWithDocSnapData(cloneDeep(writeData), docSnap)
 }
 
 export const writeThenReadTest = async (

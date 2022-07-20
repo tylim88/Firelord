@@ -12,7 +12,6 @@ import {
 	onSnapshot,
 	runTransaction,
 	writeBatch,
-	FirelordRef,
 } from '.'
 import {
 	User,
@@ -25,16 +24,10 @@ import { getFirestore } from 'firebase-admin/firestore'
 
 initializeApp({ projectId: 'any' })
 
-let userRef = undefined as unknown as FirelordRef<User>
 const firestore = getFirestore()
+const userRef = getFirelord<User>(firestore)('topLevel/FirelordTest/Users')
 
 describe('test whether works with rules-unit-testing', () => {
-	beforeAll(async () => {
-		userRef = getFirelord<User>(firestore)('topLevel/FirelordTest/Users')
-	})
-	afterAll(() => {
-		// testEnv.cleanup()
-	})
 	it('test updateDoc, setDoc, and delete field', async () => {
 		const data = generateRandomData()
 		const ref = userRef.doc('updateDocSpecificFieldTestCase')
