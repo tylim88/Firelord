@@ -57,7 +57,7 @@
 		"admin"
 	],
 	"devDependencies": {
-		"@babel/core": "^7.18.9",
+		"@babel/node": "^7.18.9",
 		"@babel/preset-env": "^7.17.10",
 		"@babel/preset-typescript": "^7.16.7",
 		"@firebase/rules-unit-testing": "^2.0.2",
