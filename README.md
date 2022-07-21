@@ -110,8 +110,6 @@
 </div>
 <br/>
 
-Code is ready, just need some housekeeping and documentation, basically it will look like the web version.
-
 This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface, so thing as basically same as the web version [FirelordJS](https://github.com/tylim88/FirelordJS).
 
 It does not become modular like the web version, but this is ok because we don't care about package size in back end.
