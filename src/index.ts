@@ -77,18 +77,10 @@ export {
 	Timestamp,
 	GeoPoint,
 	getFirestore,
-	// terminate,
-	// initializeFirestore,
-	// loadBundle,
-	// clearIndexedDbPersistence,
-	// connectFirestoreEmulator,
-	// disableNetwork,
-	// enableIndexedDbPersistence,
-	// enableMultiTabIndexedDbPersistence,
-	// enableNetwork,
-	// onSnapshotsInSync,
-	// namedQuery,
-	// Bytes,
+	BulkWriter,
+	GrpcStatus,
+	BundleBuilder,
+	setLogFunction,
 } from 'firebase-admin/firestore'
 
 export * from './batch'
@@ -113,4 +105,3 @@ export type {
 	QuerySnapshot,
 	QueryDocumentSnapshot,
 } from './types'
-export * as Types from './types'

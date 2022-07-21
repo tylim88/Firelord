@@ -30,7 +30,7 @@ import { initializeApp } from 'firebase-admin/app'
 initializeApp({ projectId: 'any' })
 
 const firestore = getFirestore()
-const userRef = getFirelord<User>(firestore)('topLevel/FirelordTest/Users')
+const userRef = getFirelord<User>()('topLevel/FirelordTest/Users')
 
 describe('test whether works with rules-unit-testing', () => {
 	it('test updateDoc, setDoc, and delete field', async () => {

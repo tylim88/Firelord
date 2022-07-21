@@ -7,19 +7,18 @@ import {
 	onSnapshot,
 	runTransaction,
 	writeBatch,
-	FirelordRef,
 	MetaTypeCreator,
 } from 'firelord'
 import { getFirestore } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
 
-initializeApp({ projectId: 'any' })
+initializeApp({ projectId: 'forTestJustUseRandomId' })
 
 type User = MetaTypeCreator<{ name: string; age: number }, 'User', string>
 const firestore = getFirestore()
 const userRef = getFirelord<User>(firestore)('User')
 
-describe('test whether works with rules-unit-testing', () => {
+describe('test with jest', () => {
 	it('test basic operation like setDoc, updateDoc, addDoc, deleteDoc etc etc', async () => {
 		const ref = userRef.doc('user1')
 		await setDoc(ref, { age: 30, name: 'John' })

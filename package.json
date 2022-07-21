@@ -1,7 +1,7 @@
 {
 	"name": "firelord",
-	"version": "1.0.0",
-	"description": "🔥 Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience",
+	"version": "1.0.1",
+	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"source": "src/index.ts",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
 		"lint": "eslint . --ext .ts --fix",
 		"pretty-quick": "pretty-quick --stage",
 		"test": "firebase emulators:exec --only firestore \"rm -rf coverage && jest --forceExit\"",
-		"parcel": "npm un firebase && npm i firebase && rm -rf dist && tsc --emitDeclarationOnly true && parcel build && npm i -D firebase",
+		"parcel": "npm un firebase-admin && npm i firebase-admin && rm -rf dist && tsc --emitDeclarationOnly true && parcel build && npm i -D firebase-admin",
 		"build": "rm -rf dist && tsc",
 		"link": "npm link && npm link firelord",
 		"qt": "babel-node -x .ts -- src/fieldPath/documentId.ts",
@@ -58,7 +58,6 @@
 	],
 	"devDependencies": {
 		"@babel/core": "^7.18.9",
-		"@babel/node": "^7.18.9",
 		"@babel/preset-env": "^7.17.10",
 		"@babel/preset-typescript": "^7.16.7",
 		"@firebase/rules-unit-testing": "^2.0.2",

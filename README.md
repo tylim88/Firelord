@@ -4,7 +4,7 @@
 
 <div align="center">
 		<img src="https://raw.githubusercontent.com/tylim88/Firelord/main/img/ozai.png" width="200px"/>
-		<h1>FirelordJS 烈火君JS</h1>
+		<h1>Firelord 烈火君</h1>
 </div>
 
 <div align="center">
@@ -105,25 +105,22 @@
 	<i>End Firestore Typing Madness</i>
 </div>
 <br />
-<!-- <div align="center">
-<a href="https://firelord.com/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
-</div> -->
-
+<div align="center">
+<a href="https://firelord.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
+</div>
 <br/>
-
-```bash
-npm i firelord firebase-admin
-```
 
 Code is ready, just need some housekeeping and documentation, basically it will look like the web version.
 
-This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface.
+This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface, so thing as basically same as the web version [FirelordJS](https://github.com/tylim88/FirelordJS).
 
 It does not become modular like the web version, but this is ok because we don't care about package size in back end.
 
 The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8 and most importantly: absolute type safe.
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
+
+The old v0 documentation can be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
 ## Related Projects
 

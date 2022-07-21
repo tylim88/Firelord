@@ -12,6 +12,7 @@
 /scripts
 /src
 /functions
+/img
 
 # ignore file
 .gitignore
