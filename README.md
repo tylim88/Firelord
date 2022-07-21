@@ -106,7 +106,7 @@
 </div>
 <br />
 <div align="center">
-<a href="https://firelord.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
+<a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
 </div>
 <br/>
 
