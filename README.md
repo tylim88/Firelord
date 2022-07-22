@@ -110,6 +110,16 @@
 </div>
 <br/>
 
+## Note
+
+This library updated from v0 to v1, v0 is not compatible with v1.
+
+This change is necessary as v1 corrected a lot of issues in v0.
+
+The v0 documentation can still be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
+
+## About
+
 This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface.
 
 The API is basically same as the web version [FirelordJS](https://github.com/tylim88/FirelordJS), and of course we can share the data type definition.
@@ -119,8 +129,6 @@ It does not become modular like the web version, but this is ok because we don't
 The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8 and most importantly: absolute type safe.
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
-
-The old v0 documentation can be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
 ## Related Projects
 

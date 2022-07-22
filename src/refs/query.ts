@@ -9,7 +9,6 @@ import {
 	OriQuery,
 	OriCollectionReference,
 } from '../types'
-import crypto from 'crypto'
 
 /**
  * Creates a new immutable instance of {@link Query} that is extended to also include
@@ -48,24 +47,8 @@ export const query = <
 		// ! need revisit
 		switch (qc.type) {
 			case 'where': {
-				let value = qc.value
-				const opStr = qc.opStr
-				if (
-					opStr === 'array-contains-any' ||
-					opStr === 'in' ||
-					opStr === 'not-in'
-				) {
-					value =
-						(value as []).length > 0
-							? value
-							: [
-									crypto.randomUUID() +
-										crypto.randomUUID() +
-										crypto.randomUUID(),
-							  ]
-				}
 				// @ts-expect-error
-				return ref[qc.type](qc.fieldPath, qc.opStr, value)
+				return ref[qc.type](qc.fieldPath, qc.opStr, qc.value)
 			}
 			case 'orderBy':
 				return ref[qc.type](qc.fieldPath, qc.directionStr)

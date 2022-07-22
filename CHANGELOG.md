@@ -2,6 +2,8 @@
 
 Change log
 
+the change log now sync with https://github.com/tylim88/FirelordJS/blob/main/CHANGELOG.md starting v1.6.2
+
 ## 1.0.0 21-July-2022
 
 - finally, V9 API!

@@ -15,6 +15,7 @@ The FieldValue sentinel for use in a call to setDoc() or updateDoc().
 export const arrayUnion = <Elements extends unknown[]>(
 	...elements: Elements extends [] ? [ErrorArrayFieldValueEmpty] : Elements
 ) => {
+	// * web don't have empty array issue
 	const filler = elements.length === 0 ? [[]] : elements
 	const ref = FieldValue.arrayUnion(...filler) as ArrayUnionOrRemove<
 		Elements[number]

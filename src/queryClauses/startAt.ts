@@ -1,4 +1,5 @@
 import { Cursor } from '../types'
+import { handleEmptyArray } from './utils'
 /**
  * Creates a {@link QueryConstraint} that modifies the result set to start at the
  * provided document (exclusive). The starting position is relative to the order
@@ -13,6 +14,6 @@ import { Cursor } from '../types'
 export const startAt: Cursor<'startAt'> = (...snapshotOrFieldValues) => {
 	return {
 		type: 'startAt',
-		values: snapshotOrFieldValues,
+		values: handleEmptyArray(snapshotOrFieldValues),
 	}
 }
