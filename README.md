@@ -118,7 +118,7 @@ This change is necessary as v1 corrected a lot of issues in v0.
 
 The v0 documentation can still be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
-## What Is This? Why Do You Need This? What Problem It Solves?
+## Why Do You Need This? What Problem Firelord Solves?
 
 Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
 
@@ -133,6 +133,26 @@ It does not become modular like the web version, but this is ok because we don't
 The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8 and most importantly: absolute type safe.
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
+
+## Why Not Merge Firelord and FirelordJS?
+
+The idea behind merging is code reuse and reduce maintenance, but there are technical reasons that make merging a terrible idea.
+
+1. V8 and V9 do not share the same behavior. One example is V9 `arrayUnion` and `arrayRemove` able to accept empty array argument, but this is not possible in V8 and will result in runtime exception. To solve this we need extra code for V8 wrapper and the logic become dead code in environment that use V9 wrapper. This is not a big deal, it adds negligible amount of code, but it tells us is, we cannot assume V8 and V9 are the same.
+
+2. Mutually exclusive APIs. For example admin is more powerful and has APIs like `create`, `getAll` and `listCollections`; while web has cache related APIs like `getDocFromCache`, `getDocFromServer` and `enableIndexedDbPersistence`. It is not possible to export everything.
+
+3. Mutually inclusive API with platform dependent parameter. For example, admin's `delete` and `update` has extra parameter: `precondition` while web's `onSnapshots` has `snapshotListerOptions` parameter and `documentSnapshot.data` has `snapshotOptions` parameter. Even though we can ignore those parameters under the hood if it runs in the irrelevant environment, but developer still able to see it via type hint or JSDoc, which can be confusing.
+
+4. FirelordJS wraps V9 into type safe V9 and Firelord wraps V8 into type safe V9. So the wrapping logics are different, which mean merging will add significant amount of code.
+
+5. Both libraries import original types from original SDKs to keep internal type safe. If we merge both library, then we would have 2 set of original types.
+
+So by now you should understand, merging could do more harm than good in this case, because of the potential complexity, especially point 2 and 3 which are detrimental to developer experience. You also understand, Firelord is not simply a copy and paste of FirelordJS, there are a lot of details need to take care of.
+
+One of the core principal of the libraries is to preserve originality, if we went for absolute unified interface, then we need to give up a lot.
+
+TLDR: they look the same, but they are not the same.
 
 ## Related Projects
 
