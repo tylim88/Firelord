@@ -118,11 +118,15 @@ This change is necessary as v1 corrected a lot of issues in v0.
 
 The v0 documentation can still be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
+## What Is This? Why Do You Need This? What Problem It Solves?
+
+Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
+
 ## About
 
 This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into V9 interface.
 
-The API is basically same as the web version [FirelordJS](https://github.com/tylim88/FirelordJS), and of course we can share the data type definition.
+The API is basically same as the web version, both web and admin version basically share the same documentation.
 
 It does not become modular like the web version, but this is ok because we don't care about package size in back end.
 
