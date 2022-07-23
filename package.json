@@ -21,7 +21,7 @@
 		"build": "rm -rf dist && tsc",
 		"link": "npm link && npm link firelord",
 		"qt": "babel-node -x .ts -- src/fieldPath/documentId.ts",
-		"qt2": "jest src/onSnapshot/onSnapshot.test.ts",
+		"qt2": "jest src/queryClauses/index.test.ts",
 		"dev": "---------------------dev------------------------",
 		"d-link": "npm run build && npm run link",
 		"d-test": "tsc && npm test",

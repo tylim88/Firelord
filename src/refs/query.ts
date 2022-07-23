@@ -9,6 +9,7 @@ import {
 	OriQuery,
 	OriCollectionReference,
 } from '../types'
+import { handleEmptyArray } from './utils'
 
 /**
  * Creates a new immutable instance of {@link Query} that is extended to also include
@@ -42,28 +43,24 @@ export const query = <
 		  >
 ) => {
 	const ref = query as OriQuery<T> | OriCollectionReference
+	// ! need revisit
 	// @ts-expect-error
 	return queryConstraints.reduce((ref, qc) => {
-		// ! need revisit
-		switch (qc.type) {
-			case 'where': {
-				// @ts-expect-error
-				return ref[qc.type](qc.fieldPath, qc.opStr, qc.value)
-			}
-			case 'orderBy':
-				return ref[qc.type](qc.fieldPath, qc.directionStr)
-			case 'limit':
-				return ref[qc.type](qc.value)
-			case 'limitToLast':
-				return ref[qc.type](qc.value)
-			case 'startAt':
-				return ref[qc.type](...qc.values)
-			case 'startAfter':
-				return ref[qc.type](...qc.values)
-			case 'endAt':
-				return ref[qc.type](...qc.values)
-			case 'endBefore':
-				return ref[qc.type](...qc.values)
+		const type = qc.type
+		if (type === 'where') {
+			// @ts-expect-error
+			return ref[type](qc.fieldPath, qc.opStr, qc.value)
+		} else if (type === 'orderBy') {
+			return ref[type](qc.fieldPath, qc.directionStr)
+		} else if (type === 'limit' || type === 'limitToLast') {
+			return ref[type](qc.value)
+		} else if (
+			type === 'startAt' ||
+			type === 'startAfter' ||
+			type === 'endAt' ||
+			type === 'endBefore'
+		) {
+			return handleEmptyArray(qc.values, ref, () => ref[type](...qc.values))
 		}
 	}, ref) as Query<T>
 }
