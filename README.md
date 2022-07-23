@@ -142,7 +142,7 @@ The idea behind merging is code reuse and reduce maintenance, but there are tech
 
 2. Mutually exclusive APIs. For example admin is more powerful and has APIs like `create`, `getAll` and `listCollections`; while web has cache related APIs like `getDocFromCache`, `getDocFromServer` and `enableIndexedDbPersistence`. It is not possible to export everything.
 
-3. Mutually inclusive API with platform dependent parameter. For example, admin's `delete` and `update` has extra parameter: `precondition` while web's `onSnapshots` has `snapshotListerOptions` parameter and `documentSnapshot.data` has `snapshotOptions` parameter. Even though we can ignore those parameters under the hood if it runs in the irrelevant environment, but developer still able to see it via type hint or JSDoc, which can be confusing.
+3. Mutually inclusive API with platform dependent parameter. For example, admin's `delete` and `update` has extra parameter: `precondition` while web's `onSnapshots` has `snapshotListerOptions` parameter and `documentSnapshot.data` has `snapshotOptions` parameter. Even though we can ignore those parameters under the hood if it runs in the irrelevant environment, developer would still able to see it via type hint or JSDoc, which can be confusing.
 
 4. FirelordJS wraps V9 into type safe V9 and Firelord wraps V8 into type safe V9. So the wrapping logics are different, which mean merging will add significant amount of code.
 
