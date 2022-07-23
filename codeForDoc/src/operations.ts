@@ -8,9 +8,16 @@ import {
 	serverTimestamp,
 	increment,
 	arrayUnion,
+	createDoc,
 } from 'firelord'
 
 export const dummy = async () => {
+	await createDoc(example.doc('abc'), {
+		a: 500,
+		b: { c: true, d: [{ e: 'efg' }] },
+		f: { g: serverTimestamp(), h: 2929 },
+	})
+
 	await setDoc(example.doc('abc'), {
 		a: 100,
 		b: { c: true, d: [{ e: 'abc' }] },

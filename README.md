@@ -118,7 +118,7 @@ This change is necessary as v1 corrected a lot of issues in v0.
 
 The v0 documentation can still be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
-## Why Do You Need This? What Problem Firelord Solves?
+## Why Do You Need This? What Problems Firelord Solves?
 
 Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
 

@@ -12,6 +12,7 @@ import {
 	onSnapshot,
 	runTransaction,
 	writeBatch,
+	createDoc,
 } from '.'
 import {
 	User,
@@ -54,7 +55,15 @@ describe('test whether works with rules-unit-testing', () => {
 		const docSnap = await getDoc(docRef)
 		expect(docSnap.exists).toBe(false)
 	})
-
+	it('test createDoc and deleteDoc', async () => {
+		const data = generateRandomData()
+		const docRef = userRef.doc(firestore, 'emulatorCreateDocTest')
+		await createDoc(docRef, data)
+		await readThenCompareWithWriteData(data, docRef)
+		await deleteDoc(docRef)
+		const docSnap = await getDoc(docRef)
+		expect(docSnap.exists).toBe(false)
+	})
 	it('test getDocs', async () => {
 		const docId = 'getDocsWithOptionsQueryTest'
 		const docRef = userRef.doc(docId)
