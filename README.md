@@ -148,7 +148,7 @@ The idea behind merging is code reuse and reduce maintenance, but there are tech
 
 5. Both libraries import original types from original SDKs to keep internal type safe. If we merge both library, then we would have 2 set of original types.
 
-So by now you should understand, merging could do more harm than good in this case, because of the potential complexity, especially point 2 and 3 which are detrimental to developer experience. You also understand, Firelord is not simply a copy and paste of FirelordJS, there are a lot of details need to take care of.
+So that is why merging could do more harm than good in this case, especially point 2 and 3 which are detrimental to developer experience. Firelord is not simply a copy and paste of FirelordJS, there are a lot of details need to be taken care of.
 
 One of the core principal of the libraries is to preserve originality, if we went for absolute unified interface, then we need to give up a lot.
 
