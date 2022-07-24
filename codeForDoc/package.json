@@ -12,8 +12,8 @@
 	"license": "ISC",
 	"dependencies": {
 		"code-for-doc": "file:",
-		"firebase-admin": "^11.0.0",
-		"firelord": "^1.0.0"
+		"firebase-admin": "latest",
+		"firelord": "latest"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.2",

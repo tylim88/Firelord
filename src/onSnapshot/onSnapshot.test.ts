@@ -82,13 +82,13 @@ describe('test onSnapshot', () => {
 					const queryDocumentSnapshot = querySnapshot.docs.filter(
 						doc => doc.id === docId3
 					)[0]
-					expect(queryDocumentSnapshot).not.toBe(undefined) // ! sometime this will fail, only in admin, never in web, why?
 					if (queryDocumentSnapshot) {
 						type C = typeof queryDocumentSnapshot
 						type D = QueryDocumentSnapshot<User>
 						IsTrue<IsSame<C, D>>()
 						compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
 					}
+					expect(queryDocumentSnapshot).not.toBe(undefined) // ! sometime this will fail, only in admin, never in web, why?
 					unsub()
 					done()
 				},
