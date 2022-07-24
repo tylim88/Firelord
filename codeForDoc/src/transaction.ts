@@ -17,7 +17,7 @@ export const dummy = async () => {
 				const data = docSnapshot.data()
 			})
 
-			transaction.createDoc(example.doc('lmn'), {
+			transaction.create(example.doc('lmn'), {
 				a: 500,
 				b: { c: true, d: [{ e: 'efg' }] },
 				f: { g: serverTimestamp(), h: 3838 },

@@ -6,7 +6,7 @@ const batch = writeBatch(db)
 const batch_Alt = writeBatch()
 
 export const dummy = async () => {
-	batch.set(example.doc('hij'), {
+	batch.create(example.doc('hij'), {
 		a: 6,
 		b: { c: true, d: [{ e: '123' }] },
 		f: { g: serverTimestamp(), h: 2929 },
