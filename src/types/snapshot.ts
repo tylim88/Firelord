@@ -4,7 +4,7 @@ import {
 	UnionReadServerTimestampWithNullFlatten,
 	UnionReadServerTimestampWithNull,
 } from './unionReadTimestampWithNull'
-import { DocumentReference, Query } from './ref'
+import { DocumentReference, Query } from './refs'
 
 export interface DocumentSnapshot<T extends MetaType> {
 	/** True if the document exists. */

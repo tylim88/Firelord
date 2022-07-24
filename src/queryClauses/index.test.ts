@@ -59,7 +59,7 @@ describe('test cursor emptiness', () => {
 	})
 	it('test handle empty argument', async () => {
 		const arr: string[] = []
-		await setDoc(docRef, generateRandomData()) // ! set without await and immediately query it make firestore think the doc doesn't exist
+		await setDoc(docRef, generateRandomData()) // ! (admin only) set without await and immediately query it make firestore think the doc doesn't exist
 		const p1 = getDocs(
 			query(
 				colRef,
@@ -94,12 +94,12 @@ describe('test cursor emptiness', () => {
 		)
 		const result = (await Promise.all([p1, p2, p3, p4])).reduce(
 			(acc, querySnapshot) => {
-				acc.push(querySnapshot.docs.length === 1)
+				acc.push(querySnapshot.docs.length)
 				return acc
 			},
-			[] as boolean[]
+			[] as number[]
 		)
-		expect(result).toEqual([true, true, true, true])
+		expect(result).toEqual([1, 1, 1, 1])
 		await deleteDoc(docRef)
 	})
 })

@@ -1,5 +1,5 @@
 import { MetaType } from './metaTypeCreator'
-import { DocumentReference } from './ref'
+import { DocumentReference } from './refs'
 import { Transaction } from './transaction'
 import { WriteBatch } from './batch'
 import { Precondition, WriteResult } from './alias'

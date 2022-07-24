@@ -12,12 +12,13 @@ import betwin from 'betwin'
 import { getDoc } from './operations'
 import { flatten } from './utils'
 import { cloneDeep } from 'lodash'
-
+import { arrayUnion, increment, serverTimestamp } from './fieldValue'
 import {
 	initializeApp as initializeApp_,
 	cert,
 	ServiceAccount,
 } from 'firebase-admin/app'
+
 export const initializeApp = () => {
 	const env = process.env
 	return initializeApp_({
@@ -35,8 +36,6 @@ export const initializeApp = () => {
 		} as ServiceAccount),
 	})
 }
-
-import { arrayUnion, increment, serverTimestamp } from './fieldValue'
 
 export type Parent = MetaTypeCreator<
 	{
