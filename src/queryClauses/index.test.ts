@@ -3,7 +3,7 @@ import { endBefore } from './endBefore'
 import { startAfter } from './startAfter'
 import { startAt } from './startAt'
 import { orderBy } from './orderBy'
-import { getDocs, setDoc, deleteDoc } from '../operations'
+import { getDocs, setDoc } from '../operations'
 import {
 	userRefCreator,
 	initializeApp,
@@ -22,6 +22,7 @@ describe('test cursor emptiness', () => {
 			// ! cursor should accept only tuple
 			const arrNever: never[] = []
 			const arrNumber: number[] = []
+			const arr: [] = []
 			// @ts-expect-error
 			endAt()
 			// @ts-expect-error
@@ -30,6 +31,14 @@ describe('test cursor emptiness', () => {
 			startAfter()
 			// @ts-expect-error
 			startAt()
+			// @ts-expect-error
+			endAt(...arr)
+			// @ts-expect-error
+			endBefore(...arr)
+			// @ts-expect-error
+			startAfter(...arr)
+			// @ts-expect-error
+			startAt(...arr)
 			// @ts-expect-error
 			endAt(...arrNever)
 			// @ts-expect-error
@@ -50,7 +59,7 @@ describe('test cursor emptiness', () => {
 	})
 	it('test handle empty argument', async () => {
 		const arr: string[] = []
-		await setDoc(docRef, generateRandomData())
+		setDoc(docRef, generateRandomData())
 		const p1 = getDocs(
 			query(
 				colRef,
@@ -91,6 +100,5 @@ describe('test cursor emptiness', () => {
 			[] as boolean[]
 		)
 		expect(result).toEqual([true, true, true, true])
-		await deleteDoc(docRef)
 	})
 })
