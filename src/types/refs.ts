@@ -29,7 +29,7 @@ export interface DocumentReference<T extends MetaType> {
 	listCollections(): Promise<Array<CollectionReference<T>>> // ! revisit and fix type
 }
 
-export interface CollectionReference<T extends MetaType> {
+export interface CollectionReference<T extends MetaType> extends Query<T> {
 	/** The collection's identifier. */
 	readonly id: T['docID']
 	/**
