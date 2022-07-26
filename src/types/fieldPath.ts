@@ -22,7 +22,7 @@ export type AddSentinelFieldPathToCompare<T extends MetaType> = StrictOmit<
 
 export type AddSentinelFieldPathToCompareHighLevel<
 	T extends MetaType,
-	Q extends Query<T> | CollectionReference<T>
+	Q extends Query<T>
 > = IsEqual<Query<AddSentinelFieldPathToCompare<T>>, Q> extends true
 	? Query<AddSentinelFieldPathToCompare<T>>
 	: IsEqual<CollectionReference<T>, Q> extends true
@@ -40,7 +40,7 @@ export type __name__ = '__name__'
 
 export type GetCorrectDocumentIdBasedOnRef<
 	T extends MetaType,
-	Q extends Query<T> | CollectionReference<T>,
+	Q extends Query<T>,
 	FieldPath extends keyof T['compare'],
 	Value
 > = FieldPath extends __name__

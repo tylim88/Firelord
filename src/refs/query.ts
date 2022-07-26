@@ -7,7 +7,6 @@ import {
 	AddSentinelFieldPathToCompare,
 	AddSentinelFieldPathToCompareHighLevel,
 	OriQuery,
-	OriCollectionReference,
 	IsEqual,
 } from '../types'
 import { handleEmptyArray } from './utils'
@@ -23,7 +22,7 @@ import { handleEmptyArray } from './utils'
  */
 export const query = <
 	T extends MetaType,
-	Q extends Query<T> | CollectionReference<T>,
+	Q extends Query<T>,
 	QC extends QueryConstraints<AddSentinelFieldPathToCompare<T>>[]
 >(
 	query: Q extends never
@@ -32,7 +31,7 @@ export const query = <
 		? Query<T>
 		: IsEqual<Q, CollectionReference<T>> extends true
 		? CollectionReference<T>
-		: never, // has to code this way to infer T perfectly without union Query<T> | CollectionReference<T>
+		: never, // has to code this way to infer T perfectly
 	...queryConstraints: QC extends never
 		? QC
 		: QueryConstraintLimitation<
@@ -43,13 +42,12 @@ export const query = <
 				QC
 		  >
 ) => {
-	const ref = query as OriQuery<T> | OriCollectionReference
+	const ref = query as OriQuery<T>
 	// ! need revisit
 	// @ts-expect-error
 	return queryConstraints.reduce((ref, qc) => {
 		const type = qc.type
 		if (type === 'where') {
-			// @ts-expect-error
 			return ref[type](qc.fieldPath, qc.opStr, qc.value)
 		} else if (type === 'orderBy') {
 			return ref[type](qc.fieldPath, qc.directionStr)
