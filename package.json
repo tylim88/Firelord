@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "1.6.6",
+	"version": "1.6.7",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"source": "src/index.ts",
 	"main": "dist/index.js",
@@ -45,13 +45,12 @@
 	"bugs": {
 		"url": "https://github.com/tylim88/firelord/issues"
 	},
-	"homepage": "https://firelordjs.com",
+	"homepage": "https://firelordjs.com/firelord/quick_start",
 	"keywords": [
 		"firebase",
 		"firestore",
 		"wrapper",
 		"typescript",
-		"web",
 		"scalable",
 		"type-safe",
 		"V9",
