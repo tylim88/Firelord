@@ -110,6 +110,8 @@
 </div>
 <br/>
 
+Support [emulator](https://firelordjs.com/firelord/tests)
+
 ## Note
 
 This library updated from v0 to v1, v0 is not compatible with v1.
