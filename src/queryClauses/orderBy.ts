@@ -1,4 +1,4 @@
-import { OrderByConstraint, OriOrderByDirection, MetaType } from '../types'
+import { OrderByConstraint, OrderByDirection, MetaType } from '../types'
 
 /**
  * Creates a `QueryConstraint` that sorts the query result by the
@@ -12,7 +12,7 @@ import { OrderByConstraint, OriOrderByDirection, MetaType } from '../types'
 export const orderBy = <
 	T extends MetaType,
 	FieldPath extends keyof T['compare'] & string,
-	DirectionStr extends OriOrderByDirection | undefined = undefined
+	DirectionStr extends OrderByDirection | undefined = undefined
 >(
 	fieldPath: FieldPath extends never ? FieldPath : FieldPath,
 	directionStr?: DirectionStr extends never ? DirectionStr : DirectionStr

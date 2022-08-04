@@ -27,5 +27,5 @@ export const flatten = <T extends Record<string, unknown>>(data: T) => {
 
 export const isFirestore = (value: unknown): value is Firestore => {
 	const v = value as Partial<Firestore>
-	return !!v?.collection
+	return v?.collection !== undefined
 }

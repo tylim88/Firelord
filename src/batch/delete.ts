@@ -2,10 +2,10 @@ import {
 	OriWriteBatch,
 	OriDocumentReference,
 	WriteBatchDelete,
-	OriPrecondition,
+	Precondition,
 } from '../types'
 
 export const deleteCreator = (writeBatch: OriWriteBatch) =>
-	((reference: OriDocumentReference, precondition?: OriPrecondition) => {
+	((reference: OriDocumentReference, precondition?: Precondition) => {
 		return writeBatch.delete(reference, precondition || {})
 	}) as WriteBatchDelete

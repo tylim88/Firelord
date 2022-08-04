@@ -1,4 +1,4 @@
-import { OriDocumentReference, OriDocumentData, Create } from '../types'
+import { OriDocumentReference, DocumentData, Create } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
 /**
@@ -11,7 +11,7 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
  */
 export const createDoc = ((
 	reference: OriDocumentReference,
-	data: OriDocumentData
+	data: DocumentData
 ) => {
 	return reference.create(removeFieldValueInhomogeneousProps(data))
 }) as Create

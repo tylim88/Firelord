@@ -1,4 +1,4 @@
-import { Delete, OriDocumentReference, OriPrecondition } from '../types'
+import { Delete, OriDocumentReference, Precondition } from '../types'
 
 /**
  * Deletes the document referred to by this `DocumentReference`.
@@ -8,7 +8,7 @@ import { Delete, OriDocumentReference, OriPrecondition } from '../types'
  */
 export const deleteDoc = ((
 	reference: OriDocumentReference,
-	precondition?: OriPrecondition
+	precondition?: Precondition
 ) => {
 	return reference.delete(precondition || {})
 }) as Delete

@@ -2,12 +2,12 @@ import {
 	OriDocumentReference,
 	OriTransaction,
 	TransactionDelete,
-	OriPrecondition,
+	Precondition,
 } from '../types'
 
 export const deleteCreator = (
 	transaction: OriTransaction,
-	precondition?: OriPrecondition
+	precondition?: Precondition
 ) =>
 	((reference: OriDocumentReference) => {
 		return transaction.delete(reference, precondition || {}) as unknown

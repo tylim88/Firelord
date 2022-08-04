@@ -2,7 +2,7 @@ import {
 	OriTransaction,
 	OriDocumentReference,
 	TransactionUpdate,
-	OriPrecondition,
+	Precondition,
 } from '../types'
 import { flatten } from '../utils'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
@@ -11,7 +11,7 @@ export const updateCreator = (transaction: OriTransaction) =>
 	((
 		reference: OriDocumentReference,
 		data: Record<string, unknown>,
-		precondition?: OriPrecondition
+		precondition?: Precondition
 	) => {
 		const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 

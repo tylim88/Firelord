@@ -1,9 +1,4 @@
-import {
-	OriDocumentReference,
-	OriDocumentData,
-	OriSetOptions,
-	Set,
-} from '../types'
+import { OriDocumentReference, DocumentData, SetOptions, Set } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
 /**
@@ -23,8 +18,8 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
  */
 export const setDoc = ((
 	reference: OriDocumentReference,
-	data: OriDocumentData,
-	options?: OriSetOptions
+	data: DocumentData,
+	options?: SetOptions
 ) => {
 	return reference.set(removeFieldValueInhomogeneousProps(data), options || {})
 }) as Set

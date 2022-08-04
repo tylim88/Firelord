@@ -1,13 +1,13 @@
 import {
 	OriTransaction,
 	OriDocumentReference,
-	OriDocumentData,
+	DocumentData,
 	TransactionCreate,
 } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
 export const createCreator = (transaction: OriTransaction) =>
-	((reference: OriDocumentReference, data: OriDocumentData) => {
+	((reference: OriDocumentReference, data: DocumentData) => {
 		return transaction.create(
 			reference,
 			removeFieldValueInhomogeneousProps(data)

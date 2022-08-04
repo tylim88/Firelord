@@ -7,7 +7,7 @@ import {
 import { DeepKeyHybrid } from './objectFlatten'
 import { Transaction } from './transaction'
 import { WriteBatch } from './batch'
-import { WriteResult } from './alias'
+import { WriteResult } from './ori'
 
 type SetCreator<U> = <
 	T extends MetaType,

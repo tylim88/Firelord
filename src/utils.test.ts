@@ -48,6 +48,11 @@ describe('test flatten', () => {
 	it('test empty', () => {
 		expect(flatten({})).toEqual({})
 	})
+	it('test isFirestore', () => {
+		expect(isFirestore({})).toBe(false)
+		expect(isFirestore({ colle1ction: 'something' })).toBe(false)
+		expect(isFirestore({ collection: 'something' })).toBe(true)
+	})
 	it('test basic', () => {
 		expect(
 			flatten({

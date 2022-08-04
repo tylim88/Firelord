@@ -28,5 +28,6 @@ module.exports = {
 		'@typescript-eslint/no-empty-function': 'warn',
 		'spaced-comment': 'error',
 		'@typescript-eslint/no-empty-interface': 'off',
+		'@typescript-eslint/no-non-null-assertion': 'off',
 	},
 }

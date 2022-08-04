@@ -2,10 +2,10 @@ import {
 	OriTransaction,
 	OriDocumentReference,
 	Transaction,
-	OriReadOption,
+	ReadOption,
 } from '../types'
 
 export const getAllCreator = (transaction: OriTransaction) =>
-	((documentRefs: OriDocumentReference[], readOptions: OriReadOption) => {
+	((documentRefs: OriDocumentReference[], readOptions: ReadOption) => {
 		return transaction.getAll(...documentRefs, readOptions) as unknown
 	}) as Transaction['getAll']

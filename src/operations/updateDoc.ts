@@ -1,4 +1,4 @@
-import { OriDocumentReference, Update, OriPrecondition } from '../types'
+import { OriDocumentReference, Update, Precondition } from '../types'
 import { flatten } from '../utils'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
@@ -18,7 +18,7 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 export const updateDoc = ((
 	reference: OriDocumentReference,
 	data: Record<string, unknown>,
-	precondition?: OriPrecondition
+	precondition?: Precondition
 ) => {
 	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 

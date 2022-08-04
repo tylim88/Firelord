@@ -2,7 +2,7 @@ import { WriteBatchSet } from './set'
 import { WriteBatchUpdate } from './update'
 import { WriteBatchDelete } from './delete'
 import { WriteBatchCreate } from './create'
-import { WriteResult } from './alias'
+import { WriteResult } from './ori'
 
 export interface WriteBatch {
 	/**

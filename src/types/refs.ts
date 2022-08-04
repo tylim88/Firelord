@@ -1,5 +1,5 @@
 import { MetaType } from './metaTypeCreator'
-import { Firestore } from './alias'
+import { Firestore } from './ori'
 
 export interface DocumentReference<T extends MetaType> {
 	/**

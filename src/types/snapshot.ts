@@ -1,5 +1,5 @@
 import { MetaType } from './metaTypeCreator'
-import { DocumentChangeType, Timestamp } from './alias'
+import { DocumentChangeType, Timestamp } from './ori'
 import {
 	UnionReadServerTimestampWithNullFlatten,
 	UnionReadServerTimestampWithNull,

@@ -3,7 +3,7 @@ import { DocumentReference } from './refs'
 import { RecursivelyReplaceDeleteFieldWithErrorMsg } from './partialNoUndefinedAndNoUnknownMember'
 import { Transaction } from './transaction'
 import { WriteBatch } from './batch'
-import { WriteResult } from './alias'
+import { WriteResult } from './ori'
 
 type CreateCreator<U> = <
 	T extends MetaType,

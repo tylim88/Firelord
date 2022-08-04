@@ -1,6 +1,6 @@
 import {
 	WhereConstraint,
-	OriWhereFilterOp,
+	WhereFilterOp,
 	DocumentId,
 	__name__,
 	MetaType,
@@ -22,7 +22,7 @@ import crypto from 'crypto'
 export const where = <
 	T extends MetaType,
 	FieldPath extends (keyof T['writeFlatten'] & string) | DocumentId,
-	OpStr extends OriWhereFilterOp,
+	OpStr extends WhereFilterOp,
 	Value
 >(
 	fieldPath: FieldPath extends __name__ ? ErrorWhere__name__ : FieldPath,
