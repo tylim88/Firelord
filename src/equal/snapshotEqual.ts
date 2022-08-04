@@ -8,8 +8,6 @@ import { DocumentSnapshot, QuerySnapshot, OriDocumentSnapshot } from '../types'
  * @returns true if the snapshots are equal.
  */
 export const snapshotEqual = <
-	// ! DocumentSnapshot<User> does not extends DocumentSnapshot<MetaType>...why? same case with QuerySnapshot
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	T extends DocumentSnapshot<any> | QuerySnapshot<any>,
 	U extends T
 >(
