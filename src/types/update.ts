@@ -1,6 +1,6 @@
 import { PartialNoUndefinedAndNoUnknownMemberNoEmptyMember } from './partialNoUndefinedAndNoUnknownMember'
 import { DocumentReference } from './refs'
-import { Precondition, WriteResult, DocumentData } from './ori'
+import { Precondition, WriteResult, DocumentData } from './alias'
 import { Transaction } from './transaction'
 import { WriteBatch } from './batch'
 import { MetaType } from './metaTypeCreator'

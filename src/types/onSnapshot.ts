@@ -1,7 +1,7 @@
 import { DocumentSnapshot, QuerySnapshot } from './snapshot'
 import { MetaType } from './metaTypeCreator'
 import { Query, DocumentReference } from './refs'
-import { Unsubscribe } from './ori'
+import { Unsubscribe } from './alias'
 
 export type OnSnapshot = {
 	/**

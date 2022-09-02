@@ -5,7 +5,7 @@ import { TransactionCreate } from './create'
 import { DocumentReference, Query } from './refs'
 import { DocumentSnapshot, QuerySnapshot } from './snapshot'
 import { MetaType } from './metaTypeCreator'
-import { Firestore } from './ori'
+import { Firestore } from './alias'
 
 /**
  * An options object that can be used to configure the behavior of `getAll()`
