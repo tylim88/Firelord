@@ -36,7 +36,7 @@ jobs:
           PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
       - run: npm run build
       - run: npm publish || true
         env:
