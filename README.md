@@ -136,6 +136,20 @@ The ultimate goal is to unify the knowledge of back end and front end, so we don
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
 
+## Running The Source Code
+
+For those who want to study this respository:
+
+Run `npm run reinstall`, then create a `.env` file in the project root directory and add this line: 
+```
+PROJECT_ID: your-firebase-project-id
+```
+
+then run:
+1. `npm run d-test` to test development code.
+2. `npm run d-b-test` to test built code.
+3. `npm run d-p-test` to test published code.
+
 ## Related Projects
 
 1. [FirelordJS](https://github.com/tylim88/FirelordJS) - Typescript wrapper for Firestore Web
