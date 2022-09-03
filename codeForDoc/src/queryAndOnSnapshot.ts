@@ -30,6 +30,7 @@ export const dummy = async () => {
 			querySnapshot.forEach(docSnapshot => {
 				const data = docSnapshot.data()
 			})
-		}
+		},
+		error => {} // optional, onError callback
 	)
 }
