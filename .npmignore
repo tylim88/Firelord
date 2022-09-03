@@ -12,7 +12,6 @@
 /scripts
 /src
 /functions
-/img
 
 # ignore file
 .gitignore
@@ -29,12 +28,15 @@ tsconfig.doc.json
 lgtm.yml
 tsconfig.prod.json
 .parcelrc
+**.rules.json
+firebase.json
+.firebaserc
+.eslintignore
 
 # env
 env.json
 .env
 .firebaserc
-serviceAccountKey.json
 
 # types
 /types/**/*
@@ -47,8 +49,5 @@ serviceAccountKey.json
 # misc
 CHANGELOG.md
 package-lock.json
-firebase.json
-.eslintignore
-.firebaserc
 note.txt
-firebase.json
+CONTRIBUTING.md
