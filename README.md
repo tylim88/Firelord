@@ -136,6 +136,10 @@ The ultimate goal is to unify the knowledge of back end and front end, so we don
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
 
+## Contributing
+
+Read [here](https://firelordjs.com/miscellaneous/contributing)
+
 ## Related Projects
 
 1. [FirelordJS](https://github.com/tylim88/FirelordJS) - Typescript wrapper for Firestore Web
