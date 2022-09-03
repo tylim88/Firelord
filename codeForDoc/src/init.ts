@@ -1,15 +1,14 @@
-import { getFirelord } from 'firelord'
-import { getFirestore } from 'firebase-admin/firestore'
+import { getFirelord, getFirestore } from 'firelord'
 import { initializeApp, cert, ServiceAccount } from 'firebase-admin/app'
 import { Example } from './dataType'
-// import serviceAccount from './serviceAccount.json' // get it from firebase console --> project setting --> service accounts, THIS IS A SECERT!
 // if you run in cloud function
 const app = initializeApp()
 
 // if you run in custom backend or you run in cloud function but want to access other project firestore
-// const app = initializeApp({
-// 	credential: cert(serviceAccount as ServiceAccount),
-// })
+import serviceAccount from './serviceAccount.json' // get it from firebase console --> project setting --> service accounts, THIS IS A SECRET!
+const app_ = initializeApp({
+	credential: cert(serviceAccount as ServiceAccount),
+})
 
 export const db = getFirestore()
 
