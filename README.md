@@ -138,9 +138,9 @@ It is not possible to unified platform specific API, good thing is most of these
 
 ## Running The Source Code
 
-For those who want to study this respository:
+If you are curious about how thing works and want to try it out:
 
-Run `npm run reinstall`, then create a `.env` file in the project root directory and add this line: 
+Run `npm i`, then create a `.env` file in the project root directory and add this line: 
 ```
 PROJECT_ID: your-firebase-project-id
 ```
