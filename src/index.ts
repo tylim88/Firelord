@@ -85,8 +85,8 @@ export {
 	setLogFunction,
 } from 'firebase-admin/firestore'
 
-export * from './batch'
-export * from './transaction'
+export * from './writeBatch'
+export * from './runTransaction'
 export * from './fieldValue'
 export * from './fieldPath'
 export * from './onSnapshot'
