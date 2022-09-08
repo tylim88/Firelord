@@ -1,11 +1,4 @@
-import {
-	WhereConstraint,
-	WhereFilterOp,
-	DocumentId,
-	__name__,
-	MetaType,
-	ErrorWhere__name__,
-} from '../types'
+import { Where } from '../types'
 import crypto from 'crypto'
 
 /**
@@ -19,16 +12,8 @@ import crypto from 'crypto'
  * @param value - The value for comparison
  * @returns The created Query.
  */
-export const where = <
-	T extends MetaType,
-	FieldPath extends (keyof T['writeFlatten'] & string) | DocumentId,
-	OpStr extends WhereFilterOp,
-	Value
->(
-	fieldPath: FieldPath extends __name__ ? ErrorWhere__name__ : FieldPath,
-	opStr: OpStr,
-	value: Value
-) => {
+// @ts-expect-error
+export const where: Where = (fieldPath, opStr, value) => {
 	let newValue = value
 	if (
 		Array.isArray(newValue) &&
@@ -45,10 +30,5 @@ export const where = <
 		fieldPath: fieldPath as string,
 		opStr,
 		value: newValue,
-	} as WhereConstraint<
-		T,
-		FieldPath extends DocumentId ? __name__ : FieldPath,
-		OpStr,
-		Value
-	>
+	}
 }

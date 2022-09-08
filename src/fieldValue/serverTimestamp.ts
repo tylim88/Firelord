@@ -2,8 +2,13 @@ import { FieldValue } from 'firebase-admin/firestore'
 import { ServerTimestamp } from '../types'
 
 /**
-Returns a sentinel used with @firebase/firestore/lite#(setDoc:1) or @firebase/firestore/lite#(updateDoc:1) to include a server-generated timestamp in the written data.
+ * Returns a sentinel used with set(), create() or update() to include a
+ * server-generated timestamp in the written data.
+ *
+ * @return The FieldValue sentinel for use in a call to set(), create() or
+ * update().
  */
-export const serverTimestamp = () => {
-	return FieldValue.serverTimestamp() as ServerTimestamp
+export const serverTimestamp = (): ServerTimestamp => {
+	// @ts-expect-error
+	return FieldValue.serverTimestamp()
 }

@@ -1,11 +1,9 @@
-import { MetaType, CollectionReference, Firestore } from '../types'
+import { CollectionCreator } from '../types'
 
-export const collectionCreator =
-	<T extends MetaType>(
-		fStore: Firestore,
-		collectionPath: T['collectionPath']
-	) =>
-	(firestore?: Firestore) => {
+export const collectionCreator: CollectionCreator =
+	(fStore, collectionPath) =>
+	// @ts-expect-error
+	(firestore?) => {
 		const fs = firestore || fStore
-		return fs.collection(collectionPath) as CollectionReference<T>
+		return fs.collection(collectionPath)
 	}

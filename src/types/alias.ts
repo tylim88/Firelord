@@ -28,6 +28,12 @@ export type WriteResult = import('firebase-admin/firestore').WriteResult
 
 export type ReadOption = import('firebase-admin/firestore').ReadOptions
 
+export type ReadOnlyTransactionOptions =
+	import('firebase-admin/firestore').ReadOnlyTransactionOptions
+
+export type ReadWriteTransactionOptions =
+	import('@google-cloud/firestore').ReadWriteTransactionOptions
+
 export type OriDocumentReference<T extends DocumentData = DocumentData> =
 	import('firebase-admin/firestore').DocumentReference<T>
 

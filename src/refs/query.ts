@@ -1,14 +1,4 @@
-import {
-	MetaType,
-	Query,
-	CollectionReference,
-	QueryConstraints,
-	QueryConstraintLimitation,
-	AddSentinelFieldPathToCompare,
-	AddSentinelFieldPathToCompareHighLevel,
-	OriQuery,
-	IsEqual,
-} from '../types'
+import { MetaType, OriQuery, QueryRef } from '../types'
 import { handleEmptyArray } from './utils'
 
 /**
@@ -20,29 +10,9 @@ import { handleEmptyArray } from './utils'
  * @throws if any of the provided query constraints cannot be combined with the
  * existing or new constraints.
  */
-export const query = <
-	T extends MetaType,
-	Q extends Query<T>,
-	QC extends QueryConstraints<AddSentinelFieldPathToCompare<T>>[]
->(
-	query: Q extends never
-		? Q
-		: IsEqual<Q, Query<T>> extends true
-		? Query<T>
-		: IsEqual<Q, CollectionReference<T>> extends true
-		? CollectionReference<T>
-		: never, // has to code this way to infer T perfectly
-	...queryConstraints: QC extends never
-		? QC
-		: QueryConstraintLimitation<
-				AddSentinelFieldPathToCompare<T>,
-				AddSentinelFieldPathToCompareHighLevel<T, Q>,
-				QC,
-				[],
-				QC
-		  >
-) => {
-	const ref = query as OriQuery<T>
+// @ts-expect-error
+export const query: QueryRef = (query, ...queryConstraints) => {
+	const ref = query as OriQuery<MetaType>
 	// ! need revisit
 	// @ts-expect-error
 	return queryConstraints.reduce((ref, qc) => {
@@ -61,5 +31,5 @@ export const query = <
 		) {
 			return handleEmptyArray(qc.values, ref, () => ref[type](...qc.values))
 		}
-	}, ref) as Query<T>
+	}, ref)
 }

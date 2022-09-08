@@ -1,4 +1,4 @@
-import { DocumentSnapshot, QuerySnapshot, OriDocumentSnapshot } from '../types'
+import { SnapshotEqual } from '../types'
 
 /**
  * Returns true if the provided snapshots are equal.
@@ -7,14 +7,7 @@ import { DocumentSnapshot, QuerySnapshot, OriDocumentSnapshot } from '../types'
  * @param right - A snapshot to compare.
  * @returns true if the snapshots are equal.
  */
-export const snapshotEqual = <
-	T extends DocumentSnapshot<any> | QuerySnapshot<any>,
-	U extends T
->(
-	left: T,
-	right: U
-) => {
-	return (left as unknown as OriDocumentSnapshot).isEqual(
-		right as unknown as OriDocumentSnapshot
-	)
+export const snapshotEqual: SnapshotEqual = (left, right) => {
+	// @ts-expect-error
+	return left.isEqual(right) // ! left as OriDocumentSnapshot Type instantiation is excessively deep and possibly infinite.
 }

@@ -1,4 +1,4 @@
-import { MetaType, Query, OriQuery } from '../types'
+import { QueryEqual, OriQuery } from '../types'
 /**
  * Returns true if the provided queries point to the same collection and apply
  * the same constraints.
@@ -8,6 +8,9 @@ import { MetaType, Query, OriQuery } from '../types'
  * @returns true if the references point to the same location in the same
  * Firestore database.
  */
-export const queryEqual = (left: Query<MetaType>, right: Query<MetaType>) => {
-	return (left as OriQuery).isEqual(right as OriQuery)
+export const queryEqual: QueryEqual = (left, right) => {
+	return (left as OriQuery).isEqual(
+		// @ts-expect-error
+		right
+	)
 }

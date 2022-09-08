@@ -1,21 +1,12 @@
-import { LimitConstraint, ErrorLimitInvalidNumber } from '../types'
+import { LimitCreator } from '../types'
 
-export const limitCreator =
-	<Type extends 'limit' | 'limitToLast'>(type: Type) =>
-	<Value extends number>(
-		limit: Value extends 0
-			? ErrorLimitInvalidNumber
-			: number extends Value
-			? Value
-			: Value extends infer R
-			? `${R & number}` extends `-${number}` | `${number}.${number}`
-				? ErrorLimitInvalidNumber
-				: Value
-			: never // impossible route
-	): LimitConstraint<Type, Value> => {
+export const limitCreator: LimitCreator =
+	type =>
+	// @ts-expect-error
+	limit => {
 		return {
 			type,
-			value: limit as Value,
+			value: limit,
 		}
 	}
 

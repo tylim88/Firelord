@@ -4,6 +4,17 @@ import { WriteBatchDelete } from './delete'
 import { WriteBatchCreate } from './create'
 import { WriteResult } from './alias'
 
+/**
+ * A write batch, used to perform multiple writes as a single atomic unit.
+ *
+ * A `WriteBatch` object can be acquired by calling `Firestore.batch()`. It
+ * provides methods for adding writes to the write batch. None of the
+ * writes will be committed (or visible locally) until `WriteBatch.commit()`
+ * is called.
+ *
+ * Unlike transactions, write batches are persisted offline and therefore are
+ * preferable when you don't need to condition your writes on read data.
+ */
 export interface WriteBatch {
 	/**
 	 * Create the document referred to by the provided `DocumentReference`. The

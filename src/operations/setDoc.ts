@@ -1,4 +1,4 @@
-import { OriDocumentReference, DocumentData, SetOptions, Set } from '../types'
+import { OriDocumentReference, Set } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
 /**
@@ -16,10 +16,9 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
  * @throws Error If the provided input is not a valid Firestore document.
  * @return A Promise resolved with the write time of this set.
  */
-export const setDoc = ((
-	reference: OriDocumentReference,
-	data: DocumentData,
-	options?: SetOptions
-) => {
-	return reference.set(removeFieldValueInhomogeneousProps(data), options || {})
-}) as Set
+export const setDoc: Set = (reference, data, options?) => {
+	return (reference as OriDocumentReference).set(
+		removeFieldValueInhomogeneousProps(data),
+		options || {}
+	)
+}

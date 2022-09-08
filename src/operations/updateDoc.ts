@@ -1,4 +1,4 @@
-import { OriDocumentReference, Update, Precondition } from '../types'
+import { OriDocumentReference, Update } from '../types'
 import { flatten } from '../utils'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
@@ -15,17 +15,13 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
  * @throws Error If the provided input is not valid Firestore data.
  * @return A Promise resolved with the write time of this update.
  */
-export const updateDoc = ((
-	reference: OriDocumentReference,
-	data: Record<string, unknown>,
-	precondition?: Precondition
-) => {
+export const updateDoc: Update = (reference, data, precondition?) => {
 	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 
 	return Object.keys(data_).length > 0
-		? reference.update(
+		? (reference as OriDocumentReference).update(
 				flatten(removeFieldValueInhomogeneousProps(data)),
 				precondition || {}
 		  )
 		: Promise.resolve(undefined)
-}) as Update
+}

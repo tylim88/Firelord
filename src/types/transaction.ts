@@ -5,7 +5,11 @@ import { TransactionCreate } from './create'
 import { DocumentReference, Query } from './refs'
 import { DocumentSnapshot, QuerySnapshot } from './snapshot'
 import { MetaType } from './metaTypeCreator'
-import { Firestore } from './alias'
+import {
+	Firestore,
+	ReadWriteTransactionOptions,
+	ReadOnlyTransactionOptions,
+} from './alias'
 
 /**
  * An options object that can be used to configure the behavior of `getAll()`
@@ -115,34 +119,17 @@ export interface Transaction {
 }
 
 export type RunTransaction = {
-	/** 
-Executes the given updateFunction and then attempts to commit the changes applied within the transaction. If any document read within the transaction has changed, Cloud Firestore retries the updateFunction. If it fails to commit after 5 attempts, the transaction fails.
-
-The maximum number of writes allowed in a single transaction is 500.
-
-@param firestore
-A reference to the Firestore database to run this transaction against. If no value is provided.
-
-@param updateFunction
-The function to execute within the transaction context.
-
-@returns
-If the transaction completed successfully or was explicitly aborted (the updateFunction returned a failed promise), the promise returned by the updateFunction is returned here. Otherwise, if the transaction failed, a rejected promise with the corresponding failure error is returned.
-*/
 	<T>(
 		firestore: Firestore,
-		updateFunction: (transaction: Transaction) => Promise<T>
+		updateFunction: (transaction: Transaction) => Promise<T>,
+		transactionOptions?:
+			| ReadWriteTransactionOptions
+			| ReadOnlyTransactionOptions
 	): Promise<T>
-	/** 
-Executes the given updateFunction and then attempts to commit the changes applied within the transaction. If any document read within the transaction has changed, Cloud Firestore retries the updateFunction. If it fails to commit after 5 attempts, the transaction fails.
-
-The maximum number of writes allowed in a single transaction is 500.
-
-@param updateFunction
-The function to execute within the transaction context.
-
-@returns
-If the transaction completed successfully or was explicitly aborted (the updateFunction returned a failed promise), the promise returned by the updateFunction is returned here. Otherwise, if the transaction failed, a rejected promise with the corresponding failure error is returned.
-*/
-	<T>(updateFunction: (transaction: Transaction) => Promise<T>): Promise<T>
+	<T>(
+		updateFunction: (transaction: Transaction) => Promise<T>,
+		transactionOptions?:
+			| ReadWriteTransactionOptions
+			| ReadOnlyTransactionOptions
+	): Promise<T>
 }
