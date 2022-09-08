@@ -1,6 +1,11 @@
-import { OriTransaction, OriDocumentReference, Transaction } from '../types'
+import { OriTransaction, Transaction } from '../types'
 
-export const getCreator = (transaction: OriTransaction) =>
-	((reference: OriDocumentReference) => {
-		return transaction.get(reference) as unknown
-	}) as Transaction['get']
+export const getCreator =
+	(transaction: OriTransaction): Transaction['get'] =>
+	// @ts-expect-error
+	reference => {
+		return transaction.get(
+			// @ts-expect-error
+			reference
+		)
+	}

@@ -1,21 +1,14 @@
-import {
-	OriTransaction,
-	OriDocumentReference,
-	DocumentData,
-	TransactionSet,
-	SetOptions,
-} from '../types'
+import { OriTransaction, TransactionSet } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
-export const setCreator = (transaction: OriTransaction) =>
-	((
-		reference: OriDocumentReference,
-		data: DocumentData,
-		options?: SetOptions
-	) => {
+export const setCreator =
+	(transaction: OriTransaction): TransactionSet =>
+	// @ts-expect-error
+	(reference, data, options?) => {
 		return transaction.set(
+			// @ts-expect-error
 			reference,
 			removeFieldValueInhomogeneousProps(data),
 			options || {}
-		) as unknown
-	}) as TransactionSet
+		)
+	}

@@ -1,4 +1,4 @@
-import { Delete, OriDocumentReference, Precondition } from '../types'
+import { Delete, OriDocumentReference } from '../types'
 
 /**
  * Deletes the document referred to by this `DocumentReference`.

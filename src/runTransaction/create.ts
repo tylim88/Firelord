@@ -1,15 +1,13 @@
-import {
-	OriTransaction,
-	OriDocumentReference,
-	DocumentData,
-	TransactionCreate,
-} from '../types'
+import { OriTransaction, TransactionCreate } from '../types'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
-export const createCreator = (transaction: OriTransaction) =>
-	((reference: OriDocumentReference, data: DocumentData) => {
+export const createCreator =
+	(transaction: OriTransaction): TransactionCreate =>
+	// @ts-expect-error
+	(reference, data) => {
 		return transaction.create(
+			// @ts-expect-error
 			reference,
 			removeFieldValueInhomogeneousProps(data)
-		) as unknown
-	}) as TransactionCreate
+		)
+	}
