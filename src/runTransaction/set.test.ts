@@ -9,7 +9,10 @@ import { runTransaction } from '.'
 import { setDoc, getDoc } from '../operations'
 import { TransactionSet, IsTrue, IsSame } from '../types'
 import { setCreator } from './set'
+import { getFirestore, Timestamp } from 'firebase-admin/firestore'
+
 initializeApp()
+const db = getFirestore()
 const userRef = userRefCreator()
 describe('test set transaction', () => {
 	it('test whether the return type is correct', () => {
@@ -26,14 +29,14 @@ describe('test set transaction', () => {
 			IsTrue<IsSame<typeof A, 1>>()
 		}
 	})
-	it('test set functionality', async () => {
+	it('test set functionality, with db', async () => {
 		const docRef = userRef.doc('setTransactionTestCase')
 		const docRef2 = userRef.doc('setTransactionTestCase2')
 		const docRef3 = userRef.doc('setTransactionTestCase3')
 		const data = generateRandomData()
 		const data2 = generateRandomData()
 		const data3 = generateRandomData()
-		await runTransaction(async transaction => {
+		await runTransaction(db, async transaction => {
 			transaction.set(docRef, data)
 			transaction.set(docRef2, data2)
 			transaction.set(docRef3, data3)
@@ -42,26 +45,33 @@ describe('test set transaction', () => {
 		await readThenCompareWithWriteData(data2, docRef2)
 		await readThenCompareWithWriteData(data3, docRef3)
 	})
-	it('test read functionality', async () => {
+	it('test read functionality, with options', async () => {
 		const docRef = userRef.doc('setTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
-		await runTransaction(async transaction => {
-			const docSnap = await transaction.get(docRef)
-			compareWriteDataWithDocSnapData(data, docSnap)
-		})
+		await runTransaction(
+			async transaction => {
+				const docSnap = await transaction.get(docRef)
+				compareWriteDataWithDocSnapData(data, docSnap)
+			},
+			{ readOnly: true, readTime: Timestamp.now() }
+		)
 	})
 	it('test delete functionality', async () => {
 		const docRef = userRef.doc('setTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
-		await runTransaction(async transaction => {
-			transaction.delete(docRef)
-		})
+		await runTransaction(
+			db,
+			async transaction => {
+				transaction.delete(docRef)
+			},
+			{ readOnly: false, maxAttempts: 6 }
+		)
 		const docSnap = await getDoc(docRef)
 		expect(docSnap.exists).toBe(false)
 	})
-	it('test merge true functionality', async () => {
+	it('test merge true functionality, with db and options', async () => {
 		const ref = userRef.doc('setTransactionTestMergeCase')
 		const data = generateRandomData()
 		await setDoc(ref, data)
