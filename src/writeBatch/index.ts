@@ -13,11 +13,11 @@ import { getFirestore } from 'firebase-admin/firestore'
  */
 export const writeBatch = (firestore?: Firestore): WriteBatch => {
 	const batch = (firestore || getFirestore()).batch()
-	return Object.freeze({
+	return {
 		commit: () => batch.commit(),
 		create: createCreator(batch),
 		set: setCreator(batch),
 		update: updateCreator(batch),
 		delete: deleteCreator(batch),
-	})
+	}
 }
