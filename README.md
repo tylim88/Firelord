@@ -136,6 +136,12 @@ The ultimate goal is to unify the knowledge of back end and front end, so we don
 
 It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
 
+## Have Questions?
+
+[Just Ask](https://github.com/tylim88/FirelordJS/discussions)
+
+Note: FirelordJS and Firelord sharing the same discussion space.
+
 ## Contributing
 
 Read [here](https://firelordjs.com/miscellaneous/contributing)
