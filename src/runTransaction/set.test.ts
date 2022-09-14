@@ -29,24 +29,27 @@ describe('test set transaction', () => {
 			IsTrue<IsSame<typeof A, 1>>()
 		}
 	})
-	it('test set functionality, with db', async () => {
-		const docRef = userRef.doc('setTransactionTestCase')
-		const docRef2 = userRef.doc('setTransactionTestCase2')
-		const docRef3 = userRef.doc('setTransactionTestCase3')
+	it('test set functionality and return, with db', async () => {
+		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCase')
+		const docRef2 = userRef.doc('FirelordTest', 'setTransactionTestCase2')
+		const docRef3 = userRef.doc('FirelordTest', 'setTransactionTestCase3')
 		const data = generateRandomData()
 		const data2 = generateRandomData()
 		const data3 = generateRandomData()
-		await runTransaction(db, async transaction => {
+		const result = await runTransaction(db, async transaction => {
 			transaction.set(docRef, data)
 			transaction.set(docRef2, data2)
 			transaction.set(docRef3, data3)
+
+			return 123
 		})
+		expect(result).toBe(123)
 		await readThenCompareWithWriteData(data, docRef)
 		await readThenCompareWithWriteData(data2, docRef2)
 		await readThenCompareWithWriteData(data3, docRef3)
 	})
 	it('test read functionality, with options', async () => {
-		const docRef = userRef.doc('setTransactionTestCaseRead')
+		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
 		await runTransaction(
@@ -58,7 +61,7 @@ describe('test set transaction', () => {
 		)
 	})
 	it('test delete functionality', async () => {
-		const docRef = userRef.doc('setTransactionTestCaseRead')
+		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
 		await runTransaction(
@@ -72,7 +75,7 @@ describe('test set transaction', () => {
 		expect(docSnap.exists).toBe(false)
 	})
 	it('test merge true functionality, with db and options', async () => {
-		const ref = userRef.doc('setTransactionTestMergeCase')
+		const ref = userRef.doc('FirelordTest', 'setTransactionTestMergeCase')
 		const data = generateRandomData()
 		await setDoc(ref, data)
 		await runTransaction(async transaction => {
@@ -82,7 +85,7 @@ describe('test set transaction', () => {
 		await readThenCompareWithWriteData(data, ref)
 	})
 	it('test merge field functionality', async () => {
-		const ref = userRef.doc('setTransactionTestMergeCase')
+		const ref = userRef.doc('FirelordTest', 'setTransactionTestMergeCase')
 		const data = generateRandomData()
 		await setDoc(ref, data)
 		await runTransaction(async transaction => {
@@ -92,7 +95,7 @@ describe('test set transaction', () => {
 		await readThenCompareWithWriteData(data, ref)
 	})
 	it('test merge field empty functionality', async () => {
-		const ref = userRef.doc('setTransactionTestMergeCase')
+		const ref = userRef.doc('FirelordTest', 'setTransactionTestMergeCase')
 		const data = generateRandomData()
 		await setDoc(ref, data)
 		await runTransaction(async transaction => {

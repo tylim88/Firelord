@@ -8,8 +8,8 @@ import {
 	startAfter,
 	limit,
 } from 'firelord'
-
-export const dummy = async () => {
+//
+;async () => {
 	await getDocs(
 		query(
 			example.collection(),
@@ -21,7 +21,7 @@ export const dummy = async () => {
 
 	const unsub = onSnapshot(
 		query(
-			example.collection(),
+			example.collectionGroup(),
 			where('b.d', 'array-contains', { e: 'hello' }),
 			orderBy('f.g'),
 			startAfter(new Date())
@@ -31,6 +31,6 @@ export const dummy = async () => {
 				const data = docSnapshot.data()
 			})
 		},
-		error => {} // optional, onError callback
+		error => {}
 	)
 }

@@ -1,5 +1,6 @@
 import { updateDoc } from './updateDoc'
-
+import { deleteDoc } from './deleteDoc'
+import { getDoc } from './getDoc'
 import {
 	userRefCreator,
 	initializeApp,
@@ -15,10 +16,8 @@ import {
 	increment,
 } from '../fieldValue'
 import { Update, IsTrue, IsSame, ErrorUnknownMember } from '../types'
-import { getFirestore } from 'firebase-admin/firestore'
 
 initializeApp()
-const userRef = userRefCreator()
 // type test here include all type test of batch and transaction because it is the same type
 describe('test updateDoc', () => {
 	it('test whether the return type is correct', () => {
@@ -28,7 +27,7 @@ describe('test updateDoc', () => {
 	})
 	it('test wrong type', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				beenTo: [{}],
 				// @ts-expect-error
@@ -41,7 +40,7 @@ describe('test updateDoc', () => {
 	})
 	it('test undefined type, should reject undefined', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				beenTo: undefined,
 				// @ts-expect-error
@@ -54,14 +53,14 @@ describe('test updateDoc', () => {
 	})
 	it('test missing member, missing should be fine', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				beenTo: [{ China: ['Guangdong'] }],
 				name: 'abc',
 				'a.b.c': increment(1),
 				'a.b.f': [],
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor',
 				age: 1,
 				beenTo: [],
@@ -69,13 +68,13 @@ describe('test updateDoc', () => {
 	})
 	it('test missing member with wrong type', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				beenTo: [{ China: ['Guangd1ong'] }],
 				name: 'abc',
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor',
 				// @ts-expect-error
 				ag2e: 1,
@@ -88,13 +87,13 @@ describe('test updateDoc', () => {
 
 	it('test unknown member', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor',
 				// @ts-expect-error
 				[ag2e]: 1,
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor',
 				// @ts-expect-error
 				[ag2e]: errorUnknownMember,
@@ -107,7 +106,7 @@ describe('test updateDoc', () => {
 		}
 		;() =>
 			updateDoc(
-				userRef.doc('123'),
+				userRefCreator().doc('FirelordTest', '123'),
 				// @ts-expect-error
 				stale
 			)
@@ -117,35 +116,35 @@ describe('test updateDoc', () => {
 		}
 		;() =>
 			updateDoc(
-				userRef.doc('123'),
+				userRefCreator().doc('FirelordTest', '123'),
 				// @ts-expect-error
 				stale2
 			)
 	})
 	it('test empty object literal data', () => {
 		// @ts-expect-error
-		;() => updateDoc(userRef.doc('123'), {})
+		;() => updateDoc(userRefCreator().doc('123'), {})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				a: {},
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				a: {
 					// @ts-expect-error
 					i: {},
 				},
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				'a.i': {},
 			})
 	})
 	it('test hybrid correct type', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor' as const,
 				age: increment(1),
 				a: { e: arrayUnion(...['1']), 'b.c': 1 },
@@ -154,21 +153,21 @@ describe('test updateDoc', () => {
 	})
 	it('test hybrid wrong type', () => {
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor' as const,
 				age: 1,
 				// @ts-expect-error
 				a: { e: arrayUnion([1]) },
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor' as const,
 				age: 1,
 				// @ts-expect-error
 				a: { 'e.h': arrayUnion(['abc']) },
 			})
 		;() =>
-			updateDoc(userRef.doc('123'), {
+			updateDoc(userRefCreator().doc('FirelordTest', '123'), {
 				role: 'visitor' as const,
 				age: 1,
 				// @ts-expect-error
@@ -185,7 +184,7 @@ describe('test updateDoc', () => {
 		}
 		;() =>
 			updateDoc(
-				userRef.doc('123'),
+				userRefCreator().doc('FirelordTest', '123'),
 				// @ts-expect-error
 				withUnknownMember
 			)
@@ -194,14 +193,14 @@ describe('test updateDoc', () => {
 		const withUnknownMember = { ...generateRandomData(), unknown: '123' }
 		;() =>
 			updateDoc(
-				userRef.doc('123'),
+				userRefCreator().doc('FirelordTest', '123'),
 				// @ts-expect-error
 				withUnknownMember
 			)
 	})
 	it('test functionality', async () => {
 		await writeThenReadTest(async data => {
-			const ref = userRef.doc('updateDocTestCase')
+			const ref = userRefCreator().doc('FirelordTest', 'updateDocTestCase')
 			await setDoc(ref, generateRandomData())
 			await updateDoc(ref, data)
 			return ref
@@ -209,7 +208,7 @@ describe('test updateDoc', () => {
 	})
 	it('test functionality with overload', async () => {
 		await writeThenReadTest(async data => {
-			const ref = userRef.doc(getFirestore(), 'updateDocTestCase')
+			const ref = userRefCreator().doc('FirelordTest', 'updateDocTestCase')
 			await setDoc(ref, generateRandomData())
 			await updateDoc(ref, data)
 			return ref
@@ -217,7 +216,10 @@ describe('test updateDoc', () => {
 	})
 	it('test same path, delete field, in hybrid', async () => {
 		const data = generateRandomData()
-		const ref = userRef.doc('updateDocSpecificFieldTestCase')
+		const ref = userRefCreator().doc(
+			'FirelordTest',
+			'updateDocSpecificFieldTestCase'
+		)
 		await setDoc(ref, data)
 		const date = new Date()
 		const arr = [{ g: false, h: date, m: 9 }]
@@ -232,12 +234,16 @@ describe('test updateDoc', () => {
 		data.a.b.c = num
 		await readThenCompareWithWriteData(data, ref)
 	})
-	it('test empty data', async () => {
-		const result = await updateDoc(
-			userRef.doc('123'),
+	it('test update non-existing doc', async () => {
+		// ! admin doesn't not throw updating non existing doc
+		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
+		deleteDoc(docRef)
+		await updateDoc(
+			docRef,
 			// @ts-expect-error
 			{}
 		)
-		expect(result).toBe(undefined)
+		const snapshot = await getDoc(docRef)
+		expect(snapshot.exists).toBe(false)
 	})
 })

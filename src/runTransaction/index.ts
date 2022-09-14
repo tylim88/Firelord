@@ -38,6 +38,8 @@ import { isTransactionOptions } from './utils'
  * Transactions that are not committed within than 270 seconds are also
  * aborted. Any remaining locks are released when a transaction times out.
  *
+ * @param firestore - optional and skippable(function overload), a reference to the Firestore database to run this
+ * transaction against.
  * @param updateFunction The function to execute within the transaction
  * context.
  * @param transactionOptions Transaction options.

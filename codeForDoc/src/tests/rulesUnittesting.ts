@@ -16,7 +16,7 @@ initializeApp({ projectId: 'forTestJustUseRandomId' })
 
 type User = MetaTypeCreator<{ name: string; age: number }, 'User', string>
 const firestore = getFirestore()
-const userRef = getFirelord<User>(firestore)('User')
+const userRef = getFirelord<User>(firestore, 'User')
 
 describe('test with jest', () => {
 	it('test basic operation like setDoc, updateDoc, addDoc, deleteDoc etc etc', async () => {
@@ -27,7 +27,7 @@ describe('test with jest', () => {
 	})
 	it('test getDocs', async () => {
 		const querySnapshot = await getDocs(
-			query(userRef.collectionGroup(firestore), where('name', '==', 'abc'))
+			query(userRef.collectionGroup(), where('name', '==', 'abc'))
 		)
 		// do your assertion here...
 	})
@@ -36,7 +36,7 @@ describe('test with jest', () => {
 		expect.hasAssertions()
 
 		const unsub = onSnapshot(
-			query(userRef.collection(firestore), where('age', '>', 10)),
+			query(userRef.collection(), where('age', '>', 10)),
 			async querySnapshot => {
 				// do your assertion here...
 				unsub()

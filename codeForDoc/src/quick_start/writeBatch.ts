@@ -2,10 +2,8 @@ import { example, db } from './create_firelord_ref'
 import { writeBatch, serverTimestamp } from 'firelord'
 
 const batch = writeBatch(db)
-// OR
-const batch_Alt = writeBatch()
 
-export const dummy = async () => {
+;async () => {
 	batch.create(example.doc('hij'), {
 		a: 6,
 		b: { c: true, d: [{ e: '123' }] },

@@ -14,29 +14,31 @@ describe('test get transaction', () => {
 		;() => {
 			const userRef = userRefCreator()
 			runTransaction(transaction => {
-				return transaction.get(userRef.doc('123')).then(docSnap => {
-					const data = docSnap.data()
-					/*  eslint-disable @typescript-eslint/no-unused-vars */
-					if (data) {
-						const {
-							beenTo,
-							name,
-							role,
-							age,
-							a: {
-								b: {
-									c,
-									f,
-									// @ts-expect-error
-									p,
+				return transaction
+					.get(userRef.doc('FirelordTest', '123'))
+					.then(docSnap => {
+						const data = docSnap.data()
+						/*  eslint-disable @typescript-eslint/no-unused-vars */
+						if (data) {
+							const {
+								beenTo,
+								name,
+								role,
+								age,
+								a: {
+									b: {
+										c,
+										f,
+										// @ts-expect-error
+										p,
+									},
 								},
-							},
-							// @ts-expect-error
-							unknown,
-						} = data
-						/*  eslint-enable @typescript-eslint/no-unused-vars */
-					}
-				})
+								// @ts-expect-error
+								unknown,
+							} = data
+							/*  eslint-enable @typescript-eslint/no-unused-vars */
+						}
+					})
 			})
 		}
 	})

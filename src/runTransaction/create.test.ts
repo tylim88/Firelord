@@ -26,9 +26,9 @@ describe('test create transaction', () => {
 			IsTrue<IsSame<typeof A, 1>>()
 		}
 	})
-	const docRef = userRef.doc('createTransactionTestCase')
-	const docRef2 = userRef.doc('createTransactionTestCase2')
-	const docRef3 = userRef.doc('createTransactionTestCase3')
+	const docRef = userRef.doc('FirelordTest', 'createTransactionTestCase')
+	const docRef2 = userRef.doc('FirelordTest', 'createTransactionTestCase2')
+	const docRef3 = userRef.doc('FirelordTest', 'createTransactionTestCase3')
 	it('test create functionality', async () => {
 		const data = generateRandomData()
 		const data2 = generateRandomData()
@@ -43,7 +43,7 @@ describe('test create transaction', () => {
 		await readThenCompareWithWriteData(data3, docRef3)
 	})
 	it('test read functionality', async () => {
-		const docRef = userRef.doc('createTransactionTestCaseRead')
+		const docRef = userRef.doc('FirelordTest', 'createTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
 		await runTransaction(async transaction => {

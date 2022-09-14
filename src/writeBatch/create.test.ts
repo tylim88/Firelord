@@ -14,9 +14,9 @@ const userRef = userRefCreator()
 // don't need to add TYPE test code anymore, because it share the same type with basic operation where type tests are done
 // just need to test whether the return type is correct or not
 describe('test create batch', () => {
-	const docRef = userRef.doc('createBatchTestCase')
-	const docRef2 = userRef.doc('createBatchTestCase2')
-	const docRef3 = userRef.doc('createBatchTestCase3')
+	const docRef = userRef.doc('FirelordTest', 'createBatchTestCase')
+	const docRef2 = userRef.doc('FirelordTest', 'createBatchTestCase2')
+	const docRef3 = userRef.doc('FirelordTest', 'createBatchTestCase3')
 	it('test whether the return type is correct', () => {
 		type A = ReturnType<typeof writeBatch>['create']
 		type B = WriteBatchCreate

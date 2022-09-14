@@ -6,10 +6,9 @@ import {
 	arrayRemove,
 	Timestamp,
 } from 'firelord'
-
-export const dummy = async () => {
+//
+;async () => {
 	try {
-		// OR you can skip 'db'
 		await runTransaction(
 			db,
 			async transaction => {
@@ -31,18 +30,13 @@ export const dummy = async () => {
 
 				transaction.update(example.doc('lmn'), {
 					a: increment(1),
-					b: { d: arrayRemove({ e: 'rst' }) }, // nested form
-					'f.g': serverTimestamp(), // dot notation form
+					b: { d: arrayRemove({ e: 'rst' }) },
+					'f.g': serverTimestamp(),
 				})
 
 				transaction.delete(example.doc('lmn'))
 			},
-			{ readOnly: true, readTime: Timestamp.now() } // optional
-			// we can supply 2 set of options:
-			// 1. { readOnly?: false, maxAttempts?: number }
-			// note that in case 1 both properties are optional and readOnly is false
-			// 2. { readOnly: true, readTime?: Timestamp }
-			// note that in case only readTime is optional and readOnly is true
+			{ readOnly: true, readTime: Timestamp.now() }
 		)
 		console.log('Transaction successfully committed!')
 	} catch (e) {

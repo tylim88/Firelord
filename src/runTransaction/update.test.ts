@@ -10,6 +10,7 @@ import { IsTrue, IsSame, TransactionUpdate } from '../types'
 import { setDoc } from '../operations'
 import { deleteField } from '../fieldValue'
 import { updateCreator } from './update'
+import { getFirestore } from 'firebase-admin/firestore'
 
 initializeApp()
 const userRef = userRefCreator()
@@ -22,9 +23,9 @@ describe('test update transaction', () => {
 	})
 
 	it('test functionality', async () => {
-		const docRef = userRef.doc('updateTransactionTestCase')
-		const docRef2 = userRef.doc('updateTransactionTestCase2')
-		const docRef3 = userRef.doc('updateTransactionTestCase3')
+		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCase')
+		const docRef2 = userRef.doc('FirelordTest', 'updateTransactionTestCase2')
+		const docRef3 = userRef.doc('FirelordTest', 'updateTransactionTestCase3')
 		const data = generateRandomData()
 		const data2 = generateRandomData()
 		const data3 = generateRandomData()
@@ -45,7 +46,10 @@ describe('test update transaction', () => {
 
 	it('test same path, delete field, in hybrid', async () => {
 		const data = generateRandomData()
-		const ref = userRef.doc('updateTransactionSpecificFieldTestCase')
+		const ref = userRef.doc(
+			'FirelordTest',
+			'updateTransactionSpecificFieldTestCase'
+		)
 		await setDoc(ref, data)
 		const date = new Date()
 		const arr = [{ g: false, h: date, m: 9 }]
@@ -64,7 +68,7 @@ describe('test update transaction', () => {
 	})
 
 	it('test empty object', async () => {
-		const docRef = userRef.doc('updateTransactionTestCaseEmpty')
+		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCaseEmpty')
 		await setDoc(docRef, generateRandomData())
 		expect.assertions(1)
 		await runTransaction(async transaction => {

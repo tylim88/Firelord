@@ -10,8 +10,8 @@ import {
 	arrayUnion,
 	createDoc,
 } from 'firelord'
-
-export const dummy = async () => {
+//
+;async () => {
 	await createDoc(example.doc('abc'), {
 		a: 500,
 		b: { c: true, d: [{ e: 'efg' }] },
