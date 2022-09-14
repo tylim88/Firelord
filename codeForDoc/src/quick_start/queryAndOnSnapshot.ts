@@ -8,8 +8,8 @@ import {
 	startAfter,
 	limit,
 } from 'firelord'
-
-export const dummy = async () => {
+//
+;async () => {
 	await getDocs(
 		query(
 			example.collection(),

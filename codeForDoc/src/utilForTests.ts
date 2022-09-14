@@ -10,6 +10,7 @@ import {
 	ServerTimestamp,
 	DeleteField,
 	DocumentSnapshot,
+	getFirestore,
 } from 'firelord'
 import pick from 'pick-random'
 import betwin from 'betwin'
@@ -71,7 +72,7 @@ export type User = MetaTypeCreator<
 	Parent
 >
 export const userRefCreator = () =>
-	getFirelord<User>()(`topLevel/FirelordTest/Users`)
+	getFirelord<User>(getFirestore(), `topLevel`, `Users`)
 
 export const generateRandomData = (): User['write'] => {
 	const beenTo = (pick([[{ China: ['Guangdong'] }], [{ US: ['california'] }]], {

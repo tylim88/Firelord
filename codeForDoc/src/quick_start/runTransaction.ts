@@ -6,8 +6,8 @@ import {
 	arrayRemove,
 	Timestamp,
 } from 'firelord'
-
-export const dummy = async () => {
+//
+;async () => {
 	try {
 		// OR you can skip 'db'
 		await runTransaction(
