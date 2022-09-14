@@ -31,6 +31,6 @@ import {
 				const data = docSnapshot.data()
 			})
 		},
-		error => {} // optional, onError callback
+		error => {}
 	)
 }

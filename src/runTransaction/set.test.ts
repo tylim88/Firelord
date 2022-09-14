@@ -29,18 +29,21 @@ describe('test set transaction', () => {
 			IsTrue<IsSame<typeof A, 1>>()
 		}
 	})
-	it('test set functionality, with db', async () => {
+	it('test set functionality and return, with db', async () => {
 		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCase')
 		const docRef2 = userRef.doc('FirelordTest', 'setTransactionTestCase2')
 		const docRef3 = userRef.doc('FirelordTest', 'setTransactionTestCase3')
 		const data = generateRandomData()
 		const data2 = generateRandomData()
 		const data3 = generateRandomData()
-		await runTransaction(db, async transaction => {
+		const result = await runTransaction(db, async transaction => {
 			transaction.set(docRef, data)
 			transaction.set(docRef2, data2)
 			transaction.set(docRef3, data3)
+
+			return 123
 		})
+		expect(result).toBe(123)
 		await readThenCompareWithWriteData(data, docRef)
 		await readThenCompareWithWriteData(data2, docRef2)
 		await readThenCompareWithWriteData(data3, docRef3)

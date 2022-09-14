@@ -1,5 +1,6 @@
 import { updateDoc } from './updateDoc'
-
+import { deleteDoc } from './deleteDoc'
+import { getDoc } from './getDoc'
 import {
 	userRefCreator,
 	initializeApp,
@@ -233,12 +234,16 @@ describe('test updateDoc', () => {
 		data.a.b.c = num
 		await readThenCompareWithWriteData(data, ref)
 	})
-	it('test empty data', async () => {
-		const result = await updateDoc(
-			userRefCreator().doc('FirelordTest', '123'),
+	it('test update non-existing doc', async () => {
+		// ! admin doesn't not throw updating non existing doc
+		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
+		deleteDoc(docRef)
+		await updateDoc(
+			docRef,
 			// @ts-expect-error
 			{}
 		)
-		expect(result).toBe(undefined)
+		const snapshot = await getDoc(docRef)
+		expect(snapshot.exists).toBe(false)
 	})
 })
