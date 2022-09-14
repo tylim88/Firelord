@@ -9,6 +9,6 @@ const app_ = initializeApp({
 	credential: cert(serviceAccount as ServiceAccount),
 })
 
-export const db = getFirestore()
+export const db = getFirestore(app)
 
 export const example = getFirelord<Example>(db, 'SomeCollectionName') // this is your firelordRef
