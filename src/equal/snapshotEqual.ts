@@ -9,5 +9,5 @@ import { SnapshotEqual } from '../types'
  */
 export const snapshotEqual: SnapshotEqual = (left, right) => {
 	// @ts-expect-error
-	return left.isEqual(right) // ! left as OriDocumentSnapshot Type instantiation is excessively deep and possibly infinite.
+	return left.isEqual(right)
 }

@@ -5,43 +5,43 @@ import { getFirestore } from 'firebase-admin/firestore'
 
 initializeApp()
 const abc = 'abc'
-const docRef = userRefCreator().doc
-const colRef = userRefCreator().collection
+const docRefCreator = (arg: string) => userRefCreator().doc('FirelordTest', arg)
+const colRef = userRefCreator().collection('FirelordTest')
 describe('test refEqual', () => {
 	it('test equal', () => {
-		expect(refEqual(docRef(getFirestore(), abc), docRef(abc))).toBe(true)
+		expect(refEqual(docRefCreator(abc), docRefCreator(abc))).toBe(true)
 		expect(
 			refEqual(
-				docRef(abc),
+				docRefCreator(abc),
 
 				getFirestore().doc(
-					docRef(abc).path
+					docRefCreator(abc).path
 				) as unknown as DocumentReference<User>
 			)
 		).toBe(true)
-		expect(refEqual(colRef(getFirestore()), colRef())).toBe(true)
+		expect(refEqual(colRef, colRef)).toBe(true)
 		expect(
 			refEqual(
-				colRef(),
+				colRef,
 				getFirestore().collection(
-					colRef().path
+					colRef.path
 				) as unknown as CollectionReference<User>
 			)
 		).toBe(true)
 	})
 	it('test not equal', () => {
-		expect(refEqual(docRef(abc), docRef('abcd'))).toBe(false)
+		expect(refEqual(docRefCreator(abc), docRefCreator('abcd'))).toBe(false)
 		expect(
 			refEqual(
-				docRef(getFirestore(), abc),
+				docRefCreator(abc),
 				getFirestore().doc(
-					docRef('abc1').path
+					docRefCreator('abc1').path
 				) as unknown as DocumentReference<User>
 			)
 		).toBe(false)
 		expect(
 			refEqual(
-				colRef(),
+				colRef,
 				getFirestore().collection(
 					'a/b/c1'
 				) as unknown as CollectionReference<User>

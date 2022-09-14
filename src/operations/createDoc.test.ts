@@ -21,7 +21,7 @@ describe('test createDoc', () => {
 	})
 	it('test wrong type', () => {
 		;() =>
-			createDoc(userRef.doc('123'), {
+			createDoc(userRef.doc('FirelordTest', '123'), {
 				// @ts-expect-error
 				beenTo: [{}],
 				// @ts-expect-error
@@ -34,7 +34,7 @@ describe('test createDoc', () => {
 				a: {},
 			})
 		;() =>
-			createDoc(userRef.doc('123'), {
+			createDoc(userRef.doc('FirelordTest', '123'), {
 				beenTo: [],
 				// @ts-expect-error
 				name: true,
@@ -63,16 +63,19 @@ describe('test createDoc', () => {
 	})
 	it('test missing member', () => {
 		;() =>
-			// @ts-expect-error
-			createDoc(userRef.doc('123'), {
-				beenTo: [{ China: ['Guangdong'] }],
-				name: 'abc',
-				role: 'visitor',
-			})
+			createDoc(
+				userRef.doc('FirelordTest', '123'),
+				// @ts-expect-error
+				{
+					beenTo: [{ China: ['Guangdong'] }],
+					name: 'abc',
+					role: 'visitor',
+				}
+			)
 	})
 	it('test empty array', () => {
 		;() =>
-			createDoc(userRef.doc('123'), {
+			createDoc(userRef.doc('FirelordTest', '123'), {
 				beenTo: [],
 				name: 'abc',
 				role: 'admin',
@@ -87,7 +90,7 @@ describe('test createDoc', () => {
 	})
 	it('test filled array', () => {
 		;() =>
-			createDoc(userRef.doc('123'), {
+			createDoc(userRef.doc('FirelordTest', '123'), {
 				beenTo: [{ US: ['California', 'Hawaii'] }],
 				name: 'abc',
 				role: 'admin',
@@ -104,12 +107,12 @@ describe('test createDoc', () => {
 		const withUnknownMember = { ...generateRandomData(), unknown: '123' }
 		;() =>
 			createDoc(
-				userRef.doc('123'),
+				userRef.doc('FirelordTest', '123'),
 				// @ts-expect-error
 				withUnknownMember
 			)
 	})
-	const ref = userRef.doc('createDocTestCase')
+	const ref = userRef.doc('FirelordTest', 'createDocTestCase')
 	it('test functionality', async () => {
 		await writeThenReadTest(async data => {
 			await createDoc(ref, data)
