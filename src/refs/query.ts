@@ -21,7 +21,11 @@ export const query: QueryRef = (query, ...queryConstraints) => {
 			return ref[type](qc.fieldPath, qc.opStr, qc.value)
 		} else if (type === 'orderBy') {
 			return ref[type](qc.fieldPath, qc.directionStr)
-		} else if (type === 'limit' || type === 'limitToLast') {
+		} else if (
+			type === 'limit' ||
+			type === 'limitToLast' ||
+			type === 'offset'
+		) {
 			return ref[type](qc.value)
 		} else if (
 			type === 'startAt' ||

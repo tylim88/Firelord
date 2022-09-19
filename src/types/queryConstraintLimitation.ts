@@ -21,6 +21,7 @@ import {
 	OrderByConstraint,
 	CursorConstraint,
 	LimitConstraint,
+	OffsetConstraint,
 } from './queryConstraints'
 import { Query } from './refs'
 import {
@@ -81,11 +82,11 @@ export type QueryConstraintLimitation<
 	PreviousQCs extends QueryConstraints<T>[],
 	AllQCs extends QueryConstraints<T>[]
 > = ValidateOrderByAndInequalityWhere<T, AllQCs> extends string
-	? ValidateOrderByAndInequalityWhere<T, AllQCs>
+	? ValidateOrderByAndInequalityWhere<T, AllQCs>[]
 	: RestQCs extends [infer Head, ...infer Rest]
 	? Rest extends QueryConstraints<T>[]
 		? [
-				Head extends LimitConstraint<'limit', number>
+				Head extends LimitConstraint<'limit', number> | OffsetConstraint
 					? Head
 					: Head extends OrderByConstraint<string, OrderByDirection | undefined>
 					? OrderByConstraintLimitation<T, Head, AllQCs>

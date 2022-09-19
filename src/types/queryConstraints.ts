@@ -31,6 +31,11 @@ export type LimitConstraint<
 	value: Value
 }
 
+export type OffsetConstraint = {
+	type: 'offset'
+	value: number
+}
+
 export type CursorConstraint<
 	Type extends CursorType,
 	Values extends unknown[]
@@ -44,3 +49,4 @@ export type QueryConstraints<T extends MetaType> =
 	| LimitConstraint<'limit' | 'limitToLast', number>
 	| CursorConstraint<CursorType, unknown[]>
 	| OrderByConstraint<keyof T['compare'] & string, OrderByDirection | undefined>
+	| OffsetConstraint
