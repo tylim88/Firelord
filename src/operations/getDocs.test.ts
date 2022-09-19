@@ -17,7 +17,7 @@ import {
 } from '../types'
 import { query } from '../refs'
 import { where } from '../queryClauses'
-import { snapshotEqual } from '../equal'
+import { snapshotEqual, queryEqual, refEqual } from '../equal'
 
 initializeApp()
 const userRef = userRefCreator()
@@ -43,8 +43,16 @@ const queryTest = async (
 		IsTrue<IsSame<X, Y>>()
 		await compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
 	}
-
+	const incorrectDocRef = userRefCreator().doc('FirelordTest', 'abc')
 	expect(snapshotEqual(querySnapshot, querySnapshot)).toBe(true)
+	expect(refEqual(queryDocumentSnapshot!.ref, docRef)).toBe(true)
+	expect(refEqual(queryDocumentSnapshot!.ref, incorrectDocRef)).toBe(false)
+	expect(queryEqual(queryDocumentSnapshot!.ref.parent, docRef.parent)).toBe(
+		true
+	)
+	expect(
+		queryEqual(queryDocumentSnapshot!.ref.parent, incorrectDocRef.parent)
+	).toBe(true)
 }
 
 describe('test getDocs', () => {

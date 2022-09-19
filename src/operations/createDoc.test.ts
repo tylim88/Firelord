@@ -3,7 +3,7 @@ import { createDoc } from './createDoc'
 import {
 	userRefCreator,
 	initializeApp,
-	writeThenReadTest,
+	writeThenCompareWithRead,
 	generateRandomData,
 } from '../utilForTests'
 import { increment, arrayUnion, serverTimestamp } from '../fieldValue'
@@ -114,7 +114,7 @@ describe('test createDoc', () => {
 	})
 	const ref = userRef.doc('FirelordTest', 'createDocTestCase')
 	it('test functionality', async () => {
-		await writeThenReadTest(async data => {
+		await writeThenCompareWithRead(async data => {
 			await createDoc(ref, data)
 			return ref
 		})

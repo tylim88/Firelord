@@ -169,7 +169,7 @@ export const readThenCompareWithWriteData = async (
 	compareWriteDataWithDocSnapData(cloneDeep(writeData), docSnap)
 }
 
-export const writeThenReadTest = async (
+export const writeThenCompareWithRead = async (
 	writeCallback: (
 		data: ReturnType<typeof generateRandomData>
 	) => Promise<DocumentReference<User>>

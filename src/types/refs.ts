@@ -26,22 +26,24 @@ export interface DocumentReference<T extends MetaType> {
 	 *
 	 * @returns A Promise that resolves with an array of CollectionReferences.
 	 */
-	listCollections(): Promise<Array<CollectionReference<T>>> // ! revisit and fix type
+	listCollections(): Promise<CollectionReference<any>[]> // ! revisit and fix type
 }
 
 export interface CollectionReference<T extends MetaType> extends Query<T> {
 	/** The collection's identifier. */
-	readonly id: T['docID']
+	readonly id: T['collectionID']
 	/**
 	 * A reference to the containing `DocumentReference` if this is a
 	 * subcollection. If this isn't a subcollection, the reference is null.
 	 */
-	readonly parent: T['parent']
+	readonly parent: T['parent'] extends MetaType
+		? DocumentReference<T['parent']>
+		: null
 	/**
 	 * A string representing the path of the referenced collection (relative
 	 * to the root of the database).
 	 */
-	readonly path: T['docPath']
+	readonly path: T['collectionPath']
 	/**
 	 * Retrieves the list of documents in this collection.
 	 *
@@ -54,7 +56,7 @@ export interface CollectionReference<T extends MetaType> extends Query<T> {
 	 * @return {Promise<DocumentReference[]>} The list of documents in this
 	 * collection.
 	 */
-	listDocuments(): Promise<Array<DocumentReference<T>>> // ! revisit
+	listDocuments(): Promise<DocumentReference<T>[]> // ! revisit
 }
 
 export interface Query<T extends MetaType> {
@@ -85,14 +87,4 @@ export interface Query<T extends MetaType> {
 	 * @return The created Query.
 	 */
 	select(...field: (keyof T['writeFlatten'])[]): Query<T> // ! revisit
-	/**
-	 * Specifies the offset of the returned results.
-	 *
-	 * This function returns a new (immutable) instance of the Query (rather
-	 * than modify the existing instance) to impose the offset.
-	 *
-	 * @param offset The offset to apply to the Query results.
-	 * @return The created Query.
-	 */
-	offset(offset: number): Query<T> // ! revisit
 }
