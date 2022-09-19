@@ -31,17 +31,21 @@ export interface DocumentReference<T extends MetaType> {
 
 export interface CollectionReference<T extends MetaType> extends Query<T> {
 	/** The collection's identifier. */
-	readonly id: T['docID']
+	readonly id: T['collectionID']
 	/**
 	 * A reference to the containing `DocumentReference` if this is a
 	 * subcollection. If this isn't a subcollection, the reference is null.
 	 */
-	readonly parent: T['parent']
+	readonly parent: T['parent'] extends MetaType
+		? DocumentReference<T['parent']>
+		: null
+
 	/**
 	 * A string representing the path of the referenced collection (relative
 	 * to the root of the database).
 	 */
-	readonly path: T['docPath']
+	readonly path: T['collectionPath']
+
 	/**
 	 * Retrieves the list of documents in this collection.
 	 *

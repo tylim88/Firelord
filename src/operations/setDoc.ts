@@ -17,6 +17,7 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValue'
  * @return A Promise resolved with the write time of this set.
  */
 export const setDoc: Set = (reference, data, options?) => {
+	// @ts-expect-error
 	return (reference as OriDocumentReference).set(
 		removeFieldValueInhomogeneousProps(data),
 		options || {}

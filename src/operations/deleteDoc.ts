@@ -7,5 +7,6 @@ import { Delete, OriDocumentReference } from '../types'
  * @return A Promise resolved with the write time of this delete.
  */
 export const deleteDoc: Delete = (reference, precondition?) => {
+	// @ts-expect-error
 	return (reference as OriDocumentReference).delete(precondition || {})
 }

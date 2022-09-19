@@ -19,7 +19,8 @@ export const updateDoc: Update = (reference, data, precondition?) => {
 	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 
 	return Object.keys(data_).length > 0
-		? (reference as OriDocumentReference).update(
+		? // @ts-expect-error
+		  (reference as OriDocumentReference).update(
 				flatten(removeFieldValueInhomogeneousProps(data)),
 				precondition || {}
 		  )

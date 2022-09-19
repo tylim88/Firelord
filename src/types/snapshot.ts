@@ -16,7 +16,7 @@ export interface DocumentSnapshot<T extends MetaType> {
 	/**
 	 * The ID of the document for which this `DocumentSnapshot` contains data.
 	 */
-	readonly id: string
+	readonly id: T['docID']
 
 	/**
 	 * The time the document was created. Not set for documents that don't
