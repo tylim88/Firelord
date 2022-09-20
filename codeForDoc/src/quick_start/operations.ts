@@ -39,19 +39,19 @@ import {
 	await deleteDoc(example.doc('abc'))
 
 	await getDoc(example.doc('abc')).then(docSnapshot => {
-		console.log(docSnapshot.data())
-		console.log(docSnapshot.get('b.c'))
-		console.log(docSnapshot.id)
+		docSnapshot.data()
+		docSnapshot.get('b.c')
+		docSnapshot.id
 
-		console.log(docSnapshot.ref.firestore)
-		console.log(docSnapshot.ref.id)
-		console.log(docSnapshot.ref.listCollections())
-		console.log(docSnapshot.ref.path)
+		docSnapshot.ref.firestore
+		docSnapshot.ref.id
+		docSnapshot.ref.listCollections()
+		docSnapshot.ref.path
 
-		console.log(docSnapshot.ref.parent)
-		console.log(docSnapshot.ref.parent.firestore)
-		console.log(docSnapshot.ref.parent.id)
-		console.log(docSnapshot.ref.parent.listDocuments())
-		console.log(docSnapshot.ref.parent.parent)
+		docSnapshot.ref.parent
+		docSnapshot.ref.parent.firestore
+		docSnapshot.ref.parent.id
+		docSnapshot.ref.parent.listDocuments()
+		docSnapshot.ref.parent.parent
 	})
 }

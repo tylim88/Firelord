@@ -18,11 +18,11 @@ getDocs(
 	)
 ).then(querySnapshot => {
 	querySnapshot.docChanges().forEach(docChange => {
-		console.log(docChange.doc)
-		console.log(docChange.type)
-		console.log(docChange.oldIndex)
-		console.log(docChange.newIndex)
-		console.log(docChange.isEqual(docChange))
+		docChange.doc
+		docChange.type
+		docChange.oldIndex
+		docChange.newIndex
+		docChange.isEqual(docChange)
 	})
 	querySnapshot.forEach(docSnapshot => {})
 
