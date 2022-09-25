@@ -114,11 +114,7 @@ Support [emulator](https://firelordjs.com/firelord/tests)
 
 ## Note
 
-This library updated from v0 to v1, v0 is not compatible with v1.
-
-This change is necessary as v1 corrected a lot of issues in v0.
-
-The v0 documentation can still be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
+The v0 documentation can be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
 
 ## Why Do You Need This? What Problems Firelord Solves?
 
