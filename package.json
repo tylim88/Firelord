@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.1.11",
+	"version": "2.1.13",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
 		"jest": "jest src/fieldValue/utils.test.ts --collectCoverage=false",
 		"commit": "git commit --no-verify",
 		"dev": "---------------------dev------------------------",
-		"d-link": "npm run build && npm run link   ",
+		"d-link": "npm run build && npm run link",
 		"d-test": "tsc && npm test",
 		"d-b-tsc": "npm run d-link && npm run b-uninstall && npm run b-tsc",
 		"d-b-test": "npm run d-b-tsc && npm run b-test",
