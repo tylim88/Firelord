@@ -64,27 +64,7 @@
 			<a href="https://snyk.io/test/github/tylim88/FirelordJS" target="_blank">
 				<img
 					src="https://snyk.io/test/github/tylim88/FirelordJS/badge.svg"
-					alt="code coverage"
-				/>
-			</a>
-			&nbsp;
-			<a
-				href="https://lgtm.com/projects/g/tylim88/Firelord/alerts/"
-				target="_blank"
-			>
-				<img
-					alt="Total alerts"
-					src="https://img.shields.io/lgtm/alerts/g/tylim88/Firelord.svg?logo=lgtm&logoWidth=18"
-				/>
-			</a>
-			&nbsp;
-			<a
-				href="https://lgtm.com/projects/g/tylim88/Firelord/context:javascript"
-				target="_blank"
-			>
-				<img
-					alt="Language grade: JavaScript"
-					src="https://img.shields.io/lgtm/grade/javascript/g/tylim88/Firelord.svg?logo=lgtm&logoWidth=18"
+					alt="vulnerabilities"
 				/>
 			</a>
 </div>
