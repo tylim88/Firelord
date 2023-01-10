@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.1.10",
+	"version": "2.1.11",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
 		"reinstall": "rm -rf node_modules && rm -rf package-lock.json && npm i && npx husky install",
 		"tsc": "tsc",
 		"lint": "eslint . --ext .ts --fix",
-		"pretty-quick": "pretty-quick --stage",
+		"pretty": "pretty-quick --stage --branch main",
 		"test": "firebase emulators:exec --only firestore \"rm -rf coverage && jest\"",
 		"rollup": "rm -rf dist && rollup -c",
 		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
@@ -17,7 +17,7 @@
 		"jest": "jest src/fieldValue/utils.test.ts --collectCoverage=false",
 		"commit": "git commit --no-verify",
 		"dev": "---------------------dev------------------------",
-		"d-link": "npm run build && npm run link",
+		"d-link": "npm run build && npm run link   ",
 		"d-test": "tsc && npm test",
 		"d-b-tsc": "npm run d-link && npm run b-uninstall && npm run b-tsc",
 		"d-b-test": "npm run d-b-tsc && npm run b-test",
@@ -36,7 +36,7 @@
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx,md,json,yml}": [
 			"eslint --fix",
-			"pretty-quick"
+			"npm run pretty"
 		]
 	},
 	"repository": {
