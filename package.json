@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.1.15",
+	"version": "2.1.16",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
