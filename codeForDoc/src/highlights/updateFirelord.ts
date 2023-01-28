@@ -44,12 +44,14 @@ updateDoc(
 	abcd // good: type error!
 )
 
-updateDoc(docRef, {
+updateDoc(
+	docRef,
 	// @ts-expect-error
-	a: undefined,
-	// @ts-expect-error
-	b: undefined,
-}) // good: reject undefined!
+	{
+		a: undefined,
+		b: undefined,
+	}
+) // good: reject undefined! NOTE: this is not an issue if tsconfig exactOptionalPropertyTypes is ON
 
 type abc2 = MetaTypeCreator<
 	{

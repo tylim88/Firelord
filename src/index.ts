@@ -69,6 +69,8 @@ export {
 
 export { Bytes } from 'firebase/firestore'
 
+export type { DocumentData } from 'firebase-admin/firestore'
+
 export * from './writeBatch'
 export * from './runTransaction'
 export * from './fieldValue'
@@ -90,4 +92,7 @@ export type {
 	DocumentSnapshot,
 	QuerySnapshot,
 	QueryDocumentSnapshot,
+	WriteBatch,
+	RunTransaction,
+	AbstractMetaTypeCreator,
 } from './types'

@@ -58,11 +58,11 @@ type abc2 = MetaTypeCreator<
 const docRef2 = getFirelord<abc2>(db, 'abc').doc('efg')
 
 setDoc(
-	docRef2,
+	docRef2, // @ts-expect-error
 	{
 		a: 1,
-		b: { c: 1 }, // @ts-expect-error
-		e: undefined, // good, reject undefined!
+		b: { c: 1 },
+		e: undefined, // good, reject undefined! NOTE: this is not an issue if tsconfig exactOptionalPropertyTypes is ON
 	},
 	{ merge: true }
 )
