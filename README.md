@@ -35,10 +35,12 @@
 				/>
 			</a>
 			&nbsp;
-			<img
-				src="https://img.shields.io/badge/gzipped-2.5KB-brightgreen"
-				alt="package size"
-			/>
+			<a href="https://firelordjs.com/minified_size" target="_blank">
+				<img
+					src="https://img.shields.io/badge/gzipped-2.5KB-brightgreen"
+					alt="package size"
+				/>
+			</a>
 			&nbsp;
 			<a href="https://github.com/tylim88/Firelord/actions" target="_blank">
 				<img
