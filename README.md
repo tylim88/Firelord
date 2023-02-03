@@ -70,19 +70,19 @@
 </div>
 <br/>
 <div align="center">
-		<i>Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience</i>
+		<p>Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience</p>
 </div>
 <br/>
 <div align="center">
-		<i>Modular, Minuscule, Intuitive, Unopinionated, Craftsmanship, Ultimate, Peaceful, Deep</i>
+		<p>Modular, Minuscule, Intuitive, Unopinionated, Craftsmanship, Ultimate, Peaceful, Deep</p>
 </div>
 <br/>
 <div align="center">
-	<i>Of The VFQAT &#160;&#160;||&#160;&#160; By The VFQAT &#160;&#160;||&#160;&#160; For The VFQAT</i>
+	<p>Of The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; For The VFQAT</p>
 </div>
 <br />
 <div align="center">
-	<i>End Firestore Typing Madness</i>
+	<p>End Firestore Typing Madness</p>
 </div>
 <br />
 <div align="center">
@@ -92,9 +92,9 @@
 
 Support [emulator](https://firelordjs.com/firelord/tests)
 
-## Note
+## Upcoming V3
 
-The v0 documentation can be found [here](https://github.com/tylim88/Firelord/tree/96739759a5d848c77259b53fb3850f2950dd72cb).
+read [here](https://github.com/tylim88/FirelordJS#upcoming-v3)
 
 ## Why Do You Need This? What Problems Firelord Solves?
 

@@ -20,7 +20,7 @@ type Parent = MetaTypeCreator<
 
 type Child = MetaTypeCreator<
 	{
-		a: 'a' | 'b' | 'c'
+		z: 'a' | 'b' | 'c'
 	},
 	'child',
 	string,
@@ -29,44 +29,6 @@ type Child = MetaTypeCreator<
 const firelordRef = getFirelord<Child>(db, 'parent', 'child')
 const colRef = firelordRef.collection('abc')
 const groupRef = getFirelord<Child>(db, 'parent', 'child').collectionGroup()
-//
-//
-//
-//
-//
-//
-query(
-	colRef,
-	// @ts-expect-error
-	where('a', '==', 'a')
-) // bad: no const assertion
-query(colRef, where('a', '==', 'a' as const)) // good: with const assertion
-//
-const withoutAssertion = 'a'
-const withAssertion = 'a' as const
-//
-//
-//
-//
-query(
-	colRef,
-	// @ts-expect-error
-	where('a', '==', withoutAssertion)
-) // bad: no const assertion
-query(colRef, where('a', '==', withAssertion)) // good: with const assertion
-//
-//
-//
-//
-//
-//
-//
-query(
-	colRef,
-	// @ts-expect-error
-	where(documentId(), '==', 'xyz')
-) // bad: no const assertion
-query(colRef, where(documentId(), '==', 'xyz' as const)) // good: with const assertion
 //
 //
 //
@@ -116,7 +78,7 @@ query(
 	colRef,
 	// @ts-expect-error
 	where(documentId(), '>', 'xyz' as const),
-	orderBy('a')
+	orderBy('z')
 ) // bad: first orderBy field is incorrect
 query(colRef, where(documentId(), '>', 'xyz' as const), orderBy('__name__')) // good: first orderBy field is correct
 //
@@ -126,11 +88,22 @@ query(colRef, where(documentId(), '>', 'xyz' as const), orderBy('__name__')) // 
 //
 //
 //
+query(
+	colRef,
+	// @ts-expect-error
+	where(documentId(), '==', 'xyz')
+) // bad: no const assertion
+query(colRef, where(documentId(), '==', 'xyz' as const)) // good: with const assertion
 //
-// @ts-expect-error
-query(colRef, where('a', 'in', [])) // never[] type is not ok
 //
-const arr = (): ('a' | 'b' | 'c')[] => {
-	return []
-} // empty array may result from expression
-query(colRef, where('a', 'in', arr())) // impossible to block correctType[]
+//
+//
+//
+//
+//
+query(
+	colRef,
+	// @ts-expect-error
+	where(documentId(), '==', 'xyz')
+) // bad: no const assertion
+query(colRef, where(documentId(), '==', 'xyz' as const)) // good: with const assertion
