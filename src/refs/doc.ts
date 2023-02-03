@@ -1,5 +1,6 @@
 import { DocCreator } from '../types'
 import { buildPathFromColIDsAndDocIDs } from './utils'
+import { CollectionReference } from 'firebase-admin/firestore'
 
 export const docCreator: DocCreator =
 	(fStore, collectionIDs) =>
@@ -13,6 +14,6 @@ export const docCreator: DocCreator =
 				})
 			)
 		} else {
-			collectionReferenceOrDocumentId.doc()
+			return (collectionReferenceOrDocumentId as CollectionReference).doc()
 		}
 	}
