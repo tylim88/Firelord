@@ -72,19 +72,19 @@
 </div>
 <br/>
 <div align="center">
-		<p>Extremely High Precision Typescript Wrapper for Firestore Admin,Providing Unparalleled Type Safe and Dev Experience</p>
+		<i>Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience</p>
 </div>
 <br/>
 <div align="center">
-		<p>Modular, Minuscule, Intuitive, Unopinionated, Craftsmanship, Ultimate, Peaceful, Deep</p>
+		<i>Modular, Minuscule, Intuitive, Unopinionated, Craftsmanship, Ultimate, Peaceful, Deep</i>
 </div>
 <br/>
 <div align="center">
-	<p>Of The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; For The VFQAT</p>
+	<i>Of The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; For The VFQAT</p>
 </div>
 <br />
 <div align="center">
-	<p>End Firestore Typing Madness</p>
+	<i>End Firestore Typing Madness</i>
 </div>
 <br />
 <div align="center">
