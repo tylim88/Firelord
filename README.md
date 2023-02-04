@@ -96,7 +96,7 @@ Support [emulator](https://firelordjs.com/firelord/tests)
 
 ## Upcoming V3
 
-read [here](https://github.com/tylim88/FirelordJS#upcoming-v3)
+Read [here](https://github.com/tylim88/FirelordJS#upcoming-v3)
 
 ## Why Do You Need This? What Problems Firelord Solves?
 
