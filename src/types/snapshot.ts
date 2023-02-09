@@ -148,3 +148,11 @@ export interface DocumentChange<T extends MetaType> {
 	 */
 	isEqual(other: DocumentChange<T>): boolean // ! revisit
 }
+
+export interface AggregateQuerySnapshot<T extends MetaType> {
+	readonly query: Query<T>
+	/**
+	 * @returns An `Object` containing `count` properties. See https://firebase.blog/posts/2022/12/introducing-firestore-count-ttl-scale
+	 */
+	data(): { count: number }
+}
