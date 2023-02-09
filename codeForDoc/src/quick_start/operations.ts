@@ -24,12 +24,6 @@ import {
 		f: { g: serverTimestamp(), h: 1010 },
 	})
 
-	await addDoc(example.collection(), {
-		a: 900,
-		b: { c: false, d: [{ e: 'hi' }] },
-		f: { g: serverTimestamp(), h: 3838 },
-	})
-
 	await updateDoc(example.doc('abc'), {
 		a: increment(1),
 		'b.d': arrayUnion({ e: 'hello' }), // dot notation form
@@ -54,4 +48,13 @@ import {
 		docSnapshot.ref.parent.listDocuments()
 		docSnapshot.ref.parent.parent
 	})
+
+	// in case you want to create auto id doc
+	await addDoc(example.collection(), {
+		a: 900,
+		b: { c: false, d: [{ e: 'hi' }] },
+		f: { g: serverTimestamp(), h: 3838 },
+	})
+	// in case you just want auto id ref
+	const autoIdDocRef = example.doc(example.collection())
 }

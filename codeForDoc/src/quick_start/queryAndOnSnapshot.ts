@@ -7,6 +7,7 @@ import {
 	onSnapshot,
 	startAfter,
 	limit,
+	getCountFromServer,
 } from 'firelord'
 //
 getDocs(
@@ -29,6 +30,7 @@ getDocs(
 	querySnapshot.docs.forEach(docSnapshot => {})
 })
 
+// filter and listen to documents
 const unsub = onSnapshot(
 	query(
 		example.collectionGroup(),
@@ -36,10 +38,24 @@ const unsub = onSnapshot(
 		orderBy('f.g'),
 		startAfter(new Date())
 	),
-	querySnapshot => {
-		querySnapshot.forEach(docSnapshot => {
-			const data = docSnapshot.data()
-		})
-	},
+	querySnapshot => {},
 	error => {}
+)
+
+// listen to a single document
+const unsub2 = onSnapshot(
+	example.doc('abc'),
+	docSnapshot => {},
+	error => {}
+)
+
+// remove listeners
+unsub()
+unsub2()
+
+// get aggregated count
+getCountFromServer(query(example.collection(), where('a', '>', 1))).then(
+	aggregatedQuerySnapshot => {
+		const count = aggregatedQuerySnapshot.data().count
+	}
 )

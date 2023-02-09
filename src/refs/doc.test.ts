@@ -59,7 +59,6 @@ describe('simple collection type test', () => {
 	})
 	it('test auto generate id', () => {
 		const ref = userRef.doc(userRef.collection('FirelordTest'))
-		console.log({ ref })
 		const splitPath = ref.path.split('/')
 		expect(splitPath.length).toBe(4)
 		expect(splitPath[splitPath.length - 1]!.length).toBe(20)
