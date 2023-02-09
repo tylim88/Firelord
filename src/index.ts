@@ -60,10 +60,10 @@ export type FirelordRef<T extends MetaType> = Readonly<{
 export { getFirestore } from 'firebase-admin/firestore'
 
 export * from './writeBatch'
-export * from './runTransaction'
+export * from './transaction'
 export * from './fieldValue'
 export * from './fieldPath'
-export * from './onSnapshot'
+export * from './listener'
 export * from './operations'
 export * from './queryClauses'
 export { query } from './refs'
