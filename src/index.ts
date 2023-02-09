@@ -57,19 +57,7 @@ export type FirelordRef<T extends MetaType> = Readonly<{
 	 */
 	collectionGroup: () => Query<T>
 }>
-export {
-	getFirestore,
-	BulkWriter,
-	GrpcStatus,
-	BundleBuilder,
-	setLogFunction,
-	Timestamp,
-	GeoPoint,
-} from 'firebase-admin/firestore'
-
-export { Bytes } from 'firebase/firestore'
-
-export type { DocumentData } from 'firebase-admin/firestore'
+export { getFirestore } from 'firebase-admin/firestore'
 
 export * from './writeBatch'
 export * from './runTransaction'
