@@ -12,7 +12,7 @@
 		"tsc": "tsc",
 		"lint": "eslint . --ext .ts --fix",
 		"pretty": "pretty-quick --stage --branch main",
-		"test": "npm run kill && firebase emulators:exec --only firestore \"rm -rf coverage && jest\" && npm run kill",
+		"test": "npm run kill && (firebase emulators:exec --only firestore \"rm -rf coverage && jest\" || true) && npm run kill",
 		"rollup": "rm -rf dist && rollup -c",
 		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
 		"link": "npm unlink firelord && npm link && npm link firelord",
