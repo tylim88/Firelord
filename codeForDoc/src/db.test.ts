@@ -20,7 +20,9 @@ import {
 	runTransaction,
 	getFirestore,
 	writeBatch,
+	getCountFromServer,
 } from 'firelord'
+import crypto from 'crypto'
 
 initializeApp()
 const userRef = getFirelord<User>(getFirestore(), 'topLevel', 'Users')
@@ -180,5 +182,28 @@ describe('dist files test', () => {
 		await batch.commit()
 		data.a.b.f = []
 		await readThenCompareWithWriteData(data, ref)
+	})
+	it('test auto generate id', () => {
+		const ref = userRef.doc(userRef.collection('FirelordTest'))
+		const splitPath = ref.path.split('/')
+		expect(splitPath.length).toBe(4)
+		expect(splitPath[splitPath.length - 1]!.length).toBe(20)
+	})
+	it('test aggregated count', async () => {
+		const uniqueValue = { name: crypto.randomUUID() }
+		const doc1 = userRef.doc('FirelordTest', 'A1')
+		const doc2 = userRef.doc('FirelordTest', 'A2')
+		const doc3 = userRef.doc('FirelordTest', 'A3')
+		const promises = [doc1, doc2, doc3].map(docRef => {
+			setDoc(docRef, { ...generateRandomData(), ...uniqueValue })
+		})
+		await Promise.all(promises)
+		const snapshot = await getCountFromServer(
+			query(
+				userRef.collection('FirelordTest'),
+				where('name', '==', uniqueValue.name)
+			)
+		)
+		expect(snapshot.data().count).toBe(3)
 	})
 })

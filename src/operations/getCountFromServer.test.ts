@@ -13,7 +13,7 @@ initializeApp()
 const userRef = userRefCreator()
 
 describe('test getCountFromServer', () => {
-	it('test count', async () => {
+	it('test aggregated count', async () => {
 		const uniqueValue = { name: '%#$E#$%^&*YM&HU*(&NY&' }
 		const doc1 = userRef.doc('FirelordTest', 'A1')
 		const doc2 = userRef.doc('FirelordTest', 'A2')

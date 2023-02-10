@@ -14,7 +14,7 @@
 	"dependencies": {
 		"code-for-doc": "file:",
 		"firebase-admin": "latest",
-		"firelord": "latest"
+		"firelord": "^2.3.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.2",

@@ -238,7 +238,13 @@ describe('test whether works with rules-unit-testing', () => {
 
 		await Promise.all([p5, p6])
 	})
-	it('test count', async () => {
+	it('test auto generate id', () => {
+		const ref = userRef.doc(userRef.collection('FirelordTest'))
+		const splitPath = ref.path.split('/')
+		expect(splitPath.length).toBe(4)
+		expect(splitPath[splitPath.length - 1]!.length).toBe(20)
+	})
+	it('test aggregated count', async () => {
 		const uniqueValue = { name: crypto.randomUUID() }
 		const doc1 = userRef.doc('FirelordTest', 'A1')
 		const doc2 = userRef.doc('FirelordTest', 'A2')
