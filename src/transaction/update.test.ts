@@ -10,7 +10,6 @@ import { IsTrue, IsSame, TransactionUpdate } from '../types'
 import { setDoc } from '../operations'
 import { deleteField } from '../fieldValue'
 import { updateCreator } from './update'
-import { getFirestore } from 'firebase-admin/firestore'
 
 initializeApp()
 const userRef = userRefCreator()
