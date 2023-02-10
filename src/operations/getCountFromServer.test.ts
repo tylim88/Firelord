@@ -17,9 +17,10 @@ describe('test getCountFromServer', () => {
 	const doc1 = userRef.doc('ForAggCountTest', '1')
 	const doc2 = userRef.doc('ForAggCountTest', '2')
 	const doc3 = userRef.doc('ForAggCountTest', '3')
+	const doc4 = userRef.doc('ForAggCountTest', '4')
 	const uniqueValue = { name: crypto.randomUUID() }
 	beforeAll(async () => {
-		const deletePromises = [doc1, doc2, doc3].map(docRef => {
+		const deletePromises = [doc1, doc2, doc3, doc4].map(docRef => {
 			return deleteDoc(docRef)
 		})
 
@@ -27,7 +28,7 @@ describe('test getCountFromServer', () => {
 		const setPromises = [doc1, doc2, doc3].map(docRef => {
 			return setDoc(docRef, { ...generateRandomData(), ...uniqueValue })
 		})
-
+		await setDoc(doc4, generateRandomData())
 		await Promise.all(setPromises)
 	})
 
@@ -44,6 +45,6 @@ describe('test getCountFromServer', () => {
 				where('name', '==', uniqueValue.name)
 			)
 		)
-		expect(snapshot.data().count).toBe(3)
+		expect(snapshot.data().count).toBe(4)
 	})
 })
