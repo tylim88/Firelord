@@ -8,6 +8,7 @@ import { query } from '../refs'
 import { where } from '../queryClauses'
 import { setDoc } from './setDoc'
 import { deleteDoc } from './deleteDoc'
+import crypto from 'crypto'
 
 initializeApp()
 
