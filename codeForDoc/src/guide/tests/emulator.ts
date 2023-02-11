@@ -32,18 +32,19 @@ describe('test with jest', () => {
 		// do your assertion here...
 	})
 
-	it('test onSnapshot', done => {
-		expect.hasAssertions()
+	it('test onSnapshot', () =>
+		new Promise(done => {
+			expect.hasAssertions()
 
-		const unsub = onSnapshot(
-			query(userRef.collection(), where('age', '>', 10)),
-			async querySnapshot => {
-				// do your assertion here...
-				unsub()
-				done()
-			}
-		)
-	})
+			const unsub = onSnapshot(
+				query(userRef.collection(), where('age', '>', 10)),
+				async querySnapshot => {
+					// do your assertion here...
+					unsub()
+					done(1)
+				}
+			)
+		}))
 	it('test transaction operations', async () => {
 		await runTransaction(firestore, async transaction => {
 			await transaction.update(userRef.doc('user1'), {

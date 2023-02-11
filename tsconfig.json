@@ -16,7 +16,8 @@
 		"removeComments": false,
 		"resolveJsonModule": true,
 		"noEmit": true,
-		"exactOptionalPropertyTypes": true
+		"exactOptionalPropertyTypes": true,
+		"types": ["vitest/globals"]
 	},
 	"include": ["src/**/*", "scripts/**/*"]
 }

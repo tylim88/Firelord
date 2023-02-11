@@ -32,101 +32,105 @@ describe('test onSnapshot', () => {
 		])
 	})
 
-	it('test one doc functionality and type', done => {
-		const docRef = userRefCreator().doc('FirelordTest', docId1)
-		const data = generateRandomData()
-		expect.hasAssertions()
-		setDoc(docRef, data).then(() => {
-			const unsub = onSnapshot(docRef, async documentSnapshot => {
-				type A = typeof documentSnapshot
-				type B = DocumentSnapshot<User>
-				IsTrue<IsSame<B, A>>()
-				compareWriteDataWithDocSnapData(data, documentSnapshot)
-				unsub()
-				done()
-			})
-		})
-	})
-	it('test one doc functionality and type', done => {
-		const docRef = userRefCreator().doc('FirelordTest', docId2)
-		const data = generateRandomData()
-		expect.hasAssertions()
-		setDoc(docRef, data).then(() => {
-			const unsub = onSnapshot(
-				docRef,
-				async documentSnapshot => {
+	it('test one doc functionality and type', () =>
+		new Promise(done => {
+			const docRef = userRefCreator().doc('FirelordTest', docId1)
+			const data = generateRandomData()
+			expect.hasAssertions()
+			setDoc(docRef, data).then(() => {
+				const unsub = onSnapshot(docRef, async documentSnapshot => {
 					type A = typeof documentSnapshot
 					type B = DocumentSnapshot<User>
 					IsTrue<IsSame<B, A>>()
 					compareWriteDataWithDocSnapData(data, documentSnapshot)
 					unsub()
-					done()
-				},
-				() => {
-					//
-				}
-			)
-		})
-	})
-	it('test naked query functionality and type', done => {
-		const docRef = userRefCreator().doc('FirelordTest', docId3)
-		const data = generateRandomData()
-		expect.hasAssertions()
-		setDoc(docRef, data).then(() => {
-			const unsub = onSnapshot(
-				query(userRefCreator().collection('FirelordTest')),
-				async querySnapshot => {
-					type A = typeof querySnapshot
-					type B = QuerySnapshot<User>
-					IsTrue<IsSame<B, A>>()
-					const queryDocumentSnapshot = querySnapshot.docs.filter(
-						doc => doc.id === docId3
-					)[0]
-					expect(queryDocumentSnapshot).not.toBe(undefined)
-					if (queryDocumentSnapshot) {
-						type C = typeof queryDocumentSnapshot
-						type D = QueryDocumentSnapshot<User>
-						IsTrue<IsSame<C, D>>()
-						compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
+					done(1)
+				})
+			})
+		}))
+	it('test one doc functionality and type', () =>
+		new Promise(done => {
+			const docRef = userRefCreator().doc('FirelordTest', docId2)
+			const data = generateRandomData()
+			expect.hasAssertions()
+			setDoc(docRef, data).then(() => {
+				const unsub = onSnapshot(
+					docRef,
+					async documentSnapshot => {
+						type A = typeof documentSnapshot
+						type B = DocumentSnapshot<User>
+						IsTrue<IsSame<B, A>>()
+						compareWriteDataWithDocSnapData(data, documentSnapshot)
+						unsub()
+						done(1)
+					},
+					() => {
+						//
 					}
-					unsub()
-					done()
-				},
-				() => {
-					//
-				}
-			)
-		})
-	})
-	it('test query functionality and type', done => {
-		const docRef = userRefCreator().doc('FirelordTest', docId4)
-		const data = generateRandomData()
-		expect.hasAssertions()
-		setDoc(docRef, data).then(() => {
-			const unsub = onSnapshot(
-				query(
-					userRefCreator().collection('FirelordTest'),
-					where('a.b.c', '==', data.a.b.c as number)
-				),
-				async querySnapshot => {
-					type A = typeof querySnapshot
-					type B = QuerySnapshot<User>
-					IsTrue<IsSame<B, A>>()
-					const queryDocumentSnapshot = querySnapshot.docs.filter(
-						doc => doc.id === docId4
-					)[0]
-					expect(querySnapshot.docs.length).toBe(1)
-					expect(queryDocumentSnapshot).not.toBe(undefined)
-					if (queryDocumentSnapshot) {
-						type C = typeof queryDocumentSnapshot
-						type D = QueryDocumentSnapshot<User>
-						IsTrue<IsSame<C, D>>()
-						compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
+				)
+			})
+		}))
+	it('test naked query functionality and type', () =>
+		new Promise(done => {
+			const docRef = userRefCreator().doc('FirelordTest', docId3)
+			const data = generateRandomData()
+			expect.hasAssertions()
+			setDoc(docRef, data).then(() => {
+				const unsub = onSnapshot(
+					query(userRefCreator().collection('FirelordTest')),
+					async querySnapshot => {
+						type A = typeof querySnapshot
+						type B = QuerySnapshot<User>
+						IsTrue<IsSame<B, A>>()
+						const queryDocumentSnapshot = querySnapshot.docs.filter(
+							doc => doc.id === docId3
+						)[0]
+						expect(queryDocumentSnapshot).not.toBe(undefined)
+						if (queryDocumentSnapshot) {
+							type C = typeof queryDocumentSnapshot
+							type D = QueryDocumentSnapshot<User>
+							IsTrue<IsSame<C, D>>()
+							compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
+						}
+						unsub()
+						done(1)
+					},
+					() => {
+						//
 					}
-					unsub()
-					done()
-				}
-			)
-		})
-	})
+				)
+			})
+		}))
+	it('test query functionality and type', () =>
+		new Promise(done => {
+			const docRef = userRefCreator().doc('FirelordTest', docId4)
+			const data = generateRandomData()
+			expect.hasAssertions()
+			setDoc(docRef, data).then(() => {
+				const unsub = onSnapshot(
+					query(
+						userRefCreator().collection('FirelordTest'),
+						where('a.b.c', '==', data.a.b.c as number)
+					),
+					async querySnapshot => {
+						type A = typeof querySnapshot
+						type B = QuerySnapshot<User>
+						IsTrue<IsSame<B, A>>()
+						const queryDocumentSnapshot = querySnapshot.docs.filter(
+							doc => doc.id === docId4
+						)[0]
+						expect(querySnapshot.docs.length).toBe(1)
+						expect(queryDocumentSnapshot).not.toBe(undefined)
+						if (queryDocumentSnapshot) {
+							type C = typeof queryDocumentSnapshot
+							type D = QueryDocumentSnapshot<User>
+							IsTrue<IsSame<C, D>>()
+							compareWriteDataWithDocSnapData(data, queryDocumentSnapshot)
+						}
+						unsub()
+						done(1)
+					}
+				)
+			})
+		}))
 })
