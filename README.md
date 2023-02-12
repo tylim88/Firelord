@@ -118,7 +118,7 @@ It is not possible to unified platform specific API, good thing is most of these
 
 [Just Ask](https://github.com/tylim88/FirelordJS/discussions)
 
-Note: FirelordJS and Firelord share the same discussion space.
+Note: FirelordJS and Firelord share the same discussion space and [release note](https://github.com/tylim88/FirelordJS/releases).
 
 ## Contributing
 
