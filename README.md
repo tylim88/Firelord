@@ -88,11 +88,9 @@
 </div>
 <br />
 <div align="center">
-	<p>Be The Master Of Your Fire, Be Firelord</p>
+	<i>Be The Master Of Your Fire, Be Firelord</i>
 </div>
-<div style="line-height:75%;">
-    <br>
-</div>
+<br>
 <div align="center">
 <a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
 </div>
