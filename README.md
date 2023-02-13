@@ -72,7 +72,7 @@
 </div>
 <br/>
 <div align="center">
-		<i>Extremely High Precision Typescript Wrapper for Firestore Admin, Providing Unparalleled Type Safe and Dev Experience</i>
+		<i>Extremely High Precision Firestore Admin Typescript Wrapper, Providing Unparalleled Type Safety and Dev Experience</i>
 </div>
 <br/>
 <div align="center">
@@ -80,13 +80,19 @@
 </div>
 <br/>
 <div align="center">
-	<i>Of The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160; For The VFQAT</i>
+	<i>Of The VFQAT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|| &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; For The VFQAT</i>
 </div>
 <br />
 <div align="center">
-	<i>End Firestore Typing Madness</i>
+	<i>End Firestore Typing Madness With Type Level Madness</i>
 </div>
 <br />
+<div align="center">
+	<p>Be The Master Of Your Fire, Be Firelord</p>
+</div>
+<div style="line-height:75%;">
+    <br>
+</div>
 <div align="center">
 <a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
 </div>
