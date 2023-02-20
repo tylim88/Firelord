@@ -17,7 +17,8 @@
 		"resolveJsonModule": true,
 		"noEmit": true,
 		"exactOptionalPropertyTypes": true,
-		"types": ["vitest/globals"]
+		"types": ["vitest/globals"],
+		"skipLibCheck": true
 	},
 	"include": ["src/**/*", "scripts/**/*"]
 }
