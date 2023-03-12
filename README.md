@@ -80,11 +80,7 @@
 </div>
 <br/>
 <div align="center">
-	<i>Of The VFQAT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|| &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; For The VFQAT</i>
-</div>
-<br />
-<div align="center">
-	<i>End Firestore Typing Madness With Type Level Madness</i>
+	<i>Of The VFQAT &#160;&#160;&#160;&#160;&#160;||&#160;&#160;&#160;&#160;&#160; By The VFQAT &#160;&#160;&#160;&#160;&#160;|| &#160;&#160;&#160;&#160;&#160; For The VFQAT</i>
 </div>
 <br />
 <div align="center">
