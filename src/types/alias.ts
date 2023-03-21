@@ -26,11 +26,6 @@ export type WhereFilterOp = import('firebase-admin/firestore').WhereFilterOp
 export type GeoPoint = FirebaseFirestore['GeoPoint']
 
 /**
- * An immutable object representing an array of bytes.
- */
-export type Bytes = typeof import('firebase/firestore')['Bytes']
-
-/**
  * A Timestamp represents a point in time independent of any time zone or
  * calendar, represented as seconds and fractions of seconds at nanosecond
  * resolution in UTC Epoch time. It is encoded using the Proleptic Gregorian

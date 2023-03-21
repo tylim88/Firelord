@@ -1,5 +1,6 @@
 import { MetaTypeCreator, MetaType } from './metaTypeCreator'
-import { Timestamp, Bytes, GeoPoint } from './alias'
+import { Timestamp, GeoPoint } from './alias'
+import { Bytes } from 'firebase/firestore'
 import {
 	ErrorNullBanned,
 	ErrorUnionInvolveObjectType,
