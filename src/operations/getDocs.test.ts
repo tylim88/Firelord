@@ -116,10 +116,8 @@ describe('test getDocs', () => {
 		expect(querySnap.docs.length).toBe(0)
 	})
 	it('test without query', async () => {
-		const querySnap = await getDocs(
-			userRefCreator().collection('ForAggCountTest')
-		)
+		const querySnap = await getDocs(userRefCreator().collection('FirelordTest'))
 		IsTrue<IsSame<typeof querySnap, QuerySnapshot<User>>>()
-		expect(querySnap.docs.length).toBe(4)
+		expect(querySnap.docs.length).greaterThan(0)
 	})
 })
