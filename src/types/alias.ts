@@ -76,3 +76,45 @@ export type OriFieldValue = import('firebase-admin/firestore').FieldValue
 export type OriWriteBatch = import('firebase-admin/firestore').WriteBatch
 
 export type OriTransaction = import('firebase-admin/firestore').Transaction
+
+export declare class Bytes {
+	private constructor()
+	/**
+	 * Creates a new `Bytes` object from the given Base64 string, converting it to
+	 * bytes.
+	 *
+	 * @param base64 - The Base64 string used to create the `Bytes` object.
+	 */
+	static fromBase64String(base64: string): Bytes
+	/**
+	 * Creates a new `Bytes` object from the given Uint8Array.
+	 *
+	 * @param array - The Uint8Array used to create the `Bytes` object.
+	 */
+	static fromUint8Array(array: Uint8Array): Bytes
+	/**
+	 * Returns the underlying bytes as a Base64-encoded string.
+	 *
+	 * @returns The Base64-encoded string created from the `Bytes` object.
+	 */
+	toBase64(): string
+	/**
+	 * Returns the underlying bytes in a new `Uint8Array`.
+	 *
+	 * @returns The Uint8Array created from the `Bytes` object.
+	 */
+	toUint8Array(): Uint8Array
+	/**
+	 * Returns a string representation of the `Bytes` object.
+	 *
+	 * @returns A string representation of the `Bytes` object.
+	 */
+	toString(): string
+	/**
+	 * Returns true if this `Bytes` object is equal to the provided one.
+	 *
+	 * @param other - The `Bytes` object to compare against.
+	 * @returns true if this `Bytes` object is equal to the provided one.
+	 */
+	isEqual(other: Bytes): boolean
+}

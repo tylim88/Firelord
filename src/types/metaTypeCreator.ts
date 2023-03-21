@@ -1,5 +1,4 @@
-import { Timestamp, GeoPoint } from './alias'
-import { Bytes } from 'firebase/firestore'
+import { Timestamp, Bytes, GeoPoint } from './alias'
 import {
 	ErrorFieldValueInArray,
 	ErrorUnassignedAbleFieldValue,
