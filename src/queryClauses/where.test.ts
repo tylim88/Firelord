@@ -88,8 +88,6 @@ describe('test query ref', () => {
 	it('test literal type without const assertion, should pass', () => {
 		query(ref, where('role', 'in', ['admin']))
 		query(ref, where('role', 'not-in', ['admin']))
-		query(ref, where('role', 'in', ['admin']))
-		query(ref, where('role', 'not-in', ['admin']))
 	})
 	it('test block fresh empty array, negative case', () => {
 		// @ts-expect-error
