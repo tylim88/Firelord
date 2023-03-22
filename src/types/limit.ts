@@ -1,11 +1,10 @@
 import { LimitConstraint } from './queryConstraints'
 import { ErrorLimitInvalidNumber } from './error'
-import { Narrow } from './utils'
 
 export type LimitCreator = <Type extends 'limit' | 'limitToLast'>(
 	type: Type
-) => <Value extends number>(
-	limit: Narrow<Value> extends 0
+) => <const Value extends number>(
+	limit: Value extends 0
 		? ErrorLimitInvalidNumber
 		: number extends Value
 		? Value
