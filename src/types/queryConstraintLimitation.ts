@@ -299,7 +299,7 @@ type WhereConstraintLimitation<
 			T,
 			U['fieldPath'],
 			U['opStr'],
-			U['value'] extends never[]
+			U['value'] extends readonly never[] | readonly []
 				? ErrorWhereNoNeverEmptyArray
 				: U['value'] extends readonly (infer P)[]
 				? readonly GetCorrectDocumentIdBasedOnRef<T, Q, U['fieldPath'], P>[]
@@ -310,7 +310,7 @@ type WhereConstraintLimitation<
 			T,
 			U['fieldPath'],
 			U['opStr'],
-			U['value'] extends readonly never[]
+			U['value'] extends readonly never[] | readonly []
 				? ErrorWhereNoNeverEmptyArray
 				: T['compare'][U['fieldPath']] extends readonly unknown[]
 				? T['compare'][U['fieldPath']]
