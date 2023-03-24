@@ -94,6 +94,10 @@
 
 Support [emulator](https://firelordjs.com/firelord/tests)
 
+# Important
+
+[Please read v2.4 release note](https://github.com/tylim88/FirelordJS/releases/tag/2.4.0)
+
 ## Upcoming V3
 
 Read [here](https://github.com/tylim88/FirelordJS#upcoming-v3)
