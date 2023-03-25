@@ -1,6 +1,6 @@
 import { getFirelord, getFirestore } from 'firelord'
 import { initializeApp, cert, ServiceAccount } from 'firebase-admin/app'
-import { Example } from './define_meta_type'
+import { Example } from './dataType'
 
 const app = initializeApp()
 

@@ -1,4 +1,4 @@
-import { example, db } from './create_firelord_ref'
+import { example, db } from './init'
 import { writeBatch, serverTimestamp } from 'firelord'
 
 const batch = writeBatch(db)
