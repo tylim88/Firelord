@@ -1,5 +1,5 @@
 import { MetaTypeCreator, MetaType } from './metaTypeCreator'
-import { Timestamp, GeoPoint, Bytes } from './alias'
+import { Timestamp, Bytes, GeoPoint } from './alias'
 import {
 	ErrorNullBanned,
 	ErrorUnionInvolveObjectType,
@@ -33,6 +33,7 @@ describe('test Firelord type', () => {
 				}
 				h: string
 				i: number | null
+				l: { a: 1 } | { b: 2 }
 			},
 			'A',
 			string,
@@ -57,6 +58,7 @@ describe('test Firelord type', () => {
 				| undefined
 			h: string | undefined
 			i: number | null | undefined
+			l: ErrorUnionInvolveObjectType | undefined
 		}
 
 		type ExpectedWrite = {
@@ -80,6 +82,7 @@ describe('test Firelord type', () => {
 			}
 			h: string
 			i: number | null | Increment
+			l: ErrorUnionInvolveObjectType
 		}
 
 		type ExpectedWriteFlatten = {
@@ -104,6 +107,7 @@ describe('test Firelord type', () => {
 			}
 			h: string
 			i: number | null | Increment
+			l: ErrorUnionInvolveObjectType
 			'b.c': 'a'
 			'b.d': {
 				e: false
@@ -140,6 +144,7 @@ describe('test Firelord type', () => {
 			}
 			h: string
 			i: number | null
+			l: ErrorUnionInvolveObjectType
 			'b.c': 'a'
 			'b.d': {
 				e: false
@@ -484,7 +489,7 @@ describe('test Firelord type', () => {
 			a: 1 | null | undefined
 			b: {
 				c: 'a' | undefined
-				d: ErrorUnionInvolveObjectType
+				d: { e: false } | undefined
 				f:
 					| {
 							g: Timestamp | null
@@ -500,10 +505,32 @@ describe('test Firelord type', () => {
 		}
 
 		type ExpectedWrite = {
+			a: 1 | null
+			b: {
+				c: 'a'
+				d: { e: false }
+				f:
+					| readonly {
+							g: Date | Timestamp | null
+							h: 2
+					  }[]
+					| ArrayUnionOrRemove<{
+							g: Date | Timestamp | null
+							h: 2
+					  }>
+
+				j: ServerTimestamp | null | Date | Timestamp
+				k: DocumentReference<MetaType> | null
+			}
+			h: string
+			i: number | null | Increment
+		}
+
+		type ExpectedWriteMerge = {
 			a: 1 | null | DeleteField
 			b: {
 				c: 'a' | DeleteField
-				d: ErrorUnionInvolveObjectType
+				d: { e: false } | DeleteField
 				f:
 					| readonly {
 							g: Date | Timestamp | null
@@ -525,7 +552,7 @@ describe('test Firelord type', () => {
 			a: 1 | null | DeleteField
 			b: {
 				c: 'a' | DeleteField
-				d: ErrorUnionInvolveObjectType
+				d: { e: false } | DeleteField
 				f:
 					| readonly {
 							g: Timestamp | Date | null
@@ -538,6 +565,7 @@ describe('test Firelord type', () => {
 					| DeleteField
 				j: ServerTimestamp | null | Date | Timestamp | DeleteField
 				k: DocumentReference<MetaType> | null | DeleteField
+				'd.e': false
 			}
 			h: string | DeleteField
 			i: number | null | Increment | DeleteField
@@ -552,16 +580,19 @@ describe('test Firelord type', () => {
 				  }>
 				| DeleteField
 			'b.c': 'a' | DeleteField
-			'b.d': ErrorUnionInvolveObjectType
+			'b.d': { e: false } | DeleteField
 			'b.j': ServerTimestamp | null | Date | Timestamp | DeleteField
 			'b.k': DocumentReference<MetaType> | null | DeleteField
+			'b.d.e': false
 		}
 
 		type ExpectedCompare = {
 			a: 1 | null
 			b: {
 				c: 'a'
-				d: ErrorUnionInvolveObjectType
+				d: {
+					e: false
+				}
 				f:
 					| readonly {
 							g: Timestamp | Date | null
@@ -569,11 +600,14 @@ describe('test Firelord type', () => {
 					  }[]
 				j: Timestamp | Date | null
 				k: DocumentReference<MetaType> | null
+				'd.e': false
 			}
 			h: string
 			i: number | null
 			'b.c': 'a'
-			'b.d': ErrorUnionInvolveObjectType
+			'b.d': {
+				e: false
+			}
 			'b.f':
 				| readonly {
 						g: Timestamp | Date | null
@@ -582,15 +616,18 @@ describe('test Firelord type', () => {
 
 			'b.j': Timestamp | Date | null
 			'b.k': DocumentReference<MetaType> | null
+			'b.d.e': false
 		}
 
 		type Read = A['read']
 		type Write = A['write']
+		type WriteMerge = A['writeMerge']
 		type WriteFlatten = A['writeFlatten']
 		type Compare = A['compare']
 
 		IsTrue<IsSame<ExpectedRead, Read>>()
 		IsTrue<IsSame<ExpectedWrite, Write>>()
+		IsTrue<IsSame<ExpectedWriteMerge, WriteMerge>>()
 		IsTrue<IsEqual<ExpectedWriteFlatten, WriteFlatten>>()
 		IsTrue<IsEqual<ExpectedCompare, Compare>>()
 	})

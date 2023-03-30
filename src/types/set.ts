@@ -7,7 +7,7 @@ import {
 import { DeepKey } from './objectFlatten'
 import { Transaction } from './transaction'
 import { WriteBatch } from './batch'
-import { WriteResult } from './alias'
+import { WriteResult } from 'firebase-admin/firestore'
 
 type SetCreator<U> = <
 	T extends MetaType,
@@ -33,13 +33,17 @@ type SetCreator<U> = <
 						mergeFields: DeepKey<Data, 'write'>[]
 				  }
 		? PartialNoUndefinedAndNoUnknownMemberNoEmptyMember<
-				T['write'],
+				T['writeMerge'],
 				Data,
-				SetOptions extends { merge: boolean }
-					? SetOptions['merge']
-					: SetOptions extends { mergeFields: DeepKey<Data, 'write'>[] }
-					? SetOptions['mergeFields']
-					: false
+				(
+					SetOptions extends { merge: boolean }
+						? SetOptions['merge']
+						: SetOptions extends { mergeFields: DeepKey<Data, 'write'>[] }
+						? SetOptions['mergeFields']
+						: false
+				) extends infer R extends boolean | string[]
+					? R
+					: never
 		  >
 		: RecursivelyReplaceDeleteFieldWithErrorMsg<T['write'], Data>,
 	options?: SetOptions extends never ? SetOptions : SetOptions
