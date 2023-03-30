@@ -19,7 +19,7 @@ import {
 } from './fieldValue'
 import { ObjectFlatten } from './objectFlatten'
 import { RecursiveReplaceUnionInvolveObjectTypeWithErrorMsg } from './markUnionObjectAsError'
-import { StrictOmit } from './utils'
+import { StrictOmit, IsSame } from './utils'
 import { DocumentReference } from './refs'
 
 export type MetaType = {
@@ -103,6 +103,13 @@ export type MetaTypeCreator<
 		: never
 	: never
 
+// need this because bytes extends field value which is bad (admin only)
+type IsBytes<T> = T extends Bytes
+	? IsSame<T['toBase64'], any> extends true
+		? false
+		: true
+	: false
+
 type ReadConverterArray<
 	T,
 	allFieldsPossiblyReadAsUndefined,
@@ -119,13 +126,15 @@ type ReadConverterArray<
 						true
 				  >[]
 				| (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
+		: IsBytes<T> extends true
+		? T
 		: T extends FieldValues
 		? ErrorFieldValueInArray
 		: T extends Date | Timestamp
 		?
 				| Timestamp
 				| (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
-		: T extends DocumentReference<any> | Bytes | GeoPoint
+		: T extends DocumentReference<any> | GeoPoint
 		? T | (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
 		: T extends PossiblyReadAsUndefined
 		? InArray extends true
@@ -159,9 +168,11 @@ type ReadConverter<T, allFieldsPossiblyReadAsUndefined, BannedTypes> =
 							true
 					  >[]
 					| allFieldsPossiblyReadAsUndefined
+			: IsBytes<T> extends true
+			? T | allFieldsPossiblyReadAsUndefined
 			: T extends ServerTimestamp | Date | Timestamp
 			? Timestamp | allFieldsPossiblyReadAsUndefined
-			: T extends DocumentReference<any> | Bytes | GeoPoint
+			: T extends DocumentReference<any> | GeoPoint
 			? T | allFieldsPossiblyReadAsUndefined
 			: T extends DeleteField | PossiblyReadAsUndefined
 			? undefined
@@ -186,11 +197,13 @@ type CompareConverterArray<T, BannedTypes> = NoDirectNestedArray<
 	T,
 	T extends (infer A)[]
 		? readonly CompareConverterArray<A, BannedTypes>[]
+		: IsBytes<T> extends true
+		? T
 		: T extends FieldValues
 		? ErrorFieldValueInArray
 		: T extends Date | Timestamp
 		? Timestamp | Date
-		: T extends DocumentReference<any> | Bytes | GeoPoint
+		: T extends DocumentReference<any> | GeoPoint
 		? T
 		: T extends PossiblyReadAsUndefined
 		? never
@@ -205,9 +218,11 @@ type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 	T,
 	T extends (infer A)[]
 		? readonly CompareConverterArray<A, BannedTypes>[]
+		: IsBytes<T> extends true
+		? T
 		: T extends ServerTimestamp | Date | Timestamp
 		? Timestamp | Date
-		: T extends DocumentReference<any> | Bytes | GeoPoint
+		: T extends DocumentReference<any> | GeoPoint
 		? T
 		: T extends UnassignedAbleFieldValue
 		? ErrorUnassignedAbleFieldValue
@@ -224,11 +239,13 @@ type ArrayWriteConverter<T, BannedTypes> = NoDirectNestedArray<
 	T,
 	T extends (infer A)[]
 		? readonly ArrayWriteConverter<A, BannedTypes>[]
+		: IsBytes<T> extends true
+		? T
 		: T extends FieldValues
 		? ErrorFieldValueInArray
 		: T extends Timestamp | Date
 		? Timestamp | Date
-		: T extends DocumentReference<any> | Bytes | GeoPoint
+		: T extends DocumentReference<any> | GeoPoint
 		? T
 		: T extends PossiblyReadAsUndefined
 		? never
@@ -245,6 +262,8 @@ type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		?
 				| readonly ArrayWriteConverter<A, BannedTypes>[]
 				| ArrayUnionOrRemove<ArrayWriteConverter<A, BannedTypes>>
+		: IsBytes<T> extends true
+		? T
 		: T extends DocumentReference<any> | ServerTimestamp | GeoPoint
 		? T
 		: T extends number
@@ -270,6 +289,8 @@ type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 		?
 				| readonly ArrayWriteConverter<A, BannedTypes>[]
 				| ArrayUnionOrRemove<ArrayWriteConverter<A, BannedTypes>>
+		: IsBytes<T> extends true
+		? T
 		: T extends
 				| DocumentReference<any>
 				| ServerTimestamp

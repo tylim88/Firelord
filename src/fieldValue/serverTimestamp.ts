@@ -8,7 +8,5 @@ import { ServerTimestamp } from '../types'
  * @return The FieldValue sentinel for use in a call to set(), create() or
  * update().
  */
-export const serverTimestamp = (): ServerTimestamp => {
-	// @ts-expect-error
-	return FieldValue.serverTimestamp()
-}
+export const serverTimestamp = (): ServerTimestamp =>
+	FieldValue.serverTimestamp()

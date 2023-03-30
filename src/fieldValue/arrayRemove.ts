@@ -12,13 +12,12 @@ import { ArrayRemoveOrUnion } from '../types'
  * @return The FieldValue sentinel for use in a call to set(), create() or
  * update().
  */
-// @ts-expect-error
 export const arrayRemove: ArrayRemoveOrUnion = (...elements) => {
 	// * web don't have empty array issue
 	const filler = elements.length === 0 ? [[]] : elements
 	const ref = FieldValue.arrayRemove(...filler)
 	// @ts-expect-error
-	ref['Firelord.ArrayFieldValue'] = elements
+	ref['Do_Not_Access.Firelord_ArrayFieldValue'] = elements
 
 	return ref
 }
