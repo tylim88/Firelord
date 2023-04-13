@@ -16,3 +16,7 @@ export type Collection<T extends MetaType> = <
 >(
 	...documentIDs: D extends never ? D : IsValidDocIDLoop<D>
 ) => CollectionReference<T>
+
+export type GetCollectionIds<T extends MetaType> = IsValidDocIDLoop<
+	GetOddOrEvenSegments<T['collectionPath'], false>
+>

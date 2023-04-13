@@ -85,4 +85,5 @@ export type {
 	AbstractMetaTypeCreator,
 	GetDocIds,
 	Transaction,
+	GetCollectionIds,
 } from './types'
