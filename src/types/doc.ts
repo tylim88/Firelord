@@ -20,3 +20,7 @@ export type Doc<T extends MetaType> = {
 			: ErrorAutoIdTypeMustBeWideString<T['docID']>
 	): DocumentReference<T>
 }
+
+export type GetDocIds<T extends MetaType> = IsValidDocIDLoop<
+	GetOddOrEvenSegments<T['docPath'], false>
+>

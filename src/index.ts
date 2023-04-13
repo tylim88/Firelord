@@ -83,4 +83,6 @@ export type {
 	WriteBatch,
 	RunTransaction,
 	AbstractMetaTypeCreator,
+	GetDocIds,
+	Transaction,
 } from './types'
