@@ -21,6 +21,7 @@ export type Doc<T extends MetaType> = {
 	): DocumentReference<T>
 }
 
-export type GetDocIds<T extends MetaType> = IsValidDocIDLoop<
-	GetOddOrEvenSegments<T['docPath'], false>
+export type GetDocIds<T extends MetaType> = GetOddOrEvenSegments<
+	T['docPath'],
+	false
 >
