@@ -1,5 +1,5 @@
 import { documentId } from './documentId'
-import { DocumentId, IsTrue, IsSame, DocumentReference } from '../types'
+import { IsTrue, IsSame, DocumentReference, __name__ } from '../types'
 import { query } from '../refs'
 import { where } from '../queryClauses'
 import {
@@ -26,29 +26,9 @@ const data = generateRandomData()
 describe('test document id type', () => {
 	it('test return type', () => {
 		type A = ReturnType<typeof documentId>
-		type B = DocumentId
+		type B = __name__
 		IsTrue<IsSame<A, B>>()
-	})
-
-	it('test reject __name__ as direct input', () => {
-		query(
-			collectionGroupRef,
-			where(
-				// @ts-expect-error
-				'__name__',
-				'==',
-				fullDocPath
-			)
-		)
-		query(
-			collectionRef,
-			where(
-				// @ts-expect-error
-				'__name__',
-				'!=',
-				'a'
-			)
-		)
+		expect(documentId()).toBe('__name__')
 	})
 
 	it('test document id type is string', () => {

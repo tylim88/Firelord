@@ -6,14 +6,20 @@ import {
 	OrderByConstraint,
 	CursorConstraint,
 } from '../queryConstraints'
-import { RemoveSentinelFieldPathFromCompare, __name__ } from '../fieldPath'
+import {
+	RemoveSentinelFieldPathFromCompare,
+	__name__,
+	GetCorrectDocumentIdBasedOnRef,
+} from '../fieldPath'
 import { CursorType } from '../cursor'
 import { QueryDocumentSnapshot, DocumentSnapshot } from '../snapshot'
 import { GetAllOrderBy } from './orderBy'
+import { Query } from '../refs'
 
 // Too many arguments provided to startAt(). The number of arguments must be less than or equal to the number of orderBy() clauses
 type ValidateCursorOrderBy<
 	T extends MetaType,
+	Q extends Query<T>,
 	Values extends unknown[],
 	AllOrderBy extends OrderByConstraint<string, OrderByDirection | undefined>[]
 > = Values extends [infer Head, ...infer Rest]
@@ -21,9 +27,7 @@ type ValidateCursorOrderBy<
 		? H extends OrderByConstraint<string, OrderByDirection | undefined>
 			? [
 					H['fieldPath'] extends __name__
-						? string extends Head
-							? ErrorCursor__name__
-							: T['docPath']
+						? GetCorrectDocumentIdBasedOnRef<T, Q, H['fieldPath'], Head>
 						: Head extends
 								| T['compare'][H['fieldPath']]
 								| QueryDocumentSnapshot<T>
@@ -35,6 +39,7 @@ type ValidateCursorOrderBy<
 								| DocumentSnapshot<T>,
 					...ValidateCursorOrderBy<
 						T,
+						Q,
 						Rest,
 						R extends OrderByConstraint<string, OrderByDirection | undefined>[]
 							? R
@@ -47,12 +52,15 @@ type ValidateCursorOrderBy<
 
 export type CursorConstraintLimitation<
 	T extends MetaType,
+	Q extends Query<T>,
 	U extends CursorConstraint<CursorType, unknown[]>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = CursorConstraint<
 	CursorType,
 	ValidateCursorOrderBy<
 		RemoveSentinelFieldPathFromCompare<T>,
+		// @ts-expect-error
+		Q,
 		U['values'],
 		GetAllOrderBy<T, PreviousQCs, []>
 	>

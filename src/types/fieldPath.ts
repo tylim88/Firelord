@@ -48,7 +48,9 @@ export type GetCorrectDocumentIdBasedOnRef<
 	Value
 > = FieldPath extends __name__
 	? Value extends string
-		? IsEqual<CollectionReference<T>, Q> extends true
+		? true extends
+				| IsEqual<CollectionReference<T>, Q>
+				| IsEqual<CollectionReference<AddSentinelFieldPathToCompare<T>>, Q>
 			? string extends T['docID']
 				? IsValidID<Value, 'Document', 'ID'>
 				: string extends Value
@@ -56,7 +58,9 @@ export type GetCorrectDocumentIdBasedOnRef<
 				: Value extends T['docID']
 				? IsValidID<Value, 'Document', 'ID'>
 				: T['docID']
-			: IsEqual<Query<AddSentinelFieldPathToCompare<T>>, Q> extends true
+			: true extends
+					| IsEqual<Query<AddSentinelFieldPathToCompare<T>>, Q>
+					| IsEqual<Query<T>, Q>
 			? string extends Value
 				? ErrorPleaseDoConstAssertion
 				: GetNumberOfSlash<Value> extends GetNumberOfSlash<T['docPath']> // checking number of slash is a must, because the docID type most likely is string, and will accept any string
@@ -67,7 +71,7 @@ export type GetCorrectDocumentIdBasedOnRef<
 						GetNumberOfSlash<T['docPath']>,
 						GetNumberOfSlash<Value>
 				  >
-			: never // impossible route
+			: 1 // never // impossible route
 		: DocumentReference<RemoveSentinelFieldPathFromCompare<T>>
 	: FieldPath extends string
 	? T['compare'][FieldPath]
