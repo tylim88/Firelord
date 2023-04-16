@@ -72,7 +72,7 @@
 </div>
 <br/>
 <div align="center">
-		<i>Extremely High Precision Firestore Admin Typescript Wrapper, Providing Unparalleled Type Safety and Dev Experience</i>
+		<i>High Precision Firestore Admin Typescript Wrapper, Providing Unparalleled Type Safety and Dev Experience</i>
 </div>
 <br/>
 <div align="center">
@@ -87,8 +87,13 @@
 	<i>Be The Master Of Your Fire, Be Firelord</i>
 </div>
 <br>
+
 <div align="center">
-<a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Documentation</strong></a>
+	<i>Beyond Typing</i>
+</div>
+<br>
+<div align="center">
+<a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Doc</strong></a>
 </div>
 <br/>
 
@@ -96,7 +101,7 @@ Support [emulator](https://firelordjs.com/firelord/tests)
 
 # Notice
 
-Because of the official admin SDK is lagging behind the official web SDK, Firelord admin will not sync with Firelord web and will fix bugs only until the official admin SDK catch up.
+Because the official admin SDK is lagging behind the official web SDK, Firelord admin will not sync with Firelord web and will fix bugs only until the official admin SDK catch up.
 
 Which mean composite query (`or()` `and()`) is not available.
 
@@ -106,7 +111,7 @@ Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
 
 ## About
 
-This wrapper wrap around admin Firestore V8 interface(There is no V9 for admin version) and turn it into type safe V9 interface.
+This wrapper wrap around admin Firestore V8 interface(There is no official V9 admin version) and turn it into type safe V9 interface.
 
 The API is basically same as the web version, both web and admin version basically share the same documentation.
 
@@ -114,7 +119,7 @@ It does not become modular like the web version, but this is ok because we don't
 
 The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8 and most importantly: absolute type safe.
 
-It is not possible to unified platform specific API, good thing is most of these APIs are mutually exclusive.
+Due to a lot of small differences, it is unrealistic to squeeze both platforms under the same library unless we give up something.
 
 ## Have Questions?
 
