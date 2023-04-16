@@ -94,13 +94,11 @@
 
 Support [emulator](https://firelordjs.com/firelord/tests)
 
-# Important
+# Notice
 
-[Please read v2.4 release note](https://github.com/tylim88/FirelordJS/releases/tag/2.4.0)
+Because of the official admin SDK is lagging behind the official web SDK, Firelord admin will not sync with Firelord web and will fix bugs only until the official admin SDK catch up.
 
-## Upcoming V3
-
-Read [here](https://github.com/tylim88/FirelordJS#upcoming-v3)
+Which mean composite query (`or()` `and()`) is not available.
 
 ## Why Do You Need This? What Problems Firelord Solves?
 
@@ -124,7 +122,7 @@ It is not possible to unified platform specific API, good thing is most of these
 
 Note: FirelordJS and Firelord share the same discussion space.
 
-Shared [release note](https://github.com/tylim88/FirelordJS/releases) with FirelordJS up till v2.3.6.
+[release note](https://github.com/tylim88/Firelord/releases)
 
 ## Contributing
 
