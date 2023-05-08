@@ -28,7 +28,7 @@ initializeApp({ projectId: 'any' })
 const firestore = getFirestore()
 const userRef = getFirelord<User>(firestore, 'topLevel', 'Users')
 
-describe('test whether works with rules-unit-testing', () => {
+describe('test whether works with emulator', () => {
 	it('test updateDoc, setDoc, and delete field', async () => {
 		const data = generateRandomData()
 		const ref = userRef.doc('FirelordTest', 'updateDocSpecificFieldTestCase')
