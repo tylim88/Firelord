@@ -19,12 +19,6 @@ export type DeepValue<
 		: never // impossible route
 	: T[P & keyof T]
 
-type U = DeepValue<
-	//   ^?
-	{ a: Record<string, { b: Record<string, { c: string }> }> },
-	`a.${string}.b.${string}.c`
->
-
 export type ObjectFlatten<Data> = Data extends Record<string, unknown>
 	? {
 			[K in DeepKey<Data> as RemoveLastDot<K>]-?: ObjectFlatten<
