@@ -748,6 +748,7 @@ describe('test Firelord type', () => {
 		type ExpectWrite = A['write']
 		type ExpectWriteFlatten = A['writeFlatten']
 		type ExpectWriteMerge = A['writeMerge']
+		type ExpectCompare = A['compare']
 
 		type Read = {
 			a: Record<string, string>
@@ -787,7 +788,7 @@ describe('test Firelord type', () => {
 			// @ts-expect-error
 			[x: `b.${string}.c.${string}`]: number | Increment
 		}
-		type ExpectCompare = A['compare']
+
 		type Compare = {
 			[x: `a.${string}`]: string
 			a: Record<string, string>
