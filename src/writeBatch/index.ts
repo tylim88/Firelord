@@ -2,6 +2,7 @@ import { setCreator } from './set'
 import { updateCreator } from './update'
 import { deleteCreator } from './delete'
 import { createCreator } from './create'
+import { updateNoFlattenCreator } from './updateNoFlatten'
 import { Firestore, WriteBatch } from '../types'
 import { getFirestore } from 'firebase-admin/firestore'
 
@@ -19,5 +20,6 @@ export const writeBatch = (firestore?: Firestore): WriteBatch => {
 		set: setCreator(batch),
 		update: updateCreator(batch),
 		delete: deleteCreator(batch),
+		updateNoFlatten: updateNoFlattenCreator(batch),
 	}
 }

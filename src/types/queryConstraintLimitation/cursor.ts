@@ -1,6 +1,6 @@
 import { MetaType } from '../metaTypeCreator'
 import { OrderByDirection } from '../alias'
-import { ErrorCursorTooManyArguments, ErrorCursor__name__ } from '../error'
+import { ErrorCursorTooManyArguments } from '../error'
 import {
 	QueryConstraints,
 	OrderByConstraint,
@@ -15,6 +15,7 @@ import { CursorType } from '../cursor'
 import { QueryDocumentSnapshot, DocumentSnapshot } from '../snapshot'
 import { GetAllOrderBy } from './orderBy'
 import { Query } from '../refs'
+import { DeepValue } from '../objectFlatten'
 
 // Too many arguments provided to startAt(). The number of arguments must be less than or equal to the number of orderBy() clauses
 type ValidateCursorOrderBy<
@@ -29,12 +30,12 @@ type ValidateCursorOrderBy<
 					H['fieldPath'] extends __name__
 						? GetCorrectDocumentIdBasedOnRef<T, Q, H['fieldPath'], Head>
 						: Head extends
-								| T['compare'][H['fieldPath']]
+								| DeepValue<T['compare'], H['fieldPath']>
 								| QueryDocumentSnapshot<T>
 								| DocumentSnapshot<T>
 						? Head | QueryDocumentSnapshot<T> | DocumentSnapshot<T>
 						:
-								| T['compare'][H['fieldPath']]
+								| DeepValue<T['compare'], H['fieldPath']>
 								| QueryDocumentSnapshot<T>
 								| DocumentSnapshot<T>,
 					...ValidateCursorOrderBy<

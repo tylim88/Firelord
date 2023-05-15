@@ -17,7 +17,7 @@ import {
 	ServerTimestamp,
 	PossiblyReadAsUndefined,
 } from './fieldValue'
-import { ObjectFlatten } from './objectFlatten'
+import { ObjectFlatten, DeepValue } from './objectFlatten'
 import { RecursiveReplaceUnionInvolveObjectTypeWithErrorMsg } from './markUnionObjectAsError'
 import { StrictOmit, IsSame } from './utils'
 import { DocumentReference } from './refs'
@@ -136,10 +136,6 @@ type ReadConverterArray<
 				| (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
 		: T extends DocumentReference<any> | GeoPoint
 		? T | (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
-		: T extends PossiblyReadAsUndefined
-		? InArray extends true
-			? ErrorPossiblyUndefinedAsArrayElement
-			: undefined
 		: T extends Record<string, unknown>
 		?
 				| {
@@ -151,6 +147,10 @@ type ReadConverterArray<
 						>
 				  }
 				| (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
+		: T extends PossiblyReadAsUndefined
+		? InArray extends true
+			? ErrorPossiblyUndefinedAsArrayElement
+			: undefined
 		:
 				| NoUndefinedAndBannedTypes<T, BannedTypes>
 				| allFieldsPossiblyReadAsUndefined
@@ -174,10 +174,6 @@ type ReadConverter<T, allFieldsPossiblyReadAsUndefined, BannedTypes> =
 			? Timestamp | allFieldsPossiblyReadAsUndefined
 			: T extends DocumentReference<any> | GeoPoint
 			? T | allFieldsPossiblyReadAsUndefined
-			: T extends DeleteField | PossiblyReadAsUndefined
-			? undefined
-			: T extends UnassignedAbleFieldValue
-			? ErrorUnassignedAbleFieldValue
 			: T extends Record<string, unknown>
 			?
 					| {
@@ -188,6 +184,10 @@ type ReadConverter<T, allFieldsPossiblyReadAsUndefined, BannedTypes> =
 							>
 					  }
 					| allFieldsPossiblyReadAsUndefined
+			: T extends DeleteField | PossiblyReadAsUndefined
+			? undefined
+			: T extends UnassignedAbleFieldValue
+			? ErrorUnassignedAbleFieldValue
 			:
 					| NoUndefinedAndBannedTypes<T, BannedTypes>
 					| allFieldsPossiblyReadAsUndefined
@@ -205,12 +205,12 @@ type CompareConverterArray<T, BannedTypes> = NoDirectNestedArray<
 		? Timestamp | Date
 		: T extends DocumentReference<any> | GeoPoint
 		? T
-		: T extends PossiblyReadAsUndefined
-		? never
 		: T extends Record<string, unknown>
 		? {
 				[K in keyof T]-?: CompareConverterArray<T[K], BannedTypes>
 		  }
+		: T extends PossiblyReadAsUndefined
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
 
@@ -226,12 +226,15 @@ type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 		? T
 		: T extends UnassignedAbleFieldValue
 		? ErrorUnassignedAbleFieldValue
-		: T extends PossiblyReadAsUndefined | DeleteField
-		? never
 		: T extends Record<string, unknown>
 		? {
-				[K in keyof T]-?: CompareConverter<T[K], BannedTypes>
+				[K in keyof T]-?: CompareConverter<
+					DeepValue<T, K & string>,
+					BannedTypes
+				>
 		  }
+		: T extends PossiblyReadAsUndefined | DeleteField
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
 
@@ -247,12 +250,12 @@ type ArrayWriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		? Timestamp | Date
 		: T extends DocumentReference<any> | GeoPoint
 		? T
-		: T extends PossiblyReadAsUndefined
-		? never
 		: T extends Record<string, unknown>
 		? {
 				[K in keyof T]-?: ArrayWriteConverter<T[K], BannedTypes>
 		  }
+		: T extends PossiblyReadAsUndefined
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
 
@@ -274,12 +277,12 @@ type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		? ErrorUnassignedAbleFieldValue
 		: T extends Timestamp | Date
 		? Timestamp | Date
-		: T extends PossiblyReadAsUndefined | DeleteField
-		? never
 		: T extends Record<string, unknown>
 		? {
 				[K in keyof T]-?: WriteConverter<T[K], BannedTypes>
 		  }
+		: T extends PossiblyReadAsUndefined | DeleteField
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
 
@@ -305,11 +308,14 @@ type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 		? ErrorUnassignedAbleFieldValue
 		: T extends Timestamp | Date
 		? Timestamp | Date
-		: T extends PossiblyReadAsUndefined
-		? never
 		: T extends Record<string, unknown>
 		? {
-				[K in keyof T]-?: WriteUpdateConverter<T[K], BannedTypes>
+				[K in keyof T]-?: WriteUpdateConverter<
+					DeepValue<T, K & string>,
+					BannedTypes
+				>
 		  }
+		: T extends PossiblyReadAsUndefined
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >

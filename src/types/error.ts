@@ -76,8 +76,6 @@ export type ErrorWhereDocumentFieldPath =
 	`If field path is document ID, then value must be string`
 export type ErrorWhere__name__ =
 	`Error: Don't use '__name__' directly as where's field path, use 'documentId()' sentinel field path instead.`
-export type ErrorCursor__name__ =
-	`Error: detected type is 'string', please do const assertion`
 export type ErrorArrayFieldValueEmpty =
 	`Error: arrayUnion and arrayRemove need at least 1 argument`
 export type ErrorEmptyCursor = `Error: cursor need at least 1 argument.`
@@ -87,6 +85,8 @@ export type ErrorAutoIdTypeMustBeWideString<T extends string> =
 	`Error: Only document with wide 'string' type can generate auto id, the current type is literal type '${T}'`
 export type ErrorWhereInOrNotInValueIsNotArray<T extends string> =
 	`Error: The value provided to 'in' or 'not-in' comparator must be array of type '${T}'`
+export type ErrorNonTopLevelDeleteField =
+	`Error: In non-flatten operations, deleteField() must appear at top level`
 
 export type ErrorMsgs =
 	| ErrorUndefined
@@ -121,12 +121,12 @@ export type ErrorMsgs =
 	| ErrorWhereDocumentFieldPath
 	| ErrorWhere__name__
 	| ErrorWhereNoNeverEmptyArray
-	| ErrorCursor__name__
 	| ErrorArrayFieldValueEmpty
 	| ErrorEmptyCursor
 	| ErrorCursorNoArray
 	| ErrorAutoIdTypeMustBeWideString<string>
 	| ErrorWhereInOrNotInValueIsNotArray<string>
+	| ErrorNonTopLevelDeleteField
 
 // unused
 export type ReplaceErrorMsgsWithNever<T> = T extends ErrorMsgs ? never : T

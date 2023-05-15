@@ -2,6 +2,7 @@ import { setCreator } from './set'
 import { updateCreator } from './update'
 import { getCreator } from './get'
 import { deleteCreator } from './delete'
+import { updateNoFlattenCreator } from './updateNoFlatten'
 import { createCreator } from './create'
 import { getAllCreator } from './getAll'
 import { RunTransaction } from '../types'
@@ -68,6 +69,15 @@ export const runTransaction: RunTransaction = (
 		const get = getCreator(transaction)
 		const delete_ = deleteCreator(transaction)
 		const getAll = getAllCreator(transaction)
-		return callback({ set, update, get, delete: delete_, create, getAll })
+		const updateNoFlatten = updateNoFlattenCreator(transaction)
+		return callback({
+			set,
+			update,
+			get,
+			delete: delete_,
+			create,
+			getAll,
+			updateNoFlatten,
+		})
 	}, options)
 }

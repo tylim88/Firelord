@@ -25,6 +25,7 @@ import {
 	ValueOfOnlyArrayOptStr,
 	ElementOfOptStr,
 } from './utils'
+import { DeepValue } from '../objectFlatten'
 
 // You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query.
 type ValidateWhereNotInArrayContainsAny<
@@ -197,8 +198,8 @@ export type WhereConstraintLimitation<
 			U['opStr'],
 			U['value'] extends readonly never[] | readonly []
 				? ErrorWhereNoNeverEmptyArray
-				: T['compare'][U['fieldPath']] extends readonly unknown[]
-				? T['compare'][U['fieldPath']]
+				: DeepValue<T['compare'], U['fieldPath']> extends readonly unknown[]
+				? DeepValue<T['compare'], U['fieldPath']>
 				: ErrorWhereCompareValueMustBeArray<U['fieldPath']>
 	  >
 	: U['opStr'] extends ElementOfOptStr
@@ -206,7 +207,7 @@ export type WhereConstraintLimitation<
 			T,
 			U['fieldPath'],
 			U['opStr'],
-			T['compare'][U['fieldPath']] extends readonly (infer R)[]
+			DeepValue<T['compare'], U['fieldPath']> extends readonly (infer R)[]
 				? R
 				: ErrorWhereCompareValueMustBeArray<U['fieldPath']>
 	  >

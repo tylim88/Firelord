@@ -12,7 +12,6 @@ import { deleteField } from '../fieldValue'
 import { updateCreator } from './update'
 
 initializeApp()
-
 const userRef = userRefCreator()
 
 describe('test update transaction', () => {
@@ -34,9 +33,9 @@ describe('test update transaction', () => {
 		const p3 = setDoc(docRef3, generateRandomData())
 		await Promise.all([p1, p2, p3])
 		await runTransaction(async transaction => {
-			transaction.update(docRef, data)
-			transaction.update(docRef2, data2)
-			transaction.update(docRef3, data3)
+			transaction.updateNoFlatten(docRef, data)
+			transaction.updateNoFlatten(docRef2, data2)
+			transaction.updateNoFlatten(docRef3, data3)
 		})
 		const p4 = readThenCompareWithWriteData(data, docRef)
 		const p5 = readThenCompareWithWriteData(data2, docRef2)
@@ -44,27 +43,28 @@ describe('test update transaction', () => {
 		await Promise.all([p4, p5, p6])
 	})
 
-	it('test same path, delete field, in hybrid', async () => {
-		const data = generateRandomData()
-		const ref = userRef.doc(
-			'FirelordTest',
-			'updateTransactionSpecificFieldTestCase'
-		)
-		await setDoc(ref, data)
-		const date = new Date()
-		const arr = [{ g: false, h: date, m: 9 }]
-		const num = Math.random()
-		await runTransaction(async transaction => {
-			await transaction.update(ref, {
-				a: { 'i.j': deleteField() },
-				'a.b': { f: arr },
-				'a.b.c': num,
+	it('test delete field type', async () => {
+		;async () => {
+			const ref = userRef.doc(
+				'FirelordTest',
+				'updateTransactionSpecificFieldTestCase'
+			)
+			const date = new Date()
+			const arr = [{ g: false, h: date, m: 9 }]
+			const num = Math.random()
+			await runTransaction(async transaction => {
+				await transaction.updateNoFlatten(ref, {
+					age: deleteField(),
+					a: {
+						// cannot assign delete field in nested property of non-flatten operation data
+						// @ts-expect-error
+						'i.j': deleteField(),
+					},
+					'a.b': { f: arr },
+					'a.b.c': num,
+				})
 			})
-		})
-		data.a.i.j = undefined as unknown as typeof data.a.i.j
-		data.a.b.f = arr
-		data.a.b.c = num
-		await readThenCompareWithWriteData(data, ref)
+		}
 	})
 
 	it('test empty object', async () => {
@@ -72,7 +72,7 @@ describe('test update transaction', () => {
 		await setDoc(docRef, generateRandomData())
 		expect.assertions(1)
 		await runTransaction(async transaction => {
-			const result = transaction.update(
+			const result = transaction.updateNoFlatten(
 				docRef,
 				// @ts-expect-error
 				{}

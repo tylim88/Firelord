@@ -1,6 +1,6 @@
 import { MetaType } from './metaTypeCreator'
 import { ServerTimestamp } from './fieldValue'
-import { ObjectFlattenShallow } from './objectFlatten'
+import { ObjectFlattenSimple } from './objectFlatten'
 
 export type RecursiveUnionReadServerTimestampWithNull<T, Read> =
 	T extends ServerTimestamp
@@ -23,5 +23,5 @@ export type UnionReadServerTimestampWithNull<T extends MetaType> =
 export type UnionReadServerTimestampWithNullFlatten<T extends MetaType> =
 	RecursiveUnionReadServerTimestampWithNull<
 		T['writeFlatten'],
-		ObjectFlattenShallow<T['read']>
+		ObjectFlattenSimple<T['read']>
 	>

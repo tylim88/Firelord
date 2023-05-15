@@ -1,5 +1,5 @@
 import { TransactionSet } from './set'
-import { TransactionUpdate } from './update'
+import { TransactionUpdate, TransactionUpdateNoFlatten } from './update'
 import { TransactionDelete } from './delete'
 import { TransactionCreate } from './create'
 import { DocumentReference, Query } from './refs'
@@ -108,6 +108,17 @@ export interface Transaction {
 		 * @returns This `Transaction` instance. Used for chaining method calls.
 		 */
 	update: TransactionUpdate
+	/**
+     * Updates fields in the document referred to by the provided `DocumentReference`. 
+	 * The update will fail if applied to a document that does not exist.
+	 * @param documentRef - A reference to the document to be updated.
+	 * @param data - An object containing the fields and values with which to
+	update the document. Fields can contain dots to reference nested fields
+	within the document.
+		 * @throws Error - If the provided input is not valid Firestore data.
+		 * @returns This `Transaction` instance. Used for chaining method calls.
+		 */
+	updateNoFlatten: TransactionUpdateNoFlatten
 	/**
 	 * Deletes the document referred to by the provided `DocumentReference`.
 	 *
