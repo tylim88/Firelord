@@ -225,7 +225,7 @@ describe('test updateDocNoFlatten', () => {
 			return ref
 		})
 	})
-	it('test same path, delete field, in hybrid', async () => {
+	it('test delete field type', async () => {
 		;async () => {
 			const ref = userRefCreator().doc(
 				'FirelordTest',

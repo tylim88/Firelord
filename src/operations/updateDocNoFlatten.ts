@@ -1,5 +1,4 @@
 import { OriDocumentReference, UpdateNoFlatten } from '../types'
-import { flatten } from '../utils'
 import { removeFieldValueInhomogeneousProps } from '../fieldValue'
 
 /**
@@ -20,7 +19,7 @@ export const updateDocNoFlatten: UpdateNoFlatten = (
 	data,
 	precondition?
 ) => {
-	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
+	const data_ = removeFieldValueInhomogeneousProps(data)
 
 	return Object.keys(data_).length > 0
 		? // @ts-expect-error

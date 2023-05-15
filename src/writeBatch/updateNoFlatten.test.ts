@@ -42,7 +42,7 @@ describe('test update batch', () => {
 		await Promise.all([p4, p5, p6])
 	})
 
-	it('test same path, delete field, in hybrid', async () => {
+	it('test delete field type', async () => {
 		;() => {
 			const batch = writeBatch()
 
@@ -55,9 +55,11 @@ describe('test update batch', () => {
 			const num = Math.random()
 			batch.updateNoFlatten(ref, {
 				age: deleteField(),
-				// cannot assign delete field in nested property of non-flatten operation data
-				// @ts-expect-error
-				a: { 'i.j': deleteField() },
+				a: {
+					// cannot assign delete field in nested property of non-flatten operation data
+					// @ts-expect-error
+					'i.j': deleteField(),
+				},
 				'a.b': { f: arr },
 				'a.b.c': num,
 			})

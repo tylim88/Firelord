@@ -224,8 +224,6 @@ type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 		? Timestamp | Date
 		: T extends DocumentReference<any> | GeoPoint
 		? T
-		: T extends UnassignedAbleFieldValue
-		? ErrorUnassignedAbleFieldValue
 		: T extends Record<string, unknown>
 		? {
 				[K in keyof T]-?: CompareConverter<
@@ -235,6 +233,8 @@ type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 		  }
 		: T extends PossiblyReadAsUndefined | DeleteField
 		? never
+		: T extends UnassignedAbleFieldValue
+		? ErrorUnassignedAbleFieldValue
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
 
@@ -273,14 +273,14 @@ type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		? number extends T
 			? T | Increment
 			: T
-		: T extends UnassignedAbleFieldValue
-		? ErrorUnassignedAbleFieldValue
 		: T extends Timestamp | Date
 		? Timestamp | Date
 		: T extends Record<string, unknown>
 		? {
 				[K in keyof T]-?: WriteConverter<T[K], BannedTypes>
 		  }
+		: T extends UnassignedAbleFieldValue
+		? ErrorUnassignedAbleFieldValue
 		: T extends PossiblyReadAsUndefined | DeleteField
 		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
@@ -304,8 +304,6 @@ type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 		? number extends T
 			? T | Increment
 			: T
-		: T extends UnassignedAbleFieldValue
-		? ErrorUnassignedAbleFieldValue
 		: T extends Timestamp | Date
 		? Timestamp | Date
 		: T extends Record<string, unknown>
@@ -315,6 +313,8 @@ type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 					BannedTypes
 				>
 		  }
+		: T extends UnassignedAbleFieldValue
+		? ErrorUnassignedAbleFieldValue
 		: T extends PossiblyReadAsUndefined
 		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
