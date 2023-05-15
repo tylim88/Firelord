@@ -6,7 +6,7 @@
 	"scripts": {
 		"uninstall": "rm -rf node_modules && rm -rf package-lock.json",
 		"reinstall": "npm run uninstall && npm i",
-		"test": "npm run kill && (firebase emulators:exec --only firestore \"vitest\" || true) && npm run kill",
+		"test": "npm run kill && (firebase emulators:exec --only firestore \"vitest --config vitest.emulator.ts\") && npm run kill && vitest",
 		"kill": "kill-port 8080",
 		"tsc": "tsc"
 	},
