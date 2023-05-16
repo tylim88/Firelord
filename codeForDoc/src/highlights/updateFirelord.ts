@@ -65,11 +65,8 @@ type abc2 = MetaTypeCreator<
 
 const docRef2 = getFirelord<abc2>(db, 'abc').doc('efg')
 
-updateDoc(
-	docRef2,
-	{
-		a: 1,
-		b: { c: 1 }, // nested form
-		'e.f': 1,
-	} // dot notation form
-) // type pass, seem reasonable
+updateDoc(docRef2, {
+	a: 1,
+	b: { c: 1 },
+	'e.f': 1,
+}) // type pass, seem reasonable
