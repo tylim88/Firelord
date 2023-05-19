@@ -21,6 +21,7 @@ import { ObjectFlatten, DeepValue } from './objectFlatten'
 import { RecursiveReplaceUnionInvolveObjectTypeWithErrorMsg } from './markUnionObjectAsError'
 import { StrictOmit, IsSame } from './utils'
 import { DocumentReference } from './refs'
+import { __name__Record } from './fieldPath'
 
 export type MetaType = {
 	collectionPath: string
@@ -77,7 +78,7 @@ export type MetaTypeCreator<
 					write: WriteConverter<Q, S>
 					writeMerge: WriteUpdateConverter<Q, S>
 					writeFlatten: WriteUpdateConverter<R, S>
-					compare: CompareConverter<R, S>
+					compare: CompareConverter<R, S> & __name__Record
 					collectionID: NoUndefinedAndBannedTypes<
 						string extends CollectionID
 							? ErrorCollectionIDString
@@ -134,7 +135,7 @@ type ReadConverterArray<
 		?
 				| Timestamp
 				| (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
-		: T extends DocumentReference<any> | GeoPoint
+		: T extends DocumentReference<MetaType> | GeoPoint
 		? T | (InArray extends true ? never : allFieldsPossiblyReadAsUndefined)
 		: T extends Record<string, unknown>
 		?
@@ -172,7 +173,7 @@ type ReadConverter<T, allFieldsPossiblyReadAsUndefined, BannedTypes> =
 			? T | allFieldsPossiblyReadAsUndefined
 			: T extends ServerTimestamp | Date | Timestamp
 			? Timestamp | allFieldsPossiblyReadAsUndefined
-			: T extends DocumentReference<any> | GeoPoint
+			: T extends DocumentReference<MetaType> | GeoPoint
 			? T | allFieldsPossiblyReadAsUndefined
 			: T extends Record<string, unknown>
 			?
@@ -203,7 +204,7 @@ type CompareConverterArray<T, BannedTypes> = NoDirectNestedArray<
 		? ErrorFieldValueInArray
 		: T extends Date | Timestamp
 		? Timestamp | Date
-		: T extends DocumentReference<any> | GeoPoint
+		: T extends DocumentReference<MetaType> | GeoPoint
 		? T
 		: T extends Record<string, unknown>
 		? {
@@ -222,7 +223,7 @@ type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 		? T
 		: T extends ServerTimestamp | Date | Timestamp
 		? Timestamp | Date
-		: T extends DocumentReference<any> | GeoPoint
+		: T extends DocumentReference<MetaType> | GeoPoint
 		? T
 		: T extends Record<string, unknown>
 		? {
@@ -248,7 +249,7 @@ type ArrayWriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		? ErrorFieldValueInArray
 		: T extends Timestamp | Date
 		? Timestamp | Date
-		: T extends DocumentReference<any> | GeoPoint
+		: T extends DocumentReference<MetaType> | GeoPoint
 		? T
 		: T extends Record<string, unknown>
 		? {
@@ -267,7 +268,7 @@ type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 				| ArrayUnionOrRemove<ArrayWriteConverter<A, BannedTypes>>
 		: IsBytes<T> extends true
 		? T
-		: T extends DocumentReference<any> | ServerTimestamp | GeoPoint
+		: T extends DocumentReference<MetaType> | ServerTimestamp | GeoPoint
 		? T
 		: T extends number
 		? number extends T
@@ -295,7 +296,7 @@ type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 		: IsBytes<T> extends true
 		? T
 		: T extends
-				| DocumentReference<any>
+				| DocumentReference<MetaType>
 				| ServerTimestamp
 				| DeleteField
 				| GeoPoint

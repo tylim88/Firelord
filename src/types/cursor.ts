@@ -20,7 +20,7 @@ export type Cursor<Type extends CursorType> = <const Values extends unknown[]>(
 			? Values['length'] extends 1
 				? Values
 				: ErrorMoreThanOnceDocSnapshotInCursor[] // ! if this change to [ErrorMoreThanOnceDocSnapshotInCursor], it will not able to infer as literal type, why?
-			: QueryDocumentSnapshot<any> extends R
+			: QueryDocumentSnapshot<MetaType> extends R
 			? Values['length'] extends 1
 				? Values
 				: ErrorMoreThanOnceDocSnapshotInCursor[]

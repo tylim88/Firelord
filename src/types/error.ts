@@ -1,3 +1,5 @@
+import { GetNumberOfPathSlash } from './validID'
+
 export type ErrorUndefined = `Error: undefined is not a valid Firestore type`
 export type ErrorNullBanned = `Error: Null type is banned in the setting`
 export type ErrorTypesBanned = `Error: This type(s) is banned in the setting`
@@ -31,11 +33,13 @@ export type ErrorEmptyDocumentOrCollectionID<
 	T extends 'Document' | 'Collection'
 > = `Error: ${T} ID is empty`
 export type ErrorNumberOfForwardSlashIsNotEqual<
-	Correct extends number,
-	Current extends number
-> = `Error: ${Current extends 0
-	? `You need to assert your value for documentId() as const, eg: ''a/b/c' as const' or else the forward slash count would be 0`
-	: `Invalid query, forward slash count mismatched`}, current count is ${Current}, need ${Correct}.`
+	Value extends string,
+	Type extends string
+> = `Error: ${GetNumberOfPathSlash<Value> extends 0
+	? `The type in need is ${Type}.${string extends Value
+			? `Detected type is 'string', you seem to forget to assert your value as const, eg: ''a/b/c' as const'`
+			: ''}`
+	: `Invalid query, forward slash count mismatched`}, current count is ${GetNumberOfPathSlash<Value>}, need ${GetNumberOfPathSlash<Type>}.`
 export type ErrorEmptyUpdate = `Error: Update data is an empty object literal`
 export type ErrorPossiblyUndefinedAsArrayElement =
 	`Error: You cannot assign PossiblyUndefined as array element, eg: 'PossiblyUndefined[]', you can however indirectly assign PossiblyUndefined in array, eg: < { a : number | PossiblyUndefined }[] >`
@@ -99,7 +103,7 @@ export type ErrorMsgs =
 	| ErrorUnionInvolveObjectType
 	| ErrorDeleteFieldMerge
 	| ErrorDeleteFieldUnion<string>
-	| ErrorNumberOfForwardSlashIsNotEqual<number, number>
+	| ErrorNumberOfForwardSlashIsNotEqual<string, string>
 	| ErrorPleaseDoConstAssertion
 	| ErrorEndOfID
 	| ErrorCollectionIDString
