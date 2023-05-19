@@ -40,6 +40,7 @@ export type RemoveSentinelFieldPathFromCompare<T extends MetaType> = StrictOmit<
 }
 
 export type __name__ = '__name__'
+export type __name__Record = Record<__name__, unknown>
 
 export type GetCorrectDocumentIdBasedOnRef<
 	T extends MetaType,
@@ -71,7 +72,7 @@ export type GetCorrectDocumentIdBasedOnRef<
 						GetNumberOfSlash<T['docPath']>,
 						GetNumberOfSlash<Value>
 				  >
-			: 1 // never // impossible route
+			: never // impossible route
 		: DocumentReference<RemoveSentinelFieldPathFromCompare<T>>
 	: FieldPath extends string
 	? T['compare'][FieldPath]
