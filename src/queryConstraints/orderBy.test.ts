@@ -7,7 +7,7 @@ import { startAfter } from './startAfter'
 import { startAt } from './startAt'
 import { endAt } from './endAt'
 import { QueryDocumentSnapshot, DocumentSnapshot } from '../types'
-import { documentId } from '../fieldPath'
+import { documentId } from '../fieldValue'
 import { getDocs } from '../operations'
 
 initializeApp()

@@ -1,7 +1,6 @@
 import { query } from './query'
 import { limit, orderBy, where } from '../queryConstraints'
 import { userRefCreator, initializeApp } from '../utilForTests'
-import { documentId } from '../fieldPath'
 import { Timestamp } from 'firebase-admin/firestore'
 
 initializeApp()
@@ -12,7 +11,7 @@ describe('test query ref', () => {
 	it('In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field, negative test', () => {
 		query(
 			ref,
-			where(documentId(), '>', fullDocPath),
+			where('__name__', '>', fullDocPath),
 			limit(1),
 			// @ts-expect-error
 			where('a.b.c', '!=', 2)
@@ -53,9 +52,9 @@ describe('test query ref', () => {
 	it('In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field, positive test', () => {
 		query(
 			ref,
-			where(documentId(), '>', fullDocPath),
+			where('__name__', '>', fullDocPath),
 			limit(1),
-			where(documentId(), '!=', fullDocPath)
+			where('__name__', '!=', fullDocPath)
 		)
 		query(ref, where('age', '>', 2), limit(1), where('age', '!=', 2))
 		query(ref, where('a.b.c', '>', 2), limit(1), where('a.b.c', '!=', 2))
@@ -106,7 +105,7 @@ describe('test query ref', () => {
 			query(
 				ref,
 				// @ts-expect-error
-				where(documentId(), 'not-in', ['a']),
+				where('__name__', 'not-in', ['a']),
 				limit(1),
 				orderBy('a.i')
 			)
@@ -130,7 +129,7 @@ describe('test query ref', () => {
 		)
 		query(
 			ref,
-			where(documentId(), '>=', fullDocPath),
+			where('__name__', '>=', fullDocPath),
 			limit(1),
 			orderBy('__name__')
 		)
@@ -143,7 +142,7 @@ describe('test query ref', () => {
 			ref,
 			// @ts-expect-error
 			orderBy('__name__'),
-			where(documentId(), '==', fullDocPath)
+			where('__name__', '==', fullDocPath)
 		)
 		query(
 			ref,
@@ -188,7 +187,7 @@ describe('test query ref', () => {
 	})
 
 	it(`You can't order your query by a field included in an equality (==) or in clause, positive case`, () => {
-		query(ref, orderBy('__name__'), where(documentId(), '>', fullDocPath))
+		query(ref, orderBy('__name__'), where('__name__', '>', fullDocPath))
 		query(ref, orderBy('age'), where('age', '>=', 1))
 		query(ref, where('age', '==', 1), orderBy('a.k'))
 		query(ref, orderBy('age'), limit(1), where('age', 'not-in', [1]))
@@ -198,7 +197,7 @@ describe('test query ref', () => {
 	it(`You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query. negative case`, () => {
 		query(
 			ref,
-			where(documentId(), 'not-in', [fullDocPath]),
+			where('__name__', 'not-in', [fullDocPath]),
 			limit(1), // @ts-expect-error
 			where('a.e', 'array-contains-any', ['1'])
 		) // * throw in web
@@ -248,7 +247,7 @@ describe('test query ref', () => {
 	it(`You can't combine not-in with not equals !=, negative case`, () => {
 		query(
 			ref,
-			where(documentId(), 'not-in', [fullDocPath]),
+			where('__name__', 'not-in', [fullDocPath]),
 			limit(1),
 			// @ts-expect-error
 			where('age', '!=', 1)
@@ -292,7 +291,7 @@ describe('test query ref', () => {
 	it(`You cannot use more than one '!=' filter (undocumented limitation), negative case`, () => {
 		query(
 			ref,
-			where(documentId(), '!=', fullDocPath),
+			where('__name__', '!=', fullDocPath),
 			limit(1),
 			// @ts-expect-error
 			where('age', '!=', 1)
