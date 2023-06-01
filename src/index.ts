@@ -65,7 +65,7 @@ export * from './fieldValue'
 export * from './fieldPath'
 export * from './listener'
 export * from './operations'
-export * from './queryClauses'
+export * from './queryConstraints'
 export { query } from './refs'
 export * from './equal'
 export type {

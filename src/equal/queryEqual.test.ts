@@ -1,7 +1,7 @@
 import { query } from '../refs'
 import { queryEqual } from './queryEqual'
 import { initializeApp, userRefCreator } from '../utilForTests'
-import { where, orderBy } from '../queryClauses'
+import { where, orderBy } from '../queryConstraints'
 import { getFirestore } from 'firebase-admin/firestore'
 initializeApp()
 const colRef = userRefCreator().collection('FirelordTest')
