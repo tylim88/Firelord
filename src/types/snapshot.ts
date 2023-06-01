@@ -1,10 +1,7 @@
 import { MetaType } from './metaTypeCreator'
 import { DocumentChangeType, Timestamp } from './alias'
-import {
-	UnionReadServerTimestampWithNullFlatten,
-	UnionReadServerTimestampWithNull,
-} from './unionReadTimestampWithNull'
 import { DocumentReference, Query } from './refs'
+import { DeepValue, ObjectFlatten } from './objectFlatten'
 
 export interface DocumentSnapshot<T extends MetaType> {
 	/** True if the document exists. */
@@ -41,7 +38,7 @@ export interface DocumentSnapshot<T extends MetaType> {
 	 *
 	 * @return An Object containing all fields in the document.
 	 */
-	data(): UnionReadServerTimestampWithNull<T> | undefined
+	data(): T['read'] | undefined
 	/**
 	 * Retrieves the field specified by `fieldPath`. Returns `undefined` if the
 	 * document or field doesn't exist.
@@ -51,9 +48,9 @@ export interface DocumentSnapshot<T extends MetaType> {
 	 * @returns The data at the specified field location or undefined if no such
 	 * field exists in the document.
 	 */
-	get<FieldPath extends keyof UnionReadServerTimestampWithNullFlatten<T>>(
+	get<FieldPath extends keyof T['writeFlatten'] & string>(
 		fieldPath: FieldPath
-	): UnionReadServerTimestampWithNullFlatten<T>[FieldPath] | undefined
+	): DeepValue<ObjectFlatten<T['read']>, FieldPath> | undefined
 }
 
 export interface QuerySnapshot<T extends MetaType> {
@@ -114,7 +111,7 @@ export interface QueryDocumentSnapshot<T extends MetaType>
 	 * @override
 	 * @return An Object containing all fields in the document.
 	 */
-	data: () => UnionReadServerTimestampWithNull<T>
+	data: () => T['read']
 }
 
 export interface DocumentChange<T extends MetaType> {

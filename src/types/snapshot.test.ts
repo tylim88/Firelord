@@ -37,20 +37,19 @@ it('test exists type', () => {
 	}
 })
 
-it('test data type with no option', () => {
+it('test data type', () => {
 	;() => {
 		const target = documentSnapshot.data()
-		type A = NonNullable<typeof target>['a']['k']
-		type B = User['read']['a']['k'] | null
+		type A = typeof target
+		type B = User['read'] | undefined
 		IsTrue<IsSame<A, B>>()
 	}
 })
-
-it('test get type with no option', () => {
+it('test get type', () => {
 	;() => {
 		const target = documentSnapshot.get('a.k')
 		type A = typeof target
-		type B = User['read']['a']['k'] | undefined | null
+		type B = User['read']['a']['k'] | undefined
 		IsTrue<IsSame<A, B>>()
 	}
 })
