@@ -1,7 +1,7 @@
-import { DocumentSnapshot, QuerySnapshot } from './snapshot'
-import { MetaType } from './metaTypeCreator'
-import { Query, DocumentReference } from './refs'
-import { Unsubscribe } from './alias'
+import { DocumentSnapshot, QuerySnapshot } from '../snapshot'
+import { MetaType } from '../metaTypeCreator'
+import { Query, DocumentReference } from '../refs'
+import { Unsubscribe } from '../alias'
 
 export type OnSnapshot = {
 	<T extends MetaType, Ref extends Query<T> | DocumentReference<T>>(
