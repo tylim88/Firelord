@@ -1,5 +1,12 @@
-import { LimitConstraint } from './queryConstraints'
-import { ErrorLimitInvalidNumber } from './error'
+import { ErrorLimitInvalidNumber } from '../error'
+
+export type LimitConstraint<
+	Type extends 'limit' | 'limitToLast',
+	Value extends number
+> = {
+	type: Type
+	value: Value
+}
 
 export type LimitCreator = <Type extends 'limit' | 'limitToLast'>(
 	type: Type

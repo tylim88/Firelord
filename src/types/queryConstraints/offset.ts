@@ -1,5 +1,9 @@
-import { OffsetConstraint } from './queryConstraints'
-import { ErrorLimitInvalidNumber } from './error'
+import { ErrorLimitInvalidNumber } from '../error'
+
+export type OffsetConstraint = {
+	type: 'offset'
+	value: number
+}
 
 export type Offset = <Value extends number>(
 	offset: Value extends 0
