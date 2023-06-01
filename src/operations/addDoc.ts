@@ -1,5 +1,5 @@
 import { OriCollectionReference, AddDoc } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 /**
  * Add a new document to this collection with the specified data, assigning

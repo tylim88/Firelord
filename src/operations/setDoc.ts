@@ -1,5 +1,5 @@
 import { OriDocumentReference, Set } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 /**
  * Writes to the document referred to by this `DocumentReference`. If the

@@ -61,7 +61,7 @@ export { getFirestore, Timestamp, GeoPoint } from 'firebase-admin/firestore'
 
 export * from './batch'
 export * from './transaction'
-export * from './fieldValue'
+export * from './fieldValues'
 export * from './operations'
 export * from './queryConstraints'
 export { query } from './refs'

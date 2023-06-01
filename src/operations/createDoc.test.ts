@@ -6,7 +6,7 @@ import {
 	writeThenCompareWithRead,
 	generateRandomData,
 } from '../utilForTests'
-import { increment, arrayUnion, serverTimestamp } from '../fieldValue'
+import { increment, arrayUnion, serverTimestamp } from '../fieldValues'
 import { Create, IsTrue, IsSame } from '../types'
 import { deleteDoc } from './deleteDoc'
 import { getDoc } from './getDoc'

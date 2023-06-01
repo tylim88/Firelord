@@ -1,6 +1,6 @@
 import { OriDocumentReference, Update } from '../types'
 import { flatten } from '../utils'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 /**
  * Updates fields in the document referred to by this `DocumentReference`.

@@ -1,5 +1,5 @@
 import { OriWriteBatch, WriteBatchSet } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 export const setCreator =
 	(writeBatch: OriWriteBatch): WriteBatchSet =>

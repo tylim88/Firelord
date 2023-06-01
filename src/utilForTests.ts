@@ -12,7 +12,7 @@ import betwin from 'betwin'
 import { getDoc } from './operations'
 import { flatten } from './utils'
 import { cloneDeep } from 'lodash'
-import { arrayUnion, increment, serverTimestamp } from './fieldValue'
+import { arrayUnion, increment, serverTimestamp } from './fieldValues'
 import {
 	initializeApp as initializeApp_,
 	cert,

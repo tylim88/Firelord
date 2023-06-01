@@ -1,5 +1,5 @@
 import { OriDocumentReference, DocumentData, Create } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 /**
  * Creates a document referred to by this `DocumentReference` with the

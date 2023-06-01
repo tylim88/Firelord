@@ -1,5 +1,5 @@
 import { OriTransaction, TransactionSet } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 export const setCreator =
 	(transaction: OriTransaction): TransactionSet =>

@@ -1,6 +1,6 @@
 import { OriWriteBatch, WriteBatchUpdate } from '../types'
 import { flatten } from '../utils'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 export const updateCreator =
 	(writeBatch: OriWriteBatch): WriteBatchUpdate =>

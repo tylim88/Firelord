@@ -1,5 +1,5 @@
 import { OriTransaction, TransactionUpdateNoFlatten } from '../types'
-import { removeFieldValueInhomogeneousProps } from '../fieldValue'
+import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 
 export const updateNoFlattenCreator =
 	(transaction: OriTransaction): TransactionUpdateNoFlatten =>
