@@ -1,6 +1,6 @@
 import { MetaType } from './metaTypeCreator'
 import { QueryConstraints } from './queryConstraints'
-import { QueryConstraintLimitation } from './queryConstraintLimitation'
+import { QueryConstraintLimitation } from './queryConstraintsLimitations'
 import { Query, CollectionReference } from './refs'
 
 export type QueryRef = <
