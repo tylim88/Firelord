@@ -113,13 +113,13 @@ Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
 
 This wrapper wrap around admin Firestore V8 interface(There is no official V9 admin version) and turn it into type safe V9 interface.
 
-The API is basically same as the web version, both web and admin version basically share the same documentation.
+The API is basically same as the web version, both web and admin version basically sharing the same documentation.
 
 It does not become modular like the web version, but this is ok because we don't care about package size in back end.
 
 The ultimate goal is to unify the knowledge of back end and front end, so we don't need to learn both V9 and V8 and most importantly: absolute type safe.
 
-Due to a lot of small differences, it is unrealistic to squeeze both platforms under the same library unless we give up something.
+Due to a lot of small differences, it is unrealistic to squeeze both platforms under the same library unless we give up some functionalities.
 
 ## Have Questions?
 
