@@ -1,6 +1,6 @@
 import { MetaType } from '../metaTypeCreator'
 import { DocumentReference } from '../refs'
-import { RecursivelyReplaceDeleteFieldWithErrorMsg } from '../partialNoUndefinedAndNoUnknownMember'
+import { RecursivelyReplaceDeleteFieldWithErrorMsg } from '../exactOptional'
 import { Transaction } from '../transaction'
 import { WriteBatch } from '../batch'
 import { WriteResult } from '../alias'
