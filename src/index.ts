@@ -59,7 +59,7 @@ export type FirelordRef<T extends MetaType> = Readonly<{
 }>
 export { getFirestore, Timestamp, GeoPoint } from 'firebase-admin/firestore'
 
-export * from './writeBatch'
+export * from './batch'
 export * from './transaction'
 export * from './fieldValue'
 export * from './fieldPath'
