@@ -1,7 +1,10 @@
-import { TransactionSet } from './set'
-import { TransactionUpdate, TransactionUpdateNoFlatten } from './update'
-import { TransactionDelete } from './delete'
-import { TransactionCreate } from './create'
+import {
+	TransactionSet,
+	TransactionUpdate,
+	TransactionUpdateNoFlatten,
+	TransactionDelete,
+	TransactionCreate,
+} from './operations'
 import { DocumentReference, Query } from './refs'
 import { DocumentSnapshot, QuerySnapshot } from './snapshot'
 import { MetaType } from './metaTypeCreator'
