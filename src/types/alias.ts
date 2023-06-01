@@ -1,21 +1,66 @@
-export type Firestore = ReturnType<FirebaseFirestore['getFirestore']> // ! OriFirebaseFirestore['Firestore'] doesn't work even though they are the exact same type???
+/**
+ * `Firestore` represents a Firestore Database and is the entry point for all
+ * Firestore operations.
+ */
+export type Firestore = ReturnType<FirebaseFirestore['getFirestore']> // ! FirebaseFirestore['Firestore'] doesn't work even though they are the exact same type???
 
+/**
+ * Cloud Firestore.
+ *
+ * @packageDocumentation
+ */
 export type FirebaseFirestore = typeof import('firebase-admin/firestore')
 
+/**
+ * Document data (for use with `DocumentReference.set()`) consists of fields
+ * mapped to values.
+ */
 export type DocumentData = import('firebase-admin/firestore').DocumentData
 
+/**
+ * An options object that configures the behavior of `set()` calls in
+ * `DocumentReference`, `WriteBatch` and `Transaction`. These calls can be
+ * configured to perform granular merges instead of overwriting the target
+ * documents in their entirety.
+ *
+ * @param merge Changes the behavior of a set() call to only replace the
+ * values specified in its data argument. Fields omitted from the set() call
+ * remain untouched. If your input sets any field to an empty map, all nested
+ * fields are overwritten.
+ *
+ * @param mergeFields Changes the behavior of set() calls to only replace
+ * the specified field paths. Any field path that is not specified is ignored
+ * and remains untouched. If your input sets any field to an empty map, all
+ * nested fields are overwritten.
+ */
 export type SetOptions = import('firebase-admin/firestore').SetOptions
 
+/**
+ * An unsubscribe function that can be called to cancel
+ * the snapshot listener.
+ */
 export type Unsubscribe = ReturnType<
 	import('firebase-admin/firestore').CollectionReference['onSnapshot']
 >
 
+/**
+ * The type of of a `DocumentChange` may be 'added', 'removed', or 'modified'.
+ */
 export type DocumentChangeType =
 	import('firebase-admin/firestore').DocumentChangeType
 
+/**
+ * The direction of a `Query.orderBy()` clause is specified as 'desc' or 'asc'
+ * (descending or ascending).
+ */
 export type OrderByDirection =
 	import('firebase-admin/firestore').OrderByDirection
 
+/**
+ * Filter conditions in a `Query.where()` clause are specified using the
+ * strings '<', '<=', '==', '!=', '>=', '>', 'array-contains', 'in', 'not-in',
+ * and 'array-contains-any'.
+ */
 export type WhereFilterOp = import('firebase-admin/firestore').WhereFilterOp
 
 /**
@@ -38,45 +83,38 @@ export type GeoPoint = FirebaseFirestore['GeoPoint']
  */
 export type Timestamp = import('firebase-admin/firestore').Timestamp
 
+/**
+ * An options object that configures conditional behavior of `update()` and
+ * `delete()` calls in `DocumentReference`, `WriteBatch`, and `Transaction`.
+ * Using Preconditions, these calls can be restricted to only apply to
+ * documents that match the specified restrictions.
+ */
 export type Precondition = import('firebase-admin/firestore').Precondition
 
+/**
+ * A WriteResult wraps the write time set by the Firestore servers on `sets()`,
+ * `updates()`, and `creates()`.
+ */
 export type WriteResult = import('firebase-admin/firestore').WriteResult
 
+/**
+ * An options object that can be used to configure the behavior of `getAll()`
+ * calls. By providing a `fieldMask`, these calls can be configured to only
+ * return a subset of fields.
+ */
 export type ReadOption = import('firebase-admin/firestore').ReadOptions
 
+/** Options to configure a read-only transaction. */
 export type ReadOnlyTransactionOptions =
 	import('firebase-admin/firestore').ReadOnlyTransactionOptions
 
+/** Options to configure a read-write transaction. */
 export type ReadWriteTransactionOptions =
 	import('@google-cloud/firestore').ReadWriteTransactionOptions
 
-export type OriDocumentReference<T extends DocumentData = DocumentData> =
-	import('firebase-admin/firestore').DocumentReference<T>
-
-export type OriCollectionReference<T extends DocumentData = DocumentData> =
-	import('firebase-admin/firestore').CollectionReference<T>
-
-export type OriQuery<T extends DocumentData = DocumentData> =
-	import('firebase-admin/firestore').Query<T>
-
-export type OriQuerySnapshot<T = DocumentData> =
-	import('firebase-admin/firestore').QuerySnapshot<T>
-
-export type OriQueryDocumentSnapshot<T = DocumentData> =
-	import('firebase-admin/firestore').QueryDocumentSnapshot<T>
-
-export type OriDocumentSnapshot<T extends DocumentData = DocumentData> =
-	import('firebase-admin/firestore').DocumentSnapshot<T>
-
-export type OriDocumentChange<T = DocumentData> =
-	import('firebase-admin/firestore').DocumentChange<T>
-
-export type OriFieldValue = import('firebase-admin/firestore').FieldValue
-
-export type OriWriteBatch = import('firebase-admin/firestore').WriteBatch
-
-export type OriTransaction = import('firebase-admin/firestore').Transaction
-
+/**
+ * An immutable object representing an array of bytes.
+ */
 export declare class Bytes {
 	private constructor()
 	/**
@@ -118,3 +156,30 @@ export declare class Bytes {
 	 */
 	isEqual(other: Bytes): boolean
 }
+
+export type OriDocumentReference<T extends DocumentData = DocumentData> =
+	import('firebase-admin/firestore').DocumentReference<T>
+
+export type OriCollectionReference<T extends DocumentData = DocumentData> =
+	import('firebase-admin/firestore').CollectionReference<T>
+
+export type OriQuery<T extends DocumentData = DocumentData> =
+	import('firebase-admin/firestore').Query<T>
+
+export type OriQuerySnapshot<T = DocumentData> =
+	import('firebase-admin/firestore').QuerySnapshot<T>
+
+export type OriQueryDocumentSnapshot<T = DocumentData> =
+	import('firebase-admin/firestore').QueryDocumentSnapshot<T>
+
+export type OriDocumentSnapshot<T extends DocumentData = DocumentData> =
+	import('firebase-admin/firestore').DocumentSnapshot<T>
+
+export type OriDocumentChange<T = DocumentData> =
+	import('firebase-admin/firestore').DocumentChange<T>
+
+export type OriFieldValue = import('firebase-admin/firestore').FieldValue
+
+export type OriWriteBatch = import('firebase-admin/firestore').WriteBatch
+
+export type OriTransaction = import('firebase-admin/firestore').Transaction
