@@ -14,18 +14,14 @@ import { docCreator, collectionCreator, collectionGroupCreator } from './refs'
  * @param collectionIDs - all the collectionID(s) needed to build this collection path.
  * @returns Creator function of DocumentReference, CollectionReference and CollectionGroupReference.
  */
-// @ts-expect-error
 export const getFirelord: GetFirelord = (firestore, ...collectionIDs) => {
-	const doc = docCreator(firestore, collectionIDs)
-	const collection = collectionCreator(firestore, collectionIDs)
-	const collectionGroup = collectionGroupCreator(
-		firestore,
-		collectionIDs[collectionIDs.length - 1]!
-	)
 	return {
-		doc,
-		collection,
-		collectionGroup,
+		doc: docCreator(firestore, collectionIDs),
+		collection: collectionCreator(firestore, collectionIDs),
+		collectionGroup: collectionGroupCreator(
+			firestore,
+			collectionIDs[collectionIDs.length - 1]!
+		),
 	}
 }
 export type GetFirelord = {
