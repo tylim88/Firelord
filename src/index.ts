@@ -65,6 +65,7 @@ export * from './equal'
 export type {
 	MetaType,
 	MetaTypeCreator,
+	AbstractMetaTypeCreator,
 	ServerTimestamp,
 	DeleteField,
 	PossiblyReadAsUndefined,
