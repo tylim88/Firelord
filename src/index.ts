@@ -76,7 +76,6 @@ export type {
 	QueryDocumentSnapshot,
 	WriteBatch,
 	RunTransaction,
-	AbstractMetaTypeCreator,
 	GetDocIds,
 	Transaction,
 	GetCollectionIds,
