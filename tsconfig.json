@@ -19,5 +19,6 @@
 		"exactOptionalPropertyTypes": true,
 		"types": ["vitest/globals"],
 		"skipLibCheck": true
-	}
+	},
+	"include": ["src"]
 }
