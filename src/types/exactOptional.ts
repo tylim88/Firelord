@@ -5,7 +5,7 @@ import {
 	ErrorUnknownMember,
 	ErrorNonTopLevelDeleteField,
 } from './error'
-import { ArrayUnionOrRemove, DeleteField } from './fieldValues'
+import { ArrayRemoveOrUnion, Delete } from './fieldValues'
 import { DeepValue } from './objectFlatten'
 
 type HandleUnknownMember<T extends Record<string, unknown>, Data> = Omit<
@@ -24,19 +24,19 @@ type IsSetDeleteAbleFieldValueValid<
 	Merge extends boolean | string[]
 > = Merge extends false
 	? T
-	: Data extends DeleteField
+	: Data extends Delete
 	? Merge extends true
-		? DeleteField extends Extract<T, DeleteField>
+		? Delete extends Extract<T, Delete>
 			? T
-			: string extends Exclude<T, DeleteField>
+			: string extends Exclude<T, Delete>
 			? ErrorDeleteFieldUnion<K>
-			: Exclude<T, DeleteField> | ErrorDeleteFieldMerge
+			: Exclude<T, Delete> | ErrorDeleteFieldMerge
 		: Merge extends unknown[]
-		? DeleteField extends Extract<T, DeleteField>
+		? Delete extends Extract<T, Delete>
 			? T
-			: string extends Exclude<T, DeleteField>
+			: string extends Exclude<T, Delete>
 			? ErrorDeleteFieldUnion<K>
-			: Exclude<T, DeleteField> | ErrorDeleteFieldMerge
+			: Exclude<T, Delete> | ErrorDeleteFieldMerge
 		: T
 	: T
 
@@ -85,7 +85,7 @@ export type ExactOptional<
 						: never
 					: S[] extends
 							| (infer BaseKeyElement)[][]
-							| ArrayUnionOrRemove<unknown>[]
+							| ArrayRemoveOrUnion<unknown>[]
 					? Data[K] extends (infer DataKeyElement)[]
 						? Data[K] extends never[] // https://stackoverflow.com/questions/71193522/typescript-inferred-never-is-not-never
 							? S
@@ -93,7 +93,7 @@ export type ExactOptional<
 							? ExactOptionalArray<BaseKeyElement, DataKeyElement>[]
 							: BaseKeyElement[]
 						: IsSetDeleteAbleFieldValueValid<S, Data[K], K & string, Merge>
-					: Data[K] extends DeleteField
+					: Data[K] extends Delete
 					? NoFlatten extends true
 						? TopLevel extends false
 							? ErrorNonTopLevelDeleteField
@@ -117,11 +117,11 @@ export type RecursivelyReplaceDeleteFieldWithErrorMsg<T, Data> =
 									? Data[K] extends Record<string, unknown>
 										? RecursivelyReplaceDeleteFieldWithErrorMsg<T[K], Data[K]>
 										: T[K]
-									: Data[K] extends DeleteField
-									? DeleteField extends Extract<T[K], DeleteField>
-										? string extends Exclude<T[K], DeleteField>
+									: Data[K] extends Delete
+									? Delete extends Extract<T[K], Delete>
+										? string extends Exclude<T[K], Delete>
 											? ErrorDeleteFieldMerge
-											: Exclude<T[K], DeleteField> | ErrorDeleteFieldMerge
+											: Exclude<T[K], Delete> | ErrorDeleteFieldMerge
 										: ErrorDeleteFieldMerge
 									: T[K]
 								: T[K]

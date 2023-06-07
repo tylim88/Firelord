@@ -9,7 +9,7 @@ type DeleteCreator<U> = <T extends MetaType>(
 	precondition?: Precondition
 ) => U
 
-export type Delete = DeleteCreator<Promise<WriteResult>>
+export type DeleteDoc = DeleteCreator<Promise<WriteResult>>
 
 export type WriteBatchDelete = DeleteCreator<WriteBatch>
 

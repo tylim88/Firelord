@@ -1,5 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import { ArrayRemoveOrUnion } from '../types'
+import { ArrayRemoveOrUnionFunction } from '../types'
 
 /**
  * Returns a special value that can be used with set(), create() or update()
@@ -13,12 +13,12 @@ import { ArrayRemoveOrUnion } from '../types'
  * @return The FieldValue sentinel for use in a call to set(), create() or
  * update().
  */
-export const arrayUnion: ArrayRemoveOrUnion = (...elements) => {
-	// * web don't have empty array issue
+export const arrayUnion: ArrayRemoveOrUnionFunction = (...elements) => {
+	// * web doesn't have empty array issue
 	const filler = elements.length === 0 ? [[]] : elements
 	const ref = FieldValue.arrayUnion(...filler)
 	// @ts-expect-error
-	ref['Do_Not_Access.Firelord_ArrayFieldValue'] = elements
+	ref.Firelord_ArrayFieldValue = elements
 
 	return ref
 }

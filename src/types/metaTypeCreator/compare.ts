@@ -8,7 +8,7 @@ import {
 import {
 	FieldValues,
 	UnassignedAbleFieldValue,
-	DeleteField,
+	Delete,
 	ServerTimestamp,
 	PossiblyReadAsUndefined,
 } from '../fieldValues'
@@ -54,7 +54,7 @@ export type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 					BannedTypes
 				>
 		  }
-		: T extends PossiblyReadAsUndefined | DeleteField
+		: T extends PossiblyReadAsUndefined | Delete
 		? never
 		: T extends UnassignedAbleFieldValue
 		? ErrorUnassignedAbleFieldValue

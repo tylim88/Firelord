@@ -8,9 +8,9 @@ import {
 import {
 	FieldValues,
 	UnassignedAbleFieldValue,
-	ArrayUnionOrRemove,
+	ArrayRemoveOrUnion,
 	Increment,
-	DeleteField,
+	Delete,
 	ServerTimestamp,
 	PossiblyReadAsUndefined,
 } from '../fieldValues'
@@ -44,7 +44,7 @@ export type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 	T extends (infer A)[]
 		?
 				| readonly ArrayWriteConverter<A, BannedTypes>[]
-				| ArrayUnionOrRemove<ArrayWriteConverter<A, BannedTypes>>
+				| ArrayRemoveOrUnion<ArrayWriteConverter<A, BannedTypes>>
 		: T extends Bytes
 		? T
 		: T extends DocumentReference<MetaType> | ServerTimestamp | GeoPoint
@@ -61,7 +61,7 @@ export type WriteConverter<T, BannedTypes> = NoDirectNestedArray<
 		  }
 		: T extends UnassignedAbleFieldValue
 		? ErrorUnassignedAbleFieldValue
-		: T extends PossiblyReadAsUndefined | DeleteField
+		: T extends PossiblyReadAsUndefined | Delete
 		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >
@@ -71,13 +71,13 @@ export type WriteUpdateConverter<T, BannedTypes> = NoDirectNestedArray<
 	T extends (infer A)[]
 		?
 				| readonly ArrayWriteConverter<A, BannedTypes>[]
-				| ArrayUnionOrRemove<ArrayWriteConverter<A, BannedTypes>>
+				| ArrayRemoveOrUnion<ArrayWriteConverter<A, BannedTypes>>
 		: T extends Bytes
 		? T
 		: T extends
 				| DocumentReference<MetaType>
 				| ServerTimestamp
-				| DeleteField
+				| Delete
 				| GeoPoint
 		? T
 		: T extends number

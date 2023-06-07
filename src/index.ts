@@ -67,7 +67,7 @@ export type {
 	MetaTypeCreator,
 	AbstractMetaTypeCreator,
 	ServerTimestamp,
-	DeleteField,
+	Delete,
 	PossiblyReadAsUndefined,
 	DocumentReference,
 	CollectionReference,

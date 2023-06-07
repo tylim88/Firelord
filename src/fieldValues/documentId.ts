@@ -6,4 +6,4 @@ import { __name__ } from '../types'
  * documentId() no longer play any significant role because you can replace it with string `__name__`.
  * It is kept for backward compatibility.
  */
-export const documentId: () => __name__ = () => '__name__'
+export const documentId = (): __name__ => '__name__'

@@ -1,5 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import { DeleteField } from '../types'
+import { Delete } from '../types'
 
 /**
  * Returns a sentinel for use with update() or set() with {merge:true} to
@@ -7,4 +7,4 @@ import { DeleteField } from '../types'
  *
  * @return The FieldValue sentinel for use in a call to set() or update().
  */
-export const deleteField = (): DeleteField => FieldValue.delete()
+export const deleteField = (): Delete => FieldValue.delete()

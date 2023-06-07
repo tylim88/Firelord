@@ -1,5 +1,4 @@
-import { ArrayUnionOrRemove } from '../types'
-const arrayFieldValue: keyof ArrayUnionOrRemove<unknown> = `Do_Not_Access.Firelord_ArrayFieldValue`
+const arrayFieldValue = `Firelord_ArrayFieldValue`
 
 // remove the property that make field value type inhomogeneous
 // also remove the data props if the array field value is empty(if not runtime error)

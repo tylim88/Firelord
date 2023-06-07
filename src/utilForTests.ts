@@ -4,7 +4,7 @@ import {
 	MetaTypeCreator,
 	ServerTimestamp,
 	DocumentReference,
-	DeleteField,
+	Delete,
 	DocumentSnapshot,
 } from './types'
 import pick from 'pick-random'
@@ -47,7 +47,7 @@ export type Parent = MetaTypeCreator<
 
 export type User = MetaTypeCreator<
 	{
-		age: number | DeleteField
+		age: number | Delete
 		beenTo: (
 			| Record<'US', ('Hawaii' | 'California')[]>
 			| Record<'China', ('Guangdong' | 'Shanghai')[]>
@@ -56,9 +56,9 @@ export type User = MetaTypeCreator<
 		role: 'admin' | 'editor' | 'visitor'
 		a: {
 			b: { c: number; f: { g: boolean; h: Date; m: number }[] }
-			i: { j: number | DeleteField; l: Date }
+			i: { j: number | Delete; l: Date }
 			e: string[]
-			k: ServerTimestamp | DeleteField
+			k: ServerTimestamp | Delete
 		}
 	},
 	'Users',
