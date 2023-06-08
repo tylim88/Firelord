@@ -6,11 +6,7 @@ import {
 	GetOddOrEvenSegments,
 	Collection,
 } from './types'
-import {
-	docCreator as d,
-	collectionCreator as c,
-	collectionGroupCreator as cg,
-} from './refs'
+import { docCreator, collectionCreator, collectionGroupCreator } from './refs'
 
 /**
  * Gets a FirelordReference instance that refers to the doc, collection, and collectionGroup at the specified absolute path.
@@ -20,17 +16,20 @@ import {
  */
 export const getFirelord: GetFirelord = (firestore, ...collectionIDs) => {
 	return {
-		doc: d(
+		doc: docCreator(
 			firestore,
 			// @ts-expect-error
 			...collectionIDs
 		),
-		collection: c(
+		collection: collectionCreator(
 			firestore,
 			// @ts-expect-error
 			...collectionIDs
 		),
-		collectionGroup: cg(firestore, collectionIDs[collectionIDs.length - 1]!),
+		collectionGroup: collectionGroupCreator(
+			firestore,
+			collectionIDs[collectionIDs.length - 1]!
+		),
 	}
 }
 export type GetFirelord = {
