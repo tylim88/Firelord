@@ -15,7 +15,7 @@
 		"pretty": "pretty-quick --stage --branch main",
 		"rollup": "rm -rf dist && rollup -c",
 		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
-		"link": "npm unlink firelord && npm link firelord",
+		"link": "npm unlink firelord && npm link && npm link firelord",
 		"babel": "babel-node -x .ts -- src/fieldPath/documentId.ts",
 		"commit": "git commit --no-verify",
 		"kill": "kill-port 8080",
