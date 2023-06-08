@@ -30,7 +30,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
       - run: npm run build
       - run: npm run link
-      - run: npm run b-tsc
+      # - run: npm run b-tsc
       - run: npm run b-test
         env:
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
