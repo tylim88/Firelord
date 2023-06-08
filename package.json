@@ -15,7 +15,7 @@
 		"pretty": "pretty-quick --stage --branch main",
 		"rollup": "rm -rf dist && rollup -c",
 		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
-		"link": "npm unlink firelord && npm link firelord && make-dir codeForDoc/node_modules/firelord/dist && cp -r node_modules/firelord/dist codeForDoc/node_modules/firelord/dist && cp node_modules/firelord/package.json codeForDoc/node_modules/firelord/package.json",
+		"link": "npm unlink firelord && npm link firelord && make-dir codeForDoc/node_modules/firelord/dist && cp -r node_modules/firelord/dist codeForDoc/node_modules/firelord && cp node_modules/firelord/package.json codeForDoc/node_modules/firelord/package.json",
 		"babel": "babel-node -x .ts -- src/fieldPath/documentId.ts",
 		"commit": "git commit --no-verify",
 		"kill": "kill-port 8080",
