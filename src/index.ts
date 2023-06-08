@@ -16,8 +16,16 @@ import { docCreator, collectionCreator, collectionGroupCreator } from './refs'
  */
 export const getFirelord: GetFirelord = (firestore, ...collectionIDs) => {
 	return {
-		doc: docCreator(firestore, collectionIDs),
-		collection: collectionCreator(firestore, collectionIDs),
+		doc: docCreator(
+			firestore,
+			// @ts-expect-error
+			...collectionIDs
+		),
+		collection: collectionCreator(
+			firestore,
+			// @ts-expect-error
+			...collectionIDs
+		),
 		collectionGroup: collectionGroupCreator(
 			firestore,
 			collectionIDs[collectionIDs.length - 1]!
@@ -60,7 +68,12 @@ export * from './transaction'
 export * from './fieldValues'
 export * from './operations'
 export * from './queryConstraints'
-export { query } from './refs'
+export {
+	query,
+	docCreator,
+	collectionCreator,
+	collectionGroupCreator,
+} from './refs'
 export * from './equal'
 export type {
 	MetaType,
