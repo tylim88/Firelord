@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.5.3",
+	"version": "2.5.4",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
 		"dev": "---------------------dev------------------------",
 		"d-link": "npm run build && npm run b-un && npm run link",
 		"d-test": "tsc && npm test",
-		"d-pub": "npm run build && npm publish --tag beta",
+		"d-beta": "npm run build && npm publish --tag beta",
 		"built": "-------------test built file-----------------------",
 		"b-un": "cd codeForDoc && npm run un",
 		"b-tsc": "tsc -p tsconfig.doc.json",
