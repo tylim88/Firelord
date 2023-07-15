@@ -1,6 +1,12 @@
 import { defineConfig } from 'vitest/config'
-import { preset } from './vitest.config'
+import { preset as preset_ } from './vitest.config'
+
+export const preset = {
+	...preset_,
+	include: ['src/emulator.test.ts'],
+	exclude: [],
+}
 
 export default defineConfig({
-	test: { ...preset, include: ['src/emulator.test.ts'], exclude: [] },
+	test: preset,
 })
