@@ -9,8 +9,6 @@ export type ErrorFieldValueInArray =
 	`Error: Field Value is not a valid data type in array, directly or indirectly`
 export type ErrorUnassignedAbleFieldValue =
 	`Error: Please do not directly assign Increment, Array Remove and Array Union Field Value`
-export type ErrorUnionInvolveObjectType =
-	`Error: Please check your type declaration, do not union object literal type with other type except PossiblyReadAsUndefined and Delete`
 export type ErrorDeleteFieldMerge =
 	`Error: To use deleteField, please set 'merge' to 'true' or set 'mergeFields with an array, empty array also fine' in the options parameter.`
 export type ErrorDeleteFieldUnion<T extends string> =
@@ -91,6 +89,8 @@ export type ErrorWhereInOrNotInValueIsNotArray<T extends string> =
 	`Error: The value provided to 'in' or 'not-in' comparator must be array of type '${T}'`
 export type ErrorNonTopLevelDeleteField =
 	`Error: In non-flatten operations, deleteField() must appear at top level`
+export type ErrorDocIdIncorrectType =
+	'Error: DocId must be single/multiple argument of string or CollectionReference'
 
 export type ErrorMsgs =
 	| ErrorUndefined
@@ -100,7 +100,6 @@ export type ErrorMsgs =
 	| ErrorFieldValueInArray
 	| ErrorEmptyDocumentOrCollectionID<'Document' | 'Collection'>
 	| ErrorUnassignedAbleFieldValue
-	| ErrorUnionInvolveObjectType
 	| ErrorDeleteFieldMerge
 	| ErrorDeleteFieldUnion<string>
 	| ErrorNumberOfForwardSlashIsNotEqual<string, string>
@@ -131,6 +130,7 @@ export type ErrorMsgs =
 	| ErrorAutoIdTypeMustBeWideString<string>
 	| ErrorWhereInOrNotInValueIsNotArray<string>
 	| ErrorNonTopLevelDeleteField
+	| ErrorDocIdIncorrectType
 
 // unused
 export type ReplaceErrorMsgsWithNever<T> = T extends ErrorMsgs ? never : T
