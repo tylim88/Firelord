@@ -4,7 +4,7 @@ import { query, where, orderBy, onSnapshot, startAfter, offset } from 'firelord'
 // filter and listen to documents
 const unsub = onSnapshot(
 	query(
-		example.collectionGroup(),
+		example.collection(), // or example.collectionGroup()
 		where('b.d', 'array-contains', { e: 'hello' }),
 		orderBy('f.g'),
 		startAfter(new Date())
@@ -19,7 +19,7 @@ const unsub = onSnapshot(
 
 // listen to entire collection
 const unsub2 = onSnapshot(
-	example.collectionGroup(),
+	example.collection(), // or example.collectionGroup()
 	querySnapshot => {
 		// return querySnapshot similar to querySnapshot of getDocs
 	},
