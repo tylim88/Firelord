@@ -7,7 +7,7 @@ it('test return data type', () => {
 	;() => {
 		const data = documentSnapshot.data()
 		if (data) {
-			/*  eslint-disable @typescript-eslint/no-unused-vars */
+			/*  eslint-disable unused-imports/no-unused-vars */
 			const {
 				beenTo,
 				name,
@@ -24,7 +24,7 @@ it('test return data type', () => {
 				// @ts-expect-error
 				unknown,
 			} = data
-			/*  eslint-enable @typescript-eslint/no-unused-vars */
+			/*  eslint-enable unused-imports/no-unused-vars */
 		}
 	}
 })

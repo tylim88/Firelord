@@ -19,6 +19,7 @@
 		"commit": "git commit --no-verify",
 		"kill": "kill-port 8080",
 		"test": "npm run kill && (firebase emulators:exec --only firestore \"vitest --config vitest.emulator.ts\") && npm run kill && vitest",
+		"knip": "knip",
 		"dev": "---------------------dev------------------------",
 		"d-link": "npm run build && npm run b-un && npm run link",
 		"d-test": "tsc && npm test",
@@ -62,7 +63,6 @@
 		"admin"
 	],
 	"devDependencies": {
-		"@firebase/rules-unit-testing": "^2.0.7",
 		"@rollup/plugin-terser": "^0.4.3",
 		"@rollup/plugin-typescript": "^11.0.0",
 		"@types/lodash": "^4.14.191",
@@ -74,7 +74,6 @@
 		"eslint": "^8.36.0",
 		"eslint-cli": "^1.1.1",
 		"eslint-config-prettier": "^8.8.0",
-		"eslint-import-resolver-typescript": "^3.5.3",
 		"eslint-plugin-import": "^2.27.5",
 		"eslint-plugin-json": "^3.1.0",
 		"eslint-plugin-markdown": "^3.0.0",
@@ -84,6 +83,7 @@
 		"firebase-admin": "^11.10.1",
 		"husky": "^8.0.3",
 		"kill-port": "^2.0.1",
+		"knip": "^2.17.1",
 		"lint-staged": "^13.2.0",
 		"lodash": "^4.17.21",
 		"pick-random": "^4.0.0",

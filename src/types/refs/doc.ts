@@ -39,7 +39,7 @@ export interface DocumentReference<T extends MetaType> {
 	 *
 	 * @returns A Promise that resolves with an array of CollectionReferences.
 	 */
-	listCollections(): Promise<CollectionReference<any>[]> // ! revisit and fix type
+	listCollections(): Promise<CollectionReference<MetaType>[]> // ! revisit and fix type
 }
 
 export type DocCreator = <T extends MetaType>(

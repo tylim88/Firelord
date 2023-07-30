@@ -1,7 +1,7 @@
 import { MetaType } from '../metaTypeCreator'
 import { Firestore } from '../alias'
 import { Query } from './query'
-import { QueryPartition } from '@google-cloud/firestore'
+import { type QueryPartition } from '@google-cloud/firestore'
 
 /**
  * A `CollectionGroup` refers to all documents that are contained in a

@@ -5,7 +5,7 @@ import {
 	GrandChild,
 } from '../utilForTests'
 import { refEqual } from '../equal'
-import { IsSame, IsTrue, CollectionReference } from '../types'
+import { IsSame, IsTrue, CollectionReference, MetaType } from '../types'
 
 initializeApp()
 
@@ -56,7 +56,7 @@ describe('simple collection type test', () => {
 			>
 		>()
 		IsTrue<IsSame<typeof ref.parent, CollectionReference<GrandChild>>>()
-		IsTrue<IsSame<typeof documents, CollectionReference<any>[]>>()
+		IsTrue<IsSame<typeof documents, CollectionReference<MetaType>[]>>()
 	})
 	it('test auto generate id', () => {
 		const ref = userRef.doc(userRef.collection('FirelordTest'))
