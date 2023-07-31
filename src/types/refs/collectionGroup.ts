@@ -1,11 +1,11 @@
-import { MetaType } from '../metaTypeCreator'
-import { Firestore } from '../alias'
-import { Query } from './query'
-import { type QueryPartition } from '@google-cloud/firestore'
+import type { MetaType } from '../metaTypeCreator'
+import type { Firestore } from '../alias'
+import type { Query } from './query'
+import type { QueryPartition } from '@google-cloud/firestore'
 
 /**
- * A `CollectionGroup` refers to all documents that are contained in a
- * collection or subcollection with a specific collection ID.
+ * A {@link CollectionGroup} refers to all documents that are contained in a
+ * collection or sub-collection with a specific collection ID.
  */
 interface CollectionGroup<T extends MetaType> extends Query<T> {
 	/**
@@ -24,7 +24,6 @@ interface CollectionGroup<T extends MetaType> extends Query<T> {
 export type CollectionGroupCreator = <T extends MetaType>(
 	fStore: Firestore,
 	collectionID: T['collectionID']
-) => /**
- * @returns — The created Query.
- */
-() => CollectionGroup<T>
+) => {
+	(): CollectionGroup<T>
+}

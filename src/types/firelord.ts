@@ -11,30 +11,19 @@ import {
 import { Firestore } from './alias'
 
 type Doc_<T extends MetaType> = {
-	/**
-	 * Gets a `DocumentReference` instance that refers to the document at the
-	 * specified absolute path.
-	 *
-	 * @param documentIds - all the docID(s) needed to build this document path.
-	 * @returns The `DocumentReference` instance.
-	 */
 	doc: Doc<T>
 }
 
 type Collection_<T extends MetaType> = {
-	/**
-	 * Gets a `CollectionReference` instance that refers to the collection at
-	 * the specified absolute path.
-	 *
-	 * @param documentIds - all the docID(s) needed to build this collection path.
-	 * @returns The `CollectionReference` instance.
-	 */
 	collection: Collection<T>
 }
 
 type CollectionGroup_<T extends MetaType> = {
 	/**
-	 * @returns — The created Query.
+	 *  related documentations:
+	 *  - {@link https://firelordjs.com/quick_start/#query query}
+	 *  - {@link https://firelordjs.com/quick_start/#onsnapshot onSnapshot}
+	 * @returns — The created {@link Query}.
 	 */
 	collectionGroup: () => Query<T>
 }
