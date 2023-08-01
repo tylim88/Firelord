@@ -87,7 +87,7 @@ export interface QuerySnapshot<T extends MetaType> {
 	 * @param thisArg The `this` binding for the callback.
 	 */
 	forEach(
-		callback: (result: QueryDocumentSnapshot<T>) => void,
+		callback: (result: QueryDocumentSnapshot<T>) => void | Promise<void>,
 		thisArg?: unknown
 	): void
 }

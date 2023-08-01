@@ -3,6 +3,8 @@ import { Firestore } from '../alias'
 import { QueryConstraints } from '../queryConstraints'
 import { QueryConstraintLimitation } from '../queryConstraintsLimitations'
 import { CollectionReference } from './collection'
+import { CollectionGroup } from './collectionGroup'
+
 export interface Query<T extends MetaType> {
 	/**
 	 * The `Firestore` for the Firestore database (useful for performing
@@ -33,12 +35,17 @@ export interface Query<T extends MetaType> {
 	select(...field: (keyof T['writeFlatten'])[]): Query<T> // ! revisit
 }
 
-export type QueryRef = <
+export type GeneralQuery<T extends MetaType> =
+	| Query<T>
+	| CollectionReference<T>
+	| CollectionGroup<T>
+
+export type QueryFunction = <
 	T extends MetaType,
-	Q extends Query<T> | CollectionReference<T>,
+	Q extends GeneralQuery<T>,
 	QC extends QueryConstraints<T>[]
 >(
-	query: Q extends never ? Q : Query<T> | CollectionReference<T>,
+	query: Q extends never ? Q : GeneralQuery<T>,
 
 	...queryConstraints: QC extends never
 		? QC

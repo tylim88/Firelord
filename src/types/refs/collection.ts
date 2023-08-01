@@ -56,7 +56,7 @@ export type Collection<T extends MetaType> = {
 	 *
 	 *  related documentations:
 	 *  - {@link https://firelordjs.com/guides/metatype child meta type}
-	 *  - {@link https://firelordjs.com/quick_start#operations operation}
+	 *  - {@link https://firelordjs.com/firelord/quick_start#operations operation}
 	 * @param documentIds
 	 *  All the docID(s) needed to build this document path, eg
 	 *  - for top-collection: example.collection()
@@ -77,4 +77,8 @@ export type GetCollectionIds<T extends MetaType> = GetOddOrEvenSegments<
 /**
  * stop TS from tree shake the types, we need this type for JSDoc
  */
-export type Dummy = GetDoc | GetDocs | OnSnapshot | DocumentSnapshot<MetaType>
+export type DummyCollection =
+	| GetDoc
+	| GetDocs
+	| OnSnapshot
+	| DocumentSnapshot<MetaType>

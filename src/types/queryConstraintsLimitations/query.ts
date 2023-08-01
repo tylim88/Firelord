@@ -9,7 +9,7 @@ import {
 	OffsetConstraint,
 	CursorType,
 } from '../queryConstraints'
-import { Query } from '../refs'
+import { GeneralQuery } from '../refs'
 import { LimitToLastConstraintLimitation } from './limit'
 import { CursorConstraintLimitation } from './cursor'
 import { OrderByConstraintLimitation, GetFirstOrderBy } from './orderBy'
@@ -36,7 +36,7 @@ export type ValidateOrderByAndInequalityWhere<
 
 export type QueryConstraintLimitation<
 	T extends MetaType,
-	Q extends Query<T>,
+	Q extends GeneralQuery<T>,
 	RestQCs extends QueryConstraints<T>[],
 	PreviousQCs extends QueryConstraints<T>[],
 	AllQCs extends QueryConstraints<T>[]

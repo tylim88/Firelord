@@ -1,4 +1,4 @@
-import { MetaType, OriQuery, QueryRef } from '../types'
+import { MetaType, OriQuery, QueryFunction } from '../types'
 import { handleEmptyArray } from './utils'
 
 /**
@@ -11,7 +11,7 @@ import { handleEmptyArray } from './utils'
  * existing or new constraints.
  */
 // @ts-expect-error
-export const query: QueryRef = (query, ...queryConstraints) => {
+export const query: QueryFunction = (query, ...queryConstraints) => {
 	const ref = query as OriQuery<MetaType>
 	// ! need revisit
 	// @ts-expect-error

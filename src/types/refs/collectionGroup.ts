@@ -7,7 +7,7 @@ import type { QueryPartition } from '@google-cloud/firestore'
  * A {@link CollectionGroup} refers to all documents that are contained in a
  * collection or sub-collection with a specific collection ID.
  */
-interface CollectionGroup<T extends MetaType> extends Query<T> {
+export interface CollectionGroup<T extends MetaType> extends Query<T> {
 	/**
 	 * Partitions a query by returning partition cursors that can be used to run
 	 * the query in parallel. The returned cursors are split points that can be
@@ -21,9 +21,17 @@ interface CollectionGroup<T extends MetaType> extends Query<T> {
 	getPartitions(desiredPartitionCount: number): AsyncIterable<QueryPartition<T>>
 }
 
+export type CollectionGroupFunction<T extends MetaType> = {
+	/**
+	 *  related documentations:
+	 *  - {@link https://firelordjs.com/firelord/quick_start/#query query}
+	 *  - {@link https://firelordjs.com/firelord/quick_start/#onsnapshot onSnapshot}
+	 * @returns — The created {@link Query}.
+	 */
+	(): CollectionGroup<T>
+}
+
 export type CollectionGroupCreator = <T extends MetaType>(
 	fStore: Firestore,
 	collectionID: T['collectionID']
-) => {
-	(): CollectionGroup<T>
-}
+) => CollectionGroupFunction<T>
