@@ -1,5 +1,6 @@
 import { OriFieldValue } from './alias'
 import { ErrorArrayFieldValueEmpty } from './error'
+import { SerialServerTimestamp } from './serial'
 
 declare const serverTimestampSymbol: unique symbol
 declare const deleteFieldSymbol: unique symbol
@@ -14,7 +15,7 @@ type PossiblyReadAsUndefinedSymbol = typeof possiblyReadAsUndefinedSymbol
 type ArraySymbol = typeof arraySymbol
 
 declare class FieldValue<T> {
-	protected 'Firelord_FieldValue'?: T
+	protected 'Firelord_FieldValue_Do_Not_Access': T
 }
 declare class ArrayFieldValue<T> {
 	protected Firelord_ArrayFieldValue?: T
@@ -32,15 +33,19 @@ export interface ServerTimestamp
 export interface Delete extends OriFieldValue, FieldValue<DeleteFieldSymbol> {}
 
 export interface Increment extends OriFieldValue, FieldValue<IncrementSymbol> {}
-export interface ArrayRemoveOrUnion<T>
+export interface ArrayUnionOrRemove<T>
 	extends OriFieldValue,
 		FieldValue<ArraySymbol>,
 		ArrayFieldValue<T> {}
 
-export type ArrayRemoveOrUnionFunction = <Elements extends unknown[]>(
+export type ArrayUnionOrRemoveFunction = <Elements extends unknown[]>(
 	...elements: Elements extends [] ? [ErrorArrayFieldValueEmpty] : Elements
-) => ArrayRemoveOrUnion<Elements[number]>
+) => ArrayUnionOrRemove<Elements[number]>
 
-export type UnassignedAbleFieldValue = Increment | ArrayRemoveOrUnion<unknown>
+export type UnassignedAbleFieldValue = Increment | ArrayUnionOrRemove<unknown>
 
-export type FieldValues = ServerTimestamp | UnassignedAbleFieldValue | Delete
+export type FieldValues =
+	| ServerTimestamp
+	| UnassignedAbleFieldValue
+	| Delete
+	| SerialServerTimestamp

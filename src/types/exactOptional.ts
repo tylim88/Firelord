@@ -5,7 +5,7 @@ import {
 	ErrorUnknownMember,
 	ErrorNonTopLevelDeleteField,
 } from './error'
-import { ArrayRemoveOrUnion, Delete } from './fieldValues'
+import { ArrayUnionOrRemove, Delete } from './fieldValues'
 import { DeepValue } from './objectFlatten'
 
 type HandleUnknownMember<T extends Record<string, unknown>, Data> = Omit<
@@ -85,7 +85,7 @@ export type ExactOptional<
 						: never
 					: S[] extends
 							| (infer BaseKeyElement)[][]
-							| ArrayRemoveOrUnion<unknown>[]
+							| ArrayUnionOrRemove<unknown>[]
 					? Data[K] extends (infer DataKeyElement)[]
 						? Data[K] extends never[] // https://stackoverflow.com/questions/71193522/typescript-inferred-never-is-not-never
 							? S

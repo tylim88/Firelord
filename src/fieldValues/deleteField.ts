@@ -7,4 +7,5 @@ import { Delete } from '../types'
  *
  * @return The FieldValue sentinel for use in a call to set() or update().
  */
+// @ts-expect-error
 export const deleteField = (): Delete => FieldValue.delete()

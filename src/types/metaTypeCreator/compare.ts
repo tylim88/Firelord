@@ -15,18 +15,27 @@ import {
 import { DeepValue } from '../objectFlatten'
 import { DocumentReference } from '../refs'
 import { MetaType } from './metaType'
+import {
+	SerialDate,
+	SerialGeoPoint,
+	SerialServerTimestamp,
+	SerialDocumentReference,
+	SerialTimestamp,
+} from '../serial'
 
 type CompareConverterArray<T, BannedTypes> = NoDirectNestedArray<
 	T,
 	T extends (infer A)[]
 		? readonly CompareConverterArray<A, BannedTypes>[]
-		: T extends Bytes
-		? T
 		: T extends FieldValues
 		? ErrorFieldValueInArray
-		: T extends Date | Timestamp
+		: T extends Date | Timestamp | SerialDate | SerialTimestamp
 		? Timestamp | Date
-		: T extends DocumentReference<MetaType> | GeoPoint
+		: T extends SerialDocumentReference<infer R>
+		? DocumentReference<R>
+		: T extends SerialGeoPoint
+		? GeoPoint
+		: T extends DocumentReference<MetaType> | Bytes | GeoPoint
 		? T
 		: T extends Record<string, unknown>
 		? {
@@ -41,11 +50,19 @@ export type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 	T,
 	T extends (infer A)[]
 		? readonly CompareConverterArray<A, BannedTypes>[]
-		: T extends Bytes
-		? T
-		: T extends ServerTimestamp | Date | Timestamp
+		: T extends
+				| ServerTimestamp
+				| Date
+				| Timestamp
+				| SerialDate
+				| SerialTimestamp
+				| SerialServerTimestamp
 		? Timestamp | Date
-		: T extends DocumentReference<MetaType> | GeoPoint
+		: T extends SerialGeoPoint
+		? GeoPoint
+		: T extends SerialDocumentReference<MetaType>
+		? DocumentReference<MetaType>
+		: T extends DocumentReference<MetaType> | Bytes | GeoPoint | SerialGeoPoint
 		? T
 		: T extends Record<string, unknown>
 		? {
@@ -54,9 +71,9 @@ export type CompareConverter<T, BannedTypes> = NoDirectNestedArray<
 					BannedTypes
 				>
 		  }
-		: T extends PossiblyReadAsUndefined | Delete
-		? never
 		: T extends UnassignedAbleFieldValue
 		? ErrorUnassignedAbleFieldValue
+		: T extends PossiblyReadAsUndefined | Delete
+		? never
 		: NoUndefinedAndBannedTypes<T, BannedTypes>
 >

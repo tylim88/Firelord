@@ -18,4 +18,5 @@ import { Increment } from '../types'
  * @return The FieldValue sentinel for use in a call to set(), create() or
  * update().
  */
+// @ts-expect-error
 export const increment = (n: number): Increment => FieldValue.increment(n)
