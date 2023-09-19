@@ -121,6 +121,10 @@ The ultimate goal is to unify the knowledge of back end and front end, so we don
 
 Due to a lot of small differences, it is unrealistic to squeeze both platforms under the same library unless we give up some functionalities.
 
+## What is next?
+
+Add support for Firestore function triggers.
+
 ## Have Questions?
 
 [Just Ask](https://github.com/tylim88/FirelordJS/discussions)
