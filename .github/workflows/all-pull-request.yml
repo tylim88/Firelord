@@ -4,7 +4,7 @@ jobs:
   build_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: '16.14'
@@ -34,4 +34,4 @@ jobs:
           PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
