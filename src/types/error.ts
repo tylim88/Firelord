@@ -91,6 +91,8 @@ export type ErrorNonTopLevelDeleteField =
 	`Error: In non-flatten operations, deleteField() must appear at top level`
 export type ErrorDocIdIncorrectType =
 	'Error: DocId must be single/multiple argument of string or CollectionReference'
+export type ErrorKeyNotExist<T extends string> =
+	`Error: The key '${T}' does not exist`
 
 export type ErrorMsgs =
 	| ErrorUndefined
@@ -131,6 +133,7 @@ export type ErrorMsgs =
 	| ErrorWhereInOrNotInValueIsNotArray<string>
 	| ErrorNonTopLevelDeleteField
 	| ErrorDocIdIncorrectType
+	| ErrorKeyNotExist<string>
 
 // unused
 export type ReplaceErrorMsgsWithNever<T> = T extends ErrorMsgs ? never : T
