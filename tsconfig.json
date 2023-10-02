@@ -23,7 +23,8 @@
 		"noEmit": true,
 		"exactOptionalPropertyTypes": true,
 		"types": ["vitest/globals"],
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"noErrorTruncation": true
 	},
 	"include": ["src"]
 }

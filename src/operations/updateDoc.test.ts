@@ -21,7 +21,7 @@ import {
 	IsTrue,
 	IsSame,
 	ErrorUnknownMember,
-	DeepPartial,
+	DeepPartialExceptArray,
 } from '../types'
 
 initializeApp()
@@ -46,7 +46,7 @@ describe('test updateDoc', () => {
 			})
 	})
 	it('test accept optional type, must turn on exactOptionalPropertyTypes config', () => {
-		const a = {} as unknown as DeepPartial<User['writeFlatten']>
+		const a = {} as unknown as DeepPartialExceptArray<User['writeFlatten']>
 
 		;() => updateDoc(userRefCreator().doc('FirelordTest', '123'), a)
 	})
@@ -133,7 +133,7 @@ describe('test updateDoc', () => {
 				stale2
 			)
 	})
-	it('test empty object literal data', () => {
+	it('test empty object literal data, should pass', () => {
 		// @ts-expect-error
 		;() => updateDoc(userRefCreator().doc('123'), {})
 		;() =>
@@ -193,7 +193,7 @@ describe('test updateDoc', () => {
 			a: { e: arrayUnion(...['1']), 'b.c': 1 },
 			'a.k': serverTimestamp(),
 			unknown: '123',
-		}
+		} as const
 		;() =>
 			updateDoc(
 				userRefCreator().doc('FirelordTest', '123'),
