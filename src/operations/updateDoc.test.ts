@@ -256,11 +256,15 @@ describe('test updateDoc', () => {
 
 	it('test update empty object', async () => {
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
-		;() =>
-			updateDoc(
+		expect.assertions(1)
+		try {
+			await updateDoc(
 				docRef,
 				// @ts-expect-error
 				{}
 			)
+		} catch (e) {
+			expect(true).toBe(true)
+		}
 	})
 })

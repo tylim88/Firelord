@@ -68,11 +68,10 @@ describe('test update batch', () => {
 	it('test empty data', async () => {
 		const batch = writeBatch(getFirestore())
 		const docRef = userRef.doc('FirelordTest', 'updateBatchTestCaseEmpty')
-		;() =>
-			batch.updateNoFlatten(
-				docRef,
-				// @ts-expect-error
-				{}
-			)
+		batch.updateNoFlatten(
+			docRef,
+			// @ts-expect-error
+			{}
+		)
 	})
 })

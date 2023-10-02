@@ -254,11 +254,15 @@ describe('test updateDocNoFlatten', () => {
 
 	it('test top level empty object', async () => {
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
-		;() =>
-			updateDocNoFlatten(
+		expect.assertions(1)
+		try {
+			await updateDocNoFlatten(
 				docRef,
 				// @ts-expect-error
 				{}
 			)
+		} catch (e) {
+			expect(true).toBe(true)
+		}
 	})
 })

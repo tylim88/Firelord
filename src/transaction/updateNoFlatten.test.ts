@@ -69,8 +69,8 @@ describe('test update transaction', () => {
 
 	it('test empty object, should failed', async () => {
 		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCaseEmpty')
-
-		;() =>
+		expect.assertions(1)
+		try {
 			runTransaction(async transaction => {
 				transaction.updateNoFlatten(
 					docRef,
@@ -78,5 +78,8 @@ describe('test update transaction', () => {
 					{}
 				)
 			})
+		} catch (e) {
+			expect(true).toBe(true)
+		}
 	})
 })
