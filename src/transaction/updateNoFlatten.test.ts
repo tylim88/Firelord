@@ -67,13 +67,16 @@ describe('test update transaction', () => {
 		}
 	})
 
-	it('test empty object, should pass', async () => {
+	it('test empty object, should failed', async () => {
 		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCaseEmpty')
-		await setDoc(docRef, generateRandomData())
-		expect.assertions(1)
-		await runTransaction(async transaction => {
-			const result = transaction.updateNoFlatten(docRef, {})
-			expect(result).toBe(undefined)
-		})
+
+		;() =>
+			runTransaction(async transaction => {
+				transaction.updateNoFlatten(
+					docRef,
+					// @ts-expect-error
+					{}
+				)
+			})
 	})
 })

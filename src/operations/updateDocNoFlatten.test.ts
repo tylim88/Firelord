@@ -248,8 +248,18 @@ describe('test updateDocNoFlatten', () => {
 		// * admin doesn't throw when updating non existing doc
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
 		deleteDoc(docRef)
-		await updateDocNoFlatten(docRef, {})
 		const snapshot = await getDoc(docRef)
 		expect(snapshot.exists).toBe(false)
+	})
+
+	it('test top level empty object', async () => {
+		// * admin doesn't throw when updating non existing doc
+		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
+		;() =>
+			updateDocNoFlatten(
+				docRef,
+				// @ts-expect-error
+				{}
+			)
 	})
 })

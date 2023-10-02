@@ -8,12 +8,10 @@ export const updateCreator =
 	(reference, data, precondition?) => {
 		const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 
-		return Object.keys(data_).length > 0
-			? transaction.update(
-					// @ts-expect-error
-					reference,
-					data_,
-					precondition || {}
-			  )
-			: undefined
+		return transaction.update(
+			// @ts-expect-error
+			reference,
+			data_,
+			precondition || {}
+		)
 	}

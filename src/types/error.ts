@@ -38,7 +38,8 @@ export type ErrorNumberOfForwardSlashIsNotEqual<
 			? `Detected type is 'string', you seem to forget to assert your value as const, eg: ''a/b/c' as const'`
 			: ''}`
 	: `Invalid query, forward slash count mismatched`}, current count is ${GetNumberOfPathSlash<Value>}, need ${GetNumberOfPathSlash<Type>}.`
-export type ErrorEmptyUpdate = `Error: Update data is an empty object literal`
+export type ErrorEmptyUpdate =
+	`Error: Update data cannot be empty object literal unless the empty object belong to nested properties of UpdateNoFlatten operation, eg: 'updateDocNoFlatten(docRef, { a: { } } )'`
 export type ErrorPossiblyUndefinedAsArrayElement =
 	`Error: You cannot assign PossiblyUndefined as array element, eg: 'PossiblyUndefined[]', you can however indirectly assign PossiblyUndefined in array, eg: < { a : number | PossiblyUndefined }[] >`
 export type ErrorMoreThanOnceDocSnapshotInCursor =

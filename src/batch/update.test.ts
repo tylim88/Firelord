@@ -64,11 +64,11 @@ describe('test update batch', () => {
 	it('test empty data', async () => {
 		const batch = writeBatch(getFirestore())
 		const docRef = userRef.doc('FirelordTest', 'updateBatchTestCaseEmpty')
-		const result = batch.update(
-			docRef,
-			// @ts-expect-error
-			{}
-		)
-		expect(result).toBe(undefined)
+		;() =>
+			batch.update(
+				docRef,
+				// @ts-expect-error
+				{}
+			)
 	})
 })

@@ -16,23 +16,14 @@ export type UpdateCreator<U, NoFlatten extends boolean> = <
 	precondition?: Precondition
 ) => U
 
-export type Update = UpdateCreator<Promise<WriteResult | undefined>, false>
+export type Update = UpdateCreator<Promise<WriteResult>, false>
 
-export type UpdateNoFlatten = UpdateCreator<
-	Promise<WriteResult | undefined>,
-	true
->
+export type UpdateNoFlatten = UpdateCreator<Promise<WriteResult>, true>
 
-export type TransactionUpdate = UpdateCreator<Transaction | undefined, false>
+export type TransactionUpdate = UpdateCreator<Transaction, false>
 
-export type TransactionUpdateNoFlatten = UpdateCreator<
-	Transaction | undefined,
-	true
->
+export type TransactionUpdateNoFlatten = UpdateCreator<Transaction, true>
 
-export type WriteBatchUpdate = UpdateCreator<WriteBatch | undefined, false>
+export type WriteBatchUpdate = UpdateCreator<WriteBatch, false>
 
-export type WriteBatchUpdateNoFlatten = UpdateCreator<
-	WriteBatch | undefined,
-	true
->
+export type WriteBatchUpdateNoFlatten = UpdateCreator<WriteBatch, true>

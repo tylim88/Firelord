@@ -69,15 +69,14 @@ describe('test update transaction', () => {
 
 	it('test empty object', async () => {
 		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCaseEmpty')
-		await setDoc(docRef, generateRandomData())
-		expect.assertions(1)
-		await runTransaction(async transaction => {
-			const result = transaction.update(
-				docRef,
-				// @ts-expect-error
-				{}
-			)
-			expect(result).toBe(undefined)
-		})
+
+		;() =>
+			runTransaction(async transaction => {
+				transaction.update(
+					docRef,
+					// @ts-expect-error
+					{}
+				)
+			})
 	})
 })

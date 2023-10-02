@@ -32,17 +32,11 @@ describe('test arrayRemove', () => {
 		}
 	})
 	it('test with no arg', async () => {
-		await updateDoc(docRef, {
-			a:
-				// @ts-expect-error
-				arrayRemove(),
-		})
-		const docSnap = await getDoc(docRef)
-		const data = docSnap.data()
-		expect(data).not.toBe(undefined)
-		if (data) {
-			expect(data.a).toEqual([100, 0])
-			expect(data.a).not.toEqual([0, 100])
-		}
+		;() =>
+			updateDoc(docRef, {
+				a:
+					// @ts-expect-error
+					arrayRemove(),
+			})
 	})
 })

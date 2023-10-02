@@ -250,12 +250,18 @@ describe('test updateDoc', () => {
 		// * admin doesn't throw when updating non existing doc
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
 		deleteDoc(docRef)
-		await updateDoc(
-			docRef,
-			// @ts-expect-error
-			{}
-		)
 		const snapshot = await getDoc(docRef)
 		expect(snapshot.exists).toBe(false)
+	})
+
+	it('test update empty object', async () => {
+		// * admin doesn't throw when updating non existing doc
+		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
+		;() =>
+			updateDoc(
+				docRef,
+				// @ts-expect-error
+				{}
+			)
 	})
 })

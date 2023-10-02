@@ -17,12 +17,6 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
  */
 export const updateDoc: Update = (reference, data, precondition?) => {
 	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
-
-	return Object.keys(data_).length > 0
-		? // @ts-expect-error
-		  (reference as OriDocumentReference).update(
-				flatten(removeFieldValueInhomogeneousProps(data)),
-				precondition || {}
-		  )
-		: Promise.resolve(undefined)
+	// @ts-expect-error
+	return (reference as OriDocumentReference).update(data_, precondition || {})
 }
