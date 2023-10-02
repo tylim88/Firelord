@@ -255,7 +255,6 @@ describe('test updateDoc', () => {
 	})
 
 	it('test update empty object', async () => {
-		// * admin doesn't throw when updating non existing doc
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
 		;() =>
 			updateDoc(

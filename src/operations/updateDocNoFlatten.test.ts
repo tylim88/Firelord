@@ -253,7 +253,6 @@ describe('test updateDocNoFlatten', () => {
 	})
 
 	it('test top level empty object', async () => {
-		// * admin doesn't throw when updating non existing doc
 		const docRef = userRefCreator().doc('FirelordTest', 'updateEmptyData')
 		;() =>
 			updateDocNoFlatten(
