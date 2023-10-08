@@ -1,5 +1,6 @@
 import { GetFirelordShakable } from './types'
 import { docCreator, collectionCreator, collectionGroupCreator } from './refs'
+import { Timestamp } from 'firebase-admin/firestore'
 
 export const getFirelordShakable: GetFirelordShakable =
 	({ docCreator, collectionCreator, collectionGroupCreator }) =>
@@ -20,6 +21,7 @@ export const getFirelordShakable: GetFirelordShakable =
 			}),
 		}
 	}
+
 /**
  * Gets a FirelordReference instance that refers to the doc, collection, and collectionGroup at the specified absolute path.
  * @param firestore - A reference to the root `Firestore` instance.
@@ -31,6 +33,16 @@ export const getFirelord = getFirelordShakable({
 	collectionCreator,
 	collectionGroupCreator,
 })
+
+export const toTimestamp = ({
+	seconds,
+	nanoseconds,
+}: {
+	seconds: number
+	nanoseconds: number
+}) => {
+	return new Timestamp(seconds, nanoseconds)
+}
 
 export { getFirestore, Timestamp, GeoPoint } from 'firebase-admin/firestore'
 
