@@ -71,7 +71,7 @@ describe('test update transaction', () => {
 		const docRef = userRef.doc('FirelordTest', 'updateTransactionTestCaseEmpty')
 		expect.assertions(1)
 		try {
-			runTransaction(async transaction => {
+			await runTransaction(async transaction => {
 				transaction.updateNoFlatten(
 					docRef,
 					// @ts-expect-error
