@@ -748,7 +748,6 @@ describe('test Firelord type', () => {
 		IsTrue<IsEqual<ExpectedWriteFlatten, WriteFlatten>>()
 		IsTrue<IsEqual<ExpectedCompare, Compare>>()
 	})
-
 	it('test mapped type', () => {
 		type A = MetaTypeCreator<
 			{
@@ -758,23 +757,23 @@ describe('test Firelord type', () => {
 			'test'
 		>
 
-		type Read = A['read']
-		type Write = A['write']
-		type WriteFlatten = A['writeFlatten']
-		type WriteMerge = A['writeMerge']
-		type Compare = A['compare']
+		type ExpectRead = A['read']
+		type ExpectWrite = A['write']
+		type ExpectWriteFlatten = A['writeFlatten']
+		type ExpectWriteMerge = A['writeMerge']
+		type ExpectCompare = A['compare']
 
-		type ExpectRead = {
+		type Read = {
 			a: Record<string, string>
 			b: Record<string, { c: Record<string, number> }>
 		}
 
-		type ExpectWrite = {
+		type Write = {
 			a: Record<string, string>
 			b: Record<string, { c: Record<string, number | Increment> }>
 		}
 
-		type ExpectWriteFlatten = {
+		type WriteFlatten = {
 			[x: `a.${string}`]: string
 			a: Record<string, string>
 			b: {
@@ -803,7 +802,7 @@ describe('test Firelord type', () => {
 			[x: `b.${string}.c.${string}`]: number | Increment
 		}
 
-		type ExpectCompare = {
+		type Compare = {
 			[x: `a.${string}`]: string
 			a: Record<string, string>
 			b: {
@@ -835,7 +834,7 @@ describe('test Firelord type', () => {
 		IsTrue<IsSame<ExpectRead, Read>>
 		IsTrue<IsSame<ExpectWrite, Write>>
 		IsTrue<IsSame<ExpectWriteFlatten, WriteFlatten>>
-		IsTrue<IsSame<Write, WriteMerge>>
+		IsTrue<IsSame<ExpectWriteMerge, Write>>
 		IsTrue<IsSame<ExpectCompare, Compare>>
 	})
 	it('test persistent type', () => {
