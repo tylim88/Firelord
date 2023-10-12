@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.6.22",
+	"version": "2.6.23",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"author": "tylim",
 	"license": "MIT",
@@ -96,8 +96,5 @@
 	},
 	"peerDependencies": {
 		"firebase-admin": "^11.10.1"
-	},
-	"dependencies": {
-		"firelord-core": "^1.0.1"
 	}
 }
