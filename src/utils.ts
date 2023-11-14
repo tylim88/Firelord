@@ -22,7 +22,7 @@ export const flatten = <T extends Record<string, unknown>>(data: T) => {
 
 	flat(data, '')
 
-	return obj as ObjectFlatten<T>
+	return obj as ObjectFlatten<T, string>
 }
 
 export const isFirestore = (value: unknown): value is Firestore => {

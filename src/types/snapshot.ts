@@ -50,7 +50,7 @@ export interface DocumentSnapshot<T extends MetaType> {
 	 */
 	get<FieldPath extends keyof T['writeFlatten'] & string>(
 		fieldPath: FieldPath
-	): DeepValue<ObjectFlatten<T['read']>, FieldPath> | undefined
+	): DeepValue<ObjectFlatten<T['read'], never>, FieldPath> | undefined
 }
 
 export interface QuerySnapshot<T extends MetaType> {

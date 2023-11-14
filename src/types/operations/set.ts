@@ -18,7 +18,7 @@ type SetCreator<U> = <
 				merge: boolean
 		  }
 		| {
-				mergeFields: RemoveLastDot<DeepKey<Data>>[]
+				mergeFields: RemoveLastDot<DeepKey<Data, never>>[]
 		  }
 		| undefined = undefined
 >(
@@ -30,7 +30,7 @@ type SetCreator<U> = <
 						merge: true
 				  }
 				| {
-						mergeFields: RemoveLastDot<DeepKey<Data>>[]
+						mergeFields: RemoveLastDot<DeepKey<Data, never>>[]
 				  }
 		? ExactOptional<
 				T['writeMerge'],
@@ -39,7 +39,7 @@ type SetCreator<U> = <
 					SetOptions extends { merge: boolean }
 						? SetOptions['merge']
 						: SetOptions extends {
-								mergeFields: RemoveLastDot<DeepKey<Data>>[]
+								mergeFields: RemoveLastDot<DeepKey<Data, never>>[]
 						  }
 						? SetOptions['mergeFields']
 						: false
