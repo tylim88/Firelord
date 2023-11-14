@@ -74,9 +74,4 @@ export type {
 	FirelordRef,
 	OnSnapshot,
 	Unsubscribe,
-	JSONDate,
-	JSONServerTimestamp,
-	JSONTimestamp,
-	JSONGeoPoint,
-	JSONDocumentReference,
 } from './types'
