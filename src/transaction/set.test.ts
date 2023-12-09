@@ -52,6 +52,14 @@ describe('test set transaction', () => {
 		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCaseRead')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
+		// ? for unknown reason, the admin need a delay here or else the test will fail
+		// ? does not happen on web sdk
+		// TODO open github issue
+		await new Promise(res => {
+			setTimeout(() => {
+				res(1)
+			}, 1000)
+		})
 		await runTransaction(
 			async transaction => {
 				const docSnap = await transaction.get(docRef)
@@ -61,7 +69,7 @@ describe('test set transaction', () => {
 		)
 	})
 	it('test delete functionality', async () => {
-		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCaseRead')
+		const docRef = userRef.doc('FirelordTest', 'setTransactionTestCaseDelete')
 		const data = generateRandomData()
 		await setDoc(docRef, data)
 		await runTransaction(
