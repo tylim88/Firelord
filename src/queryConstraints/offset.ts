@@ -9,6 +9,7 @@ import { Offset } from '../types'
  * @param offset The offset to apply to the Query results.
  * @returns A {@link QueryConstraint} to pass to `query()`
  */
+// @ts-expect-error
 export const offset: Offset = offset => {
 	return {
 		type: 'offset',

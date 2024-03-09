@@ -14,18 +14,20 @@ import { handleEmptyArray } from './utils'
 export const query: QueryFunction = (query, ...queryConstraints) => {
 	const ref = query as OriQuery<MetaType>
 	// ! need revisit
-	// @ts-expect-error
 	return queryConstraints.reduce((ref, qc) => {
 		const type = qc.type
 		if (type === 'where') {
+			// @ts-expect-error
 			return ref[type](qc.fieldPath, qc.opStr, qc.value)
 		} else if (type === 'orderBy') {
+			// @ts-expect-error
 			return ref[type](qc.fieldPath, qc.directionStr)
 		} else if (
 			type === 'limit' ||
 			type === 'limitToLast' ||
 			type === 'offset'
 		) {
+			// @ts-expect-error
 			return ref[type](qc.value)
 		} else if (
 			type === 'startAt' ||
@@ -33,7 +35,9 @@ export const query: QueryFunction = (query, ...queryConstraints) => {
 			type === 'endAt' ||
 			type === 'endBefore'
 		) {
+			// @ts-expect-error
 			return handleEmptyArray(qc.values, ref, () => ref[type](...qc.values))
 		}
+		// @ts-expect-error
 	}, ref)
 }
