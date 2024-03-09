@@ -11,7 +11,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
       - name: Cache firebase emulators
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/firebase/emulators
           key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('~/.cache/firebase/emulators/**') }}
@@ -34,4 +34,4 @@ jobs:
           PRIVATE_KEY_ID: ${{ secrets.PRIVATE_KEY_ID }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
