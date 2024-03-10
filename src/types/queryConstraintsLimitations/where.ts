@@ -30,7 +30,7 @@ import { DeepValue } from '../objectFlatten'
 // You can use at most one in, not-in, or array-contains-any clause per query. You can't combine in , not-in, and array-contains-any in the same query.
 type ValidateWhereNotInArrayContainsAny<
 	T extends MetaType,
-	U extends WhereConstraint<T, string, WhereFilterOp, unknown>,
+	U extends WhereConstraint<T, any, WhereFilterOp, unknown>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = U['opStr'] extends In | NotIn | ArrayContainsAny
 	? Extract<
@@ -45,7 +45,7 @@ type ValidateWhereNotInArrayContainsAny<
 // You cannot use more than one '!=' filter. (not documented directly or indirectly)
 type ValidateWhereNotInNotEqual<
 	T extends MetaType,
-	U extends WhereConstraint<T, string, WhereFilterOp, unknown>,
+	U extends WhereConstraint<T, any, WhereFilterOp, unknown>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = U['opStr'] extends NotIn
 	? Extract<
@@ -71,7 +71,7 @@ type ValidateWhereNotInNotEqual<
 // You can use at most one array-contains clause per query. You can't combine array-contains with array-contains-any.
 type ValidateWhereArrayContainsArrayContainsAny<
 	T extends MetaType,
-	U extends WhereConstraint<T, string, WhereFilterOp, unknown>,
+	U extends WhereConstraint<T, any, WhereFilterOp, unknown>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = U['opStr'] extends ArrayContains
 	? Extract<
@@ -92,18 +92,18 @@ type ValidateWhereArrayContainsArrayContainsAny<
 // In a compound query, range (<, <=, >, >=) and not equals (!=, not-in) comparisons must all filter on the same field.
 type ValidateWhereInequalityOpStrSameField<
 	T extends MetaType,
-	U extends WhereConstraint<T, string, WhereFilterOp, unknown>,
+	U extends WhereConstraint<T, any, WhereFilterOp, unknown>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = U['opStr'] extends InequalityOpStr
 	? Extract<
 			GetAllWhereConstraint<T, PreviousQCs, never>,
-			WhereConstraint<T, string, InequalityOpStr, unknown>
+			WhereConstraint<T, any, InequalityOpStr, unknown>
 	  > extends never
 		? true
 		: Exclude<
 				Extract<
 					GetAllWhereConstraint<T, PreviousQCs, never>,
-					WhereConstraint<T, string, InequalityOpStr, unknown>
+					WhereConstraint<T, any, InequalityOpStr, unknown>
 				>,
 				WhereConstraint<T, U['fieldPath'], InequalityOpStr, unknown>
 		  > extends never
@@ -115,7 +115,7 @@ export type GetFirstInequalityWhere<
 	T extends MetaType,
 	QCs extends QueryConstraints<T>[]
 > = QCs extends [infer H, ...infer Rest]
-	? H extends WhereConstraint<T, string, InequalityOpStr, unknown>
+	? H extends WhereConstraint<T, any, InequalityOpStr, unknown>
 		? H
 		: Rest extends QueryConstraints<T>[]
 		? GetFirstInequalityWhere<T, Rest>
@@ -125,7 +125,7 @@ export type GetFirstInequalityWhere<
 export type GetAllWhereConstraint<
 	T extends MetaType,
 	QCs extends QueryConstraints<T>[],
-	WhereConstraintsAcc extends WhereConstraint<T, string, WhereFilterOp, unknown>
+	WhereConstraintsAcc extends WhereConstraint<T, any, WhereFilterOp, unknown>
 > = QCs extends [infer H, ...infer R]
 	? R extends QueryConstraints<T>[]
 		?
@@ -133,7 +133,7 @@ export type GetAllWhereConstraint<
 				| GetAllWhereConstraint<
 						T,
 						R,
-						| (H extends WhereConstraint<T, string, WhereFilterOp, unknown>
+						| (H extends WhereConstraint<T, any, WhereFilterOp, unknown>
 								? H
 								: never)
 						| WhereConstraintsAcc
@@ -152,7 +152,7 @@ type GetAllWhereConstraintOpStr<
 				| GetAllWhereConstraintOpStr<
 						T,
 						R,
-						| (H extends WhereConstraint<T, string, WhereFilterOp, unknown>
+						| (H extends WhereConstraint<T, any, WhereFilterOp, unknown>
 								? H['opStr']
 								: never)
 						| OpStrAcc
@@ -163,7 +163,7 @@ type GetAllWhereConstraintOpStr<
 export type WhereConstraintLimitation<
 	T extends MetaType,
 	Q extends GeneralQuery<T>,
-	U extends WhereConstraint<T, string, WhereFilterOp, unknown>,
+	U extends WhereConstraint<T, any, WhereFilterOp, unknown>,
 	PreviousQCs extends QueryConstraints<T>[]
 > = ValidateWhereNotInArrayContainsAny<T, U, PreviousQCs> extends string
 	? ValidateWhereNotInArrayContainsAny<T, U, PreviousQCs>

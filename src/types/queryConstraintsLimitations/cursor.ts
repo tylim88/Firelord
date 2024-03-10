@@ -1,4 +1,4 @@
-import { MetaType } from '../metaTypeCreator'
+import { MetaType, GetAllCompareKeys } from '../metaTypeCreator'
 import { OrderByDirection } from '../alias'
 import { ErrorCursorTooManyArguments } from '../error'
 import {
@@ -18,10 +18,18 @@ type ValidateCursorOrderBy<
 	T extends MetaType,
 	Q extends Query<T>,
 	Values extends unknown[],
-	AllOrderBy extends OrderByConstraint<string, OrderByDirection | undefined>[]
+	AllOrderBy extends OrderByConstraint<
+		T,
+		GetAllCompareKeys<T>,
+		OrderByDirection | undefined
+	>[]
 > = Values extends [infer Head, ...infer Rest]
 	? AllOrderBy extends [infer H, ...infer R]
-		? H extends OrderByConstraint<string, OrderByDirection | undefined>
+		? H extends OrderByConstraint<
+				T,
+				GetAllCompareKeys<T>,
+				OrderByDirection | undefined
+		  >
 			? [
 					H['fieldPath'] extends __name__
 						? GetCorrectDocumentIdBasedOnRef<T, Q, H['fieldPath'], Head>
@@ -38,7 +46,11 @@ type ValidateCursorOrderBy<
 						T,
 						Q,
 						Rest,
-						R extends OrderByConstraint<string, OrderByDirection | undefined>[]
+						R extends OrderByConstraint<
+							T,
+							GetAllCompareKeys<T>,
+							OrderByDirection | undefined
+						>[]
 							? R
 							: []
 					>
