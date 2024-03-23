@@ -74,4 +74,5 @@ export type {
 	FirelordRef,
 	OnSnapshot,
 	Unsubscribe,
+	ArrayUnionOrRemove,
 } from './types'
