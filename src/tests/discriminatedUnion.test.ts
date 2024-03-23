@@ -76,8 +76,10 @@ describe('test discrimination unions', () => {
 	})
 
 	it('test query', () => {
-		query(du.collection(), where('a.b', '==', 1))
-		// @ts-expect-error
-		query(du.collection(), where('a.b', '==', 2))
+		;() => {
+			query(du.collection(), where('a.b', '==', 1))
+			// @ts-expect-error
+			query(du.collection(), where('a.b', '==', 2))
+		}
 	})
 })
