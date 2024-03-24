@@ -83,7 +83,7 @@
 </div>
 <br>
 <div align="center">
-<a href="https://firelordjs.com/firelord/quick_start" target="_blank" style="color:blue"><strong>Doc</strong></a>
+<a href="https://firelordjs.com" target="_blank" style="color:blue"><strong>Doc</strong></a>
 </div>
 <br/>
 
