@@ -5,7 +5,7 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 export const updateNoFlattenCreator =
 	(writeBatch: OriWriteBatch): WriteBatchUpdateNoFlatten =>
 	// @ts-expect-error
-	(reference, data, precondition?) => {
+	(reference, data, precondition) => {
 		const data_ = flatten(removeFieldValueInhomogeneousProps(data))
 
 		return writeBatch.update(

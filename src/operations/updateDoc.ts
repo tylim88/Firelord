@@ -15,8 +15,15 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
  * @throws Error If the provided input is not valid Firestore data.
  * @return A Promise resolved with the write time of this update.
  */
-export const updateDoc: Update = (reference, data, precondition?) => {
-	const data_ = flatten(removeFieldValueInhomogeneousProps(data))
-	// @ts-expect-error
-	return (reference as OriDocumentReference).update(data_, precondition || {})
+export const updateDoc: Update = (reference, data, precondition) => {
+	return (
+		// @ts-expect-error
+		(reference as OriDocumentReference)
+			//
+			.update(
+				// @ts-expect-error
+				flatten(removeFieldValueInhomogeneousProps(data)),
+				precondition || {}
+			)
+	)
 }

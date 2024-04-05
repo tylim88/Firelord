@@ -10,7 +10,7 @@ import { OrderBy } from '../types'
  * @returns The created `Query`.
  */
 // @ts-expect-error
-export const orderBy: OrderBy = (fieldPath, directionStr?) => {
+export const orderBy: OrderBy = (fieldPath, directionStr) => {
 	return {
 		type: 'orderBy',
 		fieldPath,

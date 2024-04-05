@@ -12,8 +12,10 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
  */
 // @ts-expect-error
 export const addDoc: AddDoc = (reference, data) => {
-	// @ts-expect-error
-	return (reference as OriCollectionReference).add(
-		removeFieldValueInhomogeneousProps(data)
+	return (
+		// @ts-expect-error
+		(reference as OriCollectionReference)
+			//
+			.add(removeFieldValueInhomogeneousProps(data))
 	)
 }

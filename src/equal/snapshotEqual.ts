@@ -1,4 +1,4 @@
-import { SnapshotEqual } from '../types'
+import { SnapshotEqual, OriQuery } from '../types'
 
 /**
  * Returns true if the provided snapshots are equal.
@@ -8,6 +8,13 @@ import { SnapshotEqual } from '../types'
  * @returns true if the snapshots are equal.
  */
 export const snapshotEqual: SnapshotEqual = (left, right) => {
-	// @ts-expect-error
-	return left.isEqual(right)
+	return (
+		// @ts-expect-error
+		(left as OriQuery)
+			//
+			.isEqual(
+				// @ts-expect-error
+				right
+			)
+	)
 }

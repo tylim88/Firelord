@@ -16,10 +16,11 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
  * @throws Error If the provided input is not a valid Firestore document.
  * @return A Promise resolved with the write time of this set.
  */
-export const setDoc: Set = (reference, data, options?) => {
-	// @ts-expect-error
-	return (reference as OriDocumentReference).set(
-		removeFieldValueInhomogeneousProps(data),
-		options || {}
+export const setDoc: Set = (reference, data, options) => {
+	return (
+		// @ts-expect-error
+		(reference as OriDocumentReference)
+			//
+			.set(removeFieldValueInhomogeneousProps(data), options || {})
 	)
 }

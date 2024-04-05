@@ -19,8 +19,10 @@ export const updateDocNoFlatten: UpdateNoFlatten = (
 	data,
 	precondition?
 ) => {
-	const data_ = removeFieldValueInhomogeneousProps(data)
-
-	// @ts-expect-error
-	return (reference as OriDocumentReference).update(data_, precondition || {})
+	return (
+		// @ts-expect-error
+		(reference as OriDocumentReference)
+			//
+			.update(removeFieldValueInhomogeneousProps(data), precondition || {})
+	)
 }

@@ -4,7 +4,7 @@ import { removeFieldValueInhomogeneousProps } from '../fieldValues'
 export const updateNoFlattenCreator =
 	(transaction: OriTransaction): TransactionUpdateNoFlatten =>
 	// @ts-expect-error
-	(reference, data, precondition?) => {
+	(reference, data, precondition) => {
 		const data_ = removeFieldValueInhomogeneousProps(data)
 
 		return transaction.update(
