@@ -12,7 +12,6 @@ import crypto from 'crypto'
  * @param value - The value for comparison
  * @returns The created Query.
  */
-// @ts-expect-error
 export const where: Where = (fieldPath, opStr, value) => {
 	let newValue = value
 	if (
@@ -27,7 +26,7 @@ export const where: Where = (fieldPath, opStr, value) => {
 
 	return {
 		type: 'where',
-		fieldPath: fieldPath as string,
+		fieldPath: fieldPath,
 		opStr,
 		value: newValue,
 	}
