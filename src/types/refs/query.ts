@@ -43,7 +43,7 @@ export type GeneralQuery<T extends MetaType> =
 export type QueryFunction = <
 	T extends MetaType,
 	Q extends GeneralQuery<T>,
-	QC extends QueryConstraints<T>[]
+	QC extends QueryConstraints[]
 >(
 	query: Q extends never ? Q : GeneralQuery<T>,
 

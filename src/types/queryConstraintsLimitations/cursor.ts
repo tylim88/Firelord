@@ -51,7 +51,7 @@ export type CursorConstraintLimitation<
 	T extends MetaType,
 	Q extends Query<T>,
 	U extends CursorConstraint<CursorType, unknown[]>,
-	PreviousQCs extends QueryConstraints<T>[]
+	PreviousQCs extends QueryConstraints[]
 > = CursorConstraint<
 	CursorType,
 	ValidateCursorOrderBy<T, Q, U['values'], GetAllOrderBy<T, PreviousQCs, []>>

@@ -21,7 +21,7 @@ import { ErrorWhereOrderByAndInEquality } from '../error'
 // If you include a filter with a range comparison (<, <=, >, >=), your first ordering must be on the same field
 export type ValidateOrderByAndInequalityWhere<
 	T extends MetaType,
-	AllQCs extends QueryConstraints<T>[]
+	AllQCs extends QueryConstraints[]
 > = GetFirstInequalityWhere<T, AllQCs> extends infer W
 	? W extends WhereConstraint<string, InequalityOpStr, unknown>
 		? GetFirstOrderBy<T, AllQCs> extends infer O
@@ -37,13 +37,13 @@ export type ValidateOrderByAndInequalityWhere<
 export type QueryConstraintLimitation<
 	T extends MetaType,
 	Q extends GeneralQuery<T>,
-	RestQCs extends QueryConstraints<T>[],
-	PreviousQCs extends QueryConstraints<T>[],
-	AllQCs extends QueryConstraints<T>[]
+	RestQCs extends QueryConstraints[],
+	PreviousQCs extends QueryConstraints[],
+	AllQCs extends QueryConstraints[]
 > = ValidateOrderByAndInequalityWhere<T, AllQCs> extends string
 	? ValidateOrderByAndInequalityWhere<T, AllQCs>[]
 	: RestQCs extends [infer Head, ...infer Rest]
-	? Rest extends QueryConstraints<T>[]
+	? Rest extends QueryConstraints[]
 		? [
 				Head extends LimitConstraint<'limit', number> | OffsetConstraint
 					? Head
@@ -60,9 +60,7 @@ export type QueryConstraintLimitation<
 					T,
 					Q,
 					Rest,
-					Head extends QueryConstraints<T>
-						? [...PreviousQCs, Head]
-						: PreviousQCs, // impossible route
+					Head extends QueryConstraints ? [...PreviousQCs, Head] : PreviousQCs, // impossible route
 					AllQCs
 				>
 		  ]
