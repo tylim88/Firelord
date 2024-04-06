@@ -6,12 +6,10 @@ export const updateCreator =
 	(transaction: OriTransaction): TransactionUpdate =>
 	// @ts-expect-error
 	(reference, data, precondition) => {
-		const data_ = flatten(removeFieldValueInhomogeneousProps(data))
-
 		return transaction.update(
 			// @ts-expect-error
 			reference,
-			data_,
+			flatten(removeFieldValueInhomogeneousProps(data)),
 			precondition || {}
 		)
 	}

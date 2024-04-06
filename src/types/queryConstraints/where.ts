@@ -3,8 +3,7 @@ import { WhereFilterOp } from '../alias'
 import { __name__ } from '../fieldPath'
 
 export type WhereConstraint<
-	T extends MetaType,
-	FieldPath extends GetAllCompareKeys<T> | __name__,
+	FieldPath extends string,
 	OpStr extends WhereFilterOp,
 	Value
 > = {
@@ -23,4 +22,4 @@ export type Where = <
 	fieldPath: FieldPath,
 	opStr: OpStr,
 	value: Value
-) => WhereConstraint<T, FieldPath, OpStr, Value>
+) => WhereConstraint<FieldPath, OpStr, Value>

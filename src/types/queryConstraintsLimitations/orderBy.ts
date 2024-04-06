@@ -1,4 +1,4 @@
-import { MetaType, GetAllCompareKeys } from '../metaTypeCreator'
+import { MetaType } from '../metaTypeCreator'
 import { OrderByDirection } from '../alias'
 import { ErrorWhereOrderByEquality } from '../error'
 import {
@@ -12,26 +12,18 @@ import { In, Equal } from './utils'
 // You can't order your query by a field included in an equality (==) or (in) clause.
 export type ValidateOrderByEqualityWhere<
 	T extends MetaType,
-	U extends OrderByConstraint<
-		T,
-		GetAllCompareKeys<T>,
-		OrderByDirection | undefined
-	>,
+	U extends OrderByConstraint<string, OrderByDirection | undefined>,
 	AllQCs extends QueryConstraints<T>[]
 > = Extract<
 	GetAllWhereConstraint<T, AllQCs, never>,
-	WhereConstraint<T, U['fieldPath'], In | Equal, unknown>
+	WhereConstraint<U['fieldPath'], In | Equal, unknown>
 > extends never
 	? true
 	: false
 
 export type OrderByConstraintLimitation<
 	T extends MetaType,
-	U extends OrderByConstraint<
-		T,
-		GetAllCompareKeys<T>,
-		OrderByDirection | undefined
-	>,
+	U extends OrderByConstraint<string, OrderByDirection | undefined>,
 	AllQCs extends QueryConstraints<T>[]
 > = ValidateOrderByEqualityWhere<T, U, AllQCs> extends false
 	? ErrorWhereOrderByEquality
@@ -41,11 +33,7 @@ export type GetFirstOrderBy<
 	T extends MetaType,
 	QCs extends QueryConstraints<T>[]
 > = QCs extends [infer H, ...infer Rest]
-	? H extends OrderByConstraint<
-			T,
-			GetAllCompareKeys<T>,
-			OrderByDirection | undefined
-	  >
+	? H extends OrderByConstraint<string, OrderByDirection | undefined>
 		? H
 		: Rest extends QueryConstraints<T>[]
 		? GetFirstOrderBy<T, Rest>
@@ -55,21 +43,13 @@ export type GetFirstOrderBy<
 export type GetAllOrderBy<
 	T extends MetaType,
 	QCs extends QueryConstraints<T>[],
-	AllOrderBy extends OrderByConstraint<
-		T,
-		GetAllCompareKeys<T>,
-		OrderByDirection | undefined
-	>[]
+	AllOrderBy extends OrderByConstraint<string, OrderByDirection | undefined>[]
 > = QCs extends [infer H, ...infer Rest]
 	? Rest extends QueryConstraints<T>[]
 		? GetAllOrderBy<
 				T,
 				Rest,
-				H extends OrderByConstraint<
-					T,
-					GetAllCompareKeys<T>,
-					OrderByDirection | undefined
-				>
+				H extends OrderByConstraint<string, OrderByDirection | undefined>
 					? [...AllOrderBy, H]
 					: AllOrderBy
 		  >

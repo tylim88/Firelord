@@ -2,8 +2,7 @@
  * `Firestore` represents a Firestore Database and is the entry point for all
  * Firestore operations.
  */
-export type Firestore = ReturnType<FirebaseFirestore['getFirestore']> // ! FirebaseFirestore['Firestore'] doesn't work even though they are the exact same type???
-
+export type Firestore = ReturnType<FirebaseFirestore['getFirestore']>
 /**
  * Cloud Firestore.
  *
