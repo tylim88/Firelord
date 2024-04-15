@@ -13,8 +13,10 @@ export const buildPathFromColIDsAndDocIDs = ({
 	collectionIDs: string[]
 	documentIDs: string[]
 }) => {
-	return collectionIDs.reduce((acc, collectionId, index) => {
-		const documentID = documentIDs[index] ? `${documentIDs[index]}/` : ''
-		return `${acc}${collectionId}/${documentID}`
-	}, '')
+	return collectionIDs
+		.reduce((acc, collectionId, index) => {
+			const documentID = documentIDs[index] ? `${documentIDs[index]}/` : ''
+			return `${acc}${collectionId}/${documentID}`
+		}, '')
+		.slice(0, -1)
 }

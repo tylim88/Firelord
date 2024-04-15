@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.8.10",
+	"version": "2.8.15",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"author": "tylim",
 	"license": "MIT",
