@@ -1,5 +1,4 @@
 import { MetaType } from '../metaTypeCreator'
-import { OrderByDirection } from '../alias'
 import { ErrorCursorTooManyArguments } from '../error'
 import {
 	QueryConstraints,
@@ -18,10 +17,10 @@ type ValidateCursorOrderBy<
 	T extends MetaType,
 	Q extends Query<T>,
 	Values extends unknown[],
-	AllOrderBy extends OrderByConstraint<string, OrderByDirection | undefined>[]
+	AllOrderBy extends OrderByConstraint<string>[]
 > = Values extends [infer Head, ...infer Rest]
 	? AllOrderBy extends [infer H, ...infer R]
-		? H extends OrderByConstraint<string, OrderByDirection | undefined>
+		? H extends OrderByConstraint<string>
 			? [
 					H['fieldPath'] extends __name__
 						? GetCorrectDocumentIdBasedOnRef<T, Q, H['fieldPath'], Head>
@@ -38,9 +37,7 @@ type ValidateCursorOrderBy<
 						T,
 						Q,
 						Rest,
-						R extends OrderByConstraint<string, OrderByDirection | undefined>[]
-							? R
-							: []
+						R extends OrderByConstraint<string>[] ? R : []
 					>
 			  ]
 			: never // impossible route

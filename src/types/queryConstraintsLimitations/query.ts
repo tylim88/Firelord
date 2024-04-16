@@ -1,5 +1,5 @@
 import { MetaType } from '../metaTypeCreator'
-import { WhereFilterOp, OrderByDirection } from '../alias'
+import { WhereFilterOp } from '../alias'
 import {
 	QueryConstraints,
 	WhereConstraint,
@@ -25,7 +25,7 @@ export type ValidateOrderByAndInequalityWhere<
 > = GetFirstInequalityWhere<T, AllQCs> extends infer W
 	? W extends WhereConstraint<string, InequalityOpStr, unknown>
 		? GetFirstOrderBy<T, AllQCs> extends infer O
-			? O extends OrderByConstraint<string, OrderByDirection | undefined>
+			? O extends OrderByConstraint<string>
 				? IsSame<W['fieldPath'], O['fieldPath']> extends true
 					? true
 					: ErrorWhereOrderByAndInEquality<O['fieldPath'], W['fieldPath']>
@@ -47,7 +47,7 @@ export type QueryConstraintLimitation<
 		? [
 				Head extends LimitConstraint<'limit', number> | OffsetConstraint
 					? Head
-					: Head extends OrderByConstraint<string, OrderByDirection | undefined>
+					: Head extends OrderByConstraint<string>
 					? OrderByConstraintLimitation<T, Head, AllQCs>
 					: Head extends LimitConstraint<'limitToLast', number>
 					? LimitToLastConstraintLimitation<T, Head, AllQCs>
