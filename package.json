@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.8.15",
+	"version": "2.8.16",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"author": "tylim",
 	"license": "MIT",
@@ -22,7 +22,6 @@
 		"kill": "kill-port 8080",
 		"test": "npm run kill && (firebase emulators:exec --only firestore \"vitest --config vitest.emulator.ts\") && npm run kill && vitest",
 		"knip": "knip",
-		"publish": "npm run build && npm publish",
 		"dev": "---------------------dev------------------------",
 		"d-link": "npm run build && npm run b-un && npm run link",
 		"d-test": "tsc && npm test",
