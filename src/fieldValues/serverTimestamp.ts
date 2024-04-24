@@ -9,6 +9,5 @@ import { ServerTimestamp } from '../types'
  * update().
  */
 
-export const serverTimestamp = (): ServerTimestamp =>
-	// @ts-expect-error
-	FieldValue.serverTimestamp()
+export const serverTimestamp = () =>
+	FieldValue.serverTimestamp() as ServerTimestamp
