@@ -91,9 +91,7 @@ Support [emulator](https://firelordjs.com/firelord/tests)
 
 # Notice
 
-Because the official admin SDK is lagging behind the official web SDK, Firelord admin will not sync with Firelord web and will fix bugs only until the official admin SDK catch up.
-
-Which mean composite query (`or()` `and()`) is not available.
+Because the official admin SDK is lagging behind the official web SDK, Which mean `or()` and `and()` clause are not available for admin.
 
 ## Why Do You Need This? What Problems Firelord Solves?
 
