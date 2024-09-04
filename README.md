@@ -91,7 +91,7 @@ Support [emulator](https://firelordjs.com/firelord/tests)
 
 # Notice
 
-Because the official admin SDK is lagging behind the official web SDK, Which mean `or()` and `and()` clause are not available for admin.
+Because the official admin SDK is lagging behind the official web SDK, Which mean `or()` and `and()` clause are not available for admin. (update: they are available now, will add them in the future)
 
 ## Why Do You Need This? What Problems Firelord Solves?
 

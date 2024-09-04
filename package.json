@@ -1,6 +1,6 @@
 {
 	"name": "firelord",
-	"version": "2.8.19",
+	"version": "2.8.20",
 	"description": "🔥 Write V9 like Firestore Admin code with extreme type safety.",
 	"author": "tylim",
 	"license": "MIT",
@@ -82,7 +82,7 @@
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-unused-imports": "^2.0.0",
 		"eslint-plugin-yml": "^1.5.0",
-		"firebase-admin": "^11.10.1",
+		"firebase-admin": "^12.4.0",
 		"husky": "^8.0.3",
 		"kill-port": "^2.0.1",
 		"knip": "^2.17.1",
@@ -96,6 +96,6 @@
 		"vitest": "^0.29.7"
 	},
 	"peerDependencies": {
-		"firebase-admin": "^11.10.1"
+		"firebase-admin": "^12.4.0"
 	}
 }
