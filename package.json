@@ -70,7 +70,7 @@
 		"@types/lodash": "^4.14.191",
 		"@typescript-eslint/eslint-plugin": "^5.56.0",
 		"@typescript-eslint/parser": "^5.56.0",
-		"@vitest/coverage-c8": "^0.29.7",
+		"@vitest/coverage-v8": "^2.0.5",
 		"betwin": "^2.1.2",
 		"dotenv": "^16.0.3",
 		"eslint": "^8.36.0",
@@ -93,7 +93,7 @@
 		"pretty-quick": "^3.1.3",
 		"rollup": "^2.79.1",
 		"typescript": "^5.4.2",
-		"vitest": "^0.29.7"
+		"vitest": "^2.0.5"
 	},
 	"peerDependencies": {
 		"firebase-admin": "^12.4.0"
