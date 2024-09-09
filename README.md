@@ -99,7 +99,7 @@ Read here at [FirelordJS](https://github.com/tylim88/FirelordJS#readme).
 
 ## About
 
-This wrapper wrap around admin Firestore V8 interface(There is no official V9 admin version) and turn it into type safe V9 interface.
+This wrapper wrap around admin Firestore V8 interface(There is no official V9 admin version) and turn it into type safe V9 interface.  
 
 The API is basically same as the web version, both web and admin version basically sharing the same documentation.
 
